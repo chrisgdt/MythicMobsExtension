@@ -1,0 +1,51 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+
+    <parent>
+        <groupId>com.gmail.berndivader</groupId>
+        <artifactId>MythicMobExtension-multi-version</artifactId>
+        <version>${revision}</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>MME-NMS-v1_14_R1</artifactId>
+    <version>${revision}</version>
+
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+    <repositories>
+        <repository>
+            <!-- MythicMobs repo -->
+            <id>nexus</id>
+            <name>Lumine Releases</name>
+            <url>https://mvn.lumine.io/repository/maven-public/</url>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>com.gmail.berndivader</groupId>
+            <artifactId>MythicMobExtension</artifactId>
+            <version>${revision}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.14.4-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.lumine.xikage</groupId>
+            <artifactId>MythicMobs</artifactId>
+            <version>${MMVersion}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+    </build>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+</project>
