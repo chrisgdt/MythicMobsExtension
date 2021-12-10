@@ -107,16 +107,16 @@ public class NMSUtils extends CompatibilityUtils {
 			class_MinecraftServer_currentTickField = class_MinecraftServer.getDeclaredField("currentTick");
 			class_MinecraftServer_currentTickField.setAccessible(true);
 
-			class_Entity_getFlagMethod = class_Entity.getMethod("getFlag", Integer.TYPE);
+			class_Entity_getFlagMethod = class_Entity.getMethod(version < 18 ? "getFlag" : "h", Integer.TYPE);
 			class_IChatBaseComponent_ChatSerializer_aMethod = class_IChatBaseComponent_ChatSerializer.getMethod("a",
 					String.class);
-			class_EntityCreature_setGoalTargetMethod = class_EntityCreature.getMethod("setGoalTarget",
+			class_EntityCreature_setGoalTargetMethod = class_EntityCreature.getMethod(version < 18 ? "setGoalTarget" : "setTarget",
 					class_EntityLiving, TargetReason.class, Boolean.TYPE);
-			class_EntityPlayer_clearActiveItemMethod = class_EntityPlayer.getMethod("clearActiveItem");
-			class_EntityLiving_getArmorStrengthMethod = class_EntityLiving.getMethod("getArmorStrength");
-			class_EntitySnowman_setHasPumpkinMethod = class_EntitySnowman.getMethod("setHasPumpkin", Boolean.TYPE);
-			class_EntityLiving_getArrowCountMethod = class_EntityLiving.getMethod("getArrowCount");
-			class_EntityLiving_setArrowCountMethod = class_EntityLiving.getMethod("setArrowCount", Integer.TYPE);
+			class_EntityPlayer_clearActiveItemMethod = class_EntityPlayer.getMethod(version < 18 ? "clearActiveItem" : "eR");
+			class_EntityLiving_getArmorStrengthMethod = class_EntityLiving.getMethod(version < 18 ? "getArmorStrength" : "ei");
+			class_EntitySnowman_setHasPumpkinMethod = class_EntitySnowman.getMethod(version < 18 ? "setHasPumpkin" : "v", Boolean.TYPE);
+			class_EntityLiving_getArrowCountMethod = class_EntityLiving.getMethod(version < 18 ? "getArrowCount" : "em");
+			class_EntityLiving_setArrowCountMethod = class_EntityLiving.getMethod("setArrowCount", Integer.TYPE, Boolean.TYPE);
 			class_PathfinderGoalSelector_PathfinderGoalSelectorItem_equalsMethod = class_PathfinderGoalSelector_PathfinderGoalSelectorItem
 					.getMethod("equals", Object.class);
 
