@@ -4,6 +4,10 @@ apply plugin: 'maven-publish'
 repositories {
     mavenCentral()
     maven {
+        url = "https://repo.codemc.io/repository/maven-public/"
+        allowInsecureProtocol = true
+    }
+    maven {
         url "http://mc.hackerzlair.org:8888/repository/public"
         allowInsecureProtocol = true
     }
@@ -11,6 +15,7 @@ repositories {
         url = "http://repo.extendedclip.com/content/repositories/placeholderapi/"
         allowInsecureProtocol = true
     }
+    mavenLocal()
 }
 
 dependencies {
@@ -23,7 +28,7 @@ dependencies {
     compileOnly  ("org.spigotmc:spigot-1.12.2:+")
     compileOnly  ("com.massivecraft:massivecore:+")
     compileOnly  ("com.massivecraft:factions:+")
-    compileOnly  ("com.gmail.filoghost:holographicdisplays:+")
+    compileOnly  ("me.filoghost.holographicdisplays:holographicdisplays-api:+")
     compileOnly  ("com.comphenix:protocol:+")
     compileOnly  ("com.garbagemule:mobarena:+")
     compileOnly  ("com.sk89q:worldedit:+")
