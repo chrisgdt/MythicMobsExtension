@@ -1,6 +1,6 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1;
 
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -9,14 +9,14 @@ import com.gmail.berndivader.mythicmobsext.conditions.GetLastDamageIndicatorCond
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
-import net.minecraft.server.v1_16_R3.EntityPlayer;
-import net.minecraft.server.v1_16_R3.Packet;
-import net.minecraft.server.v1_16_R3.PacketPlayInArmAnimation;
-import net.minecraft.server.v1_16_R3.PacketPlayInBlockDig;
-import net.minecraft.server.v1_16_R3.PacketPlayInFlying;
-import net.minecraft.server.v1_16_R3.PacketPlayInFlying.PacketPlayInPosition;
-import net.minecraft.server.v1_16_R3.PacketPlayInResourcePackStatus;
-import net.minecraft.server.v1_16_R3.PacketPlayInSteerVehicle;
+import net.minecraft.server.v1_15_R1.EntityPlayer;
+import net.minecraft.server.v1_15_R1.Packet;
+import net.minecraft.server.v1_15_R1.PacketPlayInArmAnimation;
+import net.minecraft.server.v1_15_R1.PacketPlayInBlockDig;
+import net.minecraft.server.v1_15_R1.PacketPlayInFlying;
+import net.minecraft.server.v1_15_R1.PacketPlayInFlying.PacketPlayInPosition;
+import net.minecraft.server.v1_15_R1.PacketPlayInResourcePackStatus;
+import net.minecraft.server.v1_15_R1.PacketPlayInSteerVehicle;
 
 public class PacketReceivingHandler implements IPacketReceivingHandler {
 

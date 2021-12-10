@@ -1,57 +1,25 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1;
 
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Predicate;
 
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.advancement.FakeAdvancement;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.navigation.ControllerFly;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.navigation.ControllerVex;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.navigation.NavigationClimb;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.*;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.nbt.MojangsonParser;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.*;
-import net.minecraft.network.protocol.game.PacketPlayOutPosition.EnumPlayerTeleportFlags;
+import net.minecraft.server.v1_15_R1.*;
+import net.minecraft.server.v1_15_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
+import net.minecraft.server.v1_15_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
+import net.minecraft.server.v1_15_R1.PacketPlayOutWorldBorder.EnumWorldBorderAction;
 
-import net.minecraft.server.AdvancementDataPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.server.level.WorldServer;
-import net.minecraft.server.players.PlayerList;
-import net.minecraft.stats.ServerStatisticManager;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.control.ControllerMove;
-import net.minecraft.world.entity.ai.goal.PathfinderGoal;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalAvoidTarget;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFleeSun;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalSelector;
-import net.minecraft.world.entity.ai.navigation.Navigation;
-import net.minecraft.world.entity.ai.navigation.NavigationFlying;
-import net.minecraft.world.entity.item.EntityItem;
-import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.entity.player.PlayerAbilities;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.biome.BiomeManager;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.border.WorldBorder;
-import net.minecraft.world.level.pathfinder.PathEntity;
-import net.minecraft.world.level.pathfinder.PathPoint;
-import net.minecraft.world.level.storage.WorldData;
-import net.minecraft.world.phys.AxisAlignedBB;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_17_R1.entity.*;
-import org.bukkit.craftbukkit.v1_17_R1.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftItem;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_15_R1.util.CraftMagicNumbers.NBT;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -72,9 +40,28 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
-import com.google.common.collect.Lists;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.advancement.FakeAdvancement;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.advancement.FakeDisplay;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.advancement.FakeDisplay.AdvancementFrame;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.navigation.ControllerFly;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.navigation.ControllerVex;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.navigation.NavigationClimb;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals.PathFinderGoalShoot;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals.PathfinderGoalAttack;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals.PathfinderGoalBreakBlocks;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals.PathfinderGoalDoorBreak;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals.PathfinderGoalDoorOpen;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals.PathfinderGoalEntityGrowNotify;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals.PathfinderGoalNotifyHeal;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals.PathfinderGoalNotifyOnCollide;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals.PathfinderGoalOtherTeams;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals.PathfinderGoalReturnHome;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals.PathfinderGoalTravelAround;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals.PathfinderGoalVexA;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals.PathfinderGoalVexD;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.datafixers.util.Pair;
 
 public class Core implements Handler, Listener {
 
@@ -83,7 +70,7 @@ public class Core implements Handler, Listener {
 	private static Field ai_pathfinderlist_b;
 	private static Field ai_pathfinderlist_c;
 
-	private static Set<EnumPlayerTeleportFlags> rot_set = new HashSet<>(Arrays
+	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> rot_set = new HashSet<>(Arrays
 			.asList(new EnumPlayerTeleportFlags[] { EnumPlayerTeleportFlags.X_ROT, EnumPlayerTeleportFlags.Y_ROT, }));
 	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> rot_pos_set = new HashSet<>(
 			Arrays.asList(new EnumPlayerTeleportFlags[] { EnumPlayerTeleportFlags.X_ROT, EnumPlayerTeleportFlags.Y_ROT,
@@ -93,7 +80,7 @@ public class Core implements Handler, Listener {
 					EnumPlayerTeleportFlags.Z }));
 
 	static {
-		nms_path = "net.minecraft.server.v1_17_R1";
+		nms_path = "net.minecraft.server.v1_15_R1";
 		try {
 			ai_pathfinderlist_b = PathfinderGoalSelector.class.getDeclaredField("d");
 			ai_pathfinderlist_c = PathfinderGoalSelector.class.getDeclaredField("c");
@@ -167,13 +154,13 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public List<Entity> getNearbyEntities(Entity bukkit_entity, int range) {
-		net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkit_entity).getHandle();
+		net.minecraft.server.v1_15_R1.Entity entity = ((CraftLivingEntity) bukkit_entity).getHandle();
 		return this.getNearbyEntities(entity.getWorld(), entity.getBoundingBox().grow(range, range, range), null);
 	}
 
 	@Override
 	public List<Entity> getNearbyEntities(Entity bukkit_entity, int range, Predicate<Entity> filter) {
-		net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkit_entity).getHandle();
+		net.minecraft.server.v1_15_R1.Entity entity = ((CraftLivingEntity) bukkit_entity).getHandle();
 		return this.getNearbyEntities(entity.getWorld(), entity.getBoundingBox().grow(range, range, range), filter);
 	}
 
@@ -195,12 +182,12 @@ public class Core implements Handler, Listener {
 				filter);
 	}
 
-	public List<Entity> getNearbyEntities(net.minecraft.world.level.World world, AxisAlignedBB bb,
-										  Predicate<Entity> filter) {
-		List<net.minecraft.world.entity.Entity> entityList = world.getEntities(null, bb, null);
+	public List<Entity> getNearbyEntities(net.minecraft.server.v1_15_R1.World world, AxisAlignedBB bb,
+			Predicate<Entity> filter) {
+		List<net.minecraft.server.v1_15_R1.Entity> entityList = world.getEntities(null, bb, null);
 		ArrayList<org.bukkit.entity.Entity> bukkitEntityList = new ArrayList<org.bukkit.entity.Entity>(
 				entityList.size());
-		for (net.minecraft.world.entity.Entity entity : entityList) {
+		for (net.minecraft.server.v1_15_R1.Entity entity : entityList) {
 			CraftEntity bukkitEntity = entity.getBukkitEntity();
 			if (filter != null && !filter.test(bukkitEntity))
 				continue;
@@ -211,7 +198,7 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void setFieldOfViewPacketSend(Player player, float f1) {
-		EntityPlayer me = ((CraftPlayer) player).getHandle();
+		net.minecraft.server.v1_15_R1.EntityPlayer me = ((CraftPlayer) player).getHandle();
 		PlayerAbilities arg1 = (PlayerAbilities) Utils.cloneObject(me.abilities);
 		if (f1 != 0) {
 			player.setMetadata(Utils.meta_WALKSPEED, new FixedMetadataValue(Main.getPlugin(), arg1.walkSpeed));
@@ -234,7 +221,7 @@ public class Core implements Handler, Listener {
 	@Override
 	public void forceSpectate(Player player, Entity e, boolean bl1) {
 		LivingEntity entity = (LivingEntity) e;
-		EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+		net.minecraft.server.v1_15_R1.EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
 		entityPlayer.playerConnection.sendPacket(new PacketPlayOutCamera(((CraftEntity) entity).getHandle()));
 		if (bl1) {
 			dupePlayer(entityPlayer, player.getLocation());
@@ -264,14 +251,12 @@ public class Core implements Handler, Listener {
 			entityplayer1.addScoreboardTag(s);
 		}
 		WorldData worlddata = worldServer.getWorldData();
-		location.setWorld(minecraftServer.getWorldServer(entityplayer.getSpawnDimension()).getWorld());
+		location.setWorld(minecraftServer.getWorldServer(entityplayer.dimension).getWorld());
 		entityplayer1.forceSetPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(),
 				location.getPitch());
 		entityplayer1.playerConnection.sendPacket(new PacketPlayOutRespawn(
-				entityplayer1.world.getDimensionManager(), entityplayer1.world.getDimensionKey(),
-				BiomeManager.a(entityplayer1.getWorldServer().getSeed()),
-				entityplayer1.playerInteractManager.getGameMode(), entityplayer1.playerInteractManager.c(),
-				entityplayer1.getWorldServer().isDebugWorld(), entityplayer1.getWorldServer().isFlatWorld(), true));
+				worldServer.worldProvider.getDimensionManager().getType(), WorldData.c(worlddata.getSeed()),
+				worldServer.getWorldData().getType(), entityplayer1.playerInteractManager.getGameMode()));
 		entityplayer1.playerConnection.sendPacket(new PacketPlayOutViewDistance(worldServer.spigotConfig.viewDistance));
 		entityplayer1.spawnIn(worldServer);
 		entityplayer1.dead = false;
@@ -279,7 +264,7 @@ public class Core implements Handler, Listener {
 				entityplayer1.locY(), entityplayer1.locZ(), entityplayer1.yaw, entityplayer1.pitch));
 		entityplayer1.setSneaking(false);
 		BlockPosition blockPosition1 = worldServer.getSpawn();
-		entityplayer1.playerConnection.sendPacket(new PacketPlayOutSpawnPosition(blockPosition1, 0));
+		entityplayer1.playerConnection.sendPacket(new PacketPlayOutSpawnPosition(blockPosition1));
 		entityplayer1.playerConnection.sendPacket(
 				new PacketPlayOutServerDifficulty(worlddata.getDifficulty(), worlddata.isDifficultyLocked()));
 		entityplayer1.playerConnection.sendPacket(
@@ -314,10 +299,10 @@ public class Core implements Handler, Listener {
 			playerList.playerFileData.save(entityplayer);
 			ServerStatisticManager serverstatisticmanager = entityplayer.getStatisticManager();
 			if (serverstatisticmanager != null) {
-				serverstatisticmanager.save();
+				serverstatisticmanager.a();
 			}
 			if ((advancementdataplayer = entityplayer.getAdvancementData()) != null) {
-				advancementdataplayer.b();
+				advancementdataplayer.c();
 			}
 		}
 		playerList.updateClient(entityplayer);
@@ -328,13 +313,13 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void playEndScreenForPlayer(Player player, float f) {
-		EntityPlayer me = ((CraftPlayer) player).getHandle();
-		me.playerConnection.sendPacket(new PacketPlayOutGameStateChange(new PacketPlayOutGameStateChange.a(4), f));
+		net.minecraft.server.v1_15_R1.EntityPlayer me = ((CraftPlayer) player).getHandle();
+		me.playerConnection.sendPacket(new PacketPlayOutGameStateChange(4, f));
 	}
 
 	@Override
 	public void fakeEntityDeath(Entity entity, long d) {
-		EntityLiving me = ((CraftLivingEntity) entity).getHandle();
+		net.minecraft.server.v1_15_R1.EntityLiving me = ((CraftLivingEntity) entity).getHandle();
 		me.world.broadcastEntityEffect(me, (byte) 3);
 		PacketPlayOutEntityDestroy pd = new PacketPlayOutEntityDestroy(me.getId());
 		PacketPlayOutSpawnEntityLiving ps = new PacketPlayOutSpawnEntityLiving(me);
@@ -349,14 +334,14 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void forceCancelEndScreenPlayer(Player player) {
-		EntityPlayer me = ((CraftPlayer) player).getHandle();
+		net.minecraft.server.v1_15_R1.EntityPlayer me = ((CraftPlayer) player).getHandle();
 		me.playerConnection.sendPacket(new PacketPlayOutCloseWindow(0));
 	}
 
 	@Override
 	public void forceSetPositionRotation(Entity entity, double x, double y, double z, float yaw, float pitch, boolean f,
 			boolean g) {
-		net.minecraft.world.entity.Entity me = ((CraftEntity) entity).getHandle();
+		net.minecraft.server.v1_15_R1.Entity me = ((CraftEntity) entity).getHandle();
 		me.setLocation(x, y, z, yaw, pitch);
 		if (entity instanceof Player) {
 			playerConnectionTeleport(entity, x, y, z, yaw, pitch, f, g);
@@ -366,7 +351,7 @@ public class Core implements Handler, Listener {
 
 	private void playerConnectionTeleport(Entity entity, double x, double y, double z, float yaw, float pitch,
 			boolean f, boolean g) {
-		EntityPlayer me = ((CraftPlayer) entity).getHandle();
+		net.minecraft.server.v1_15_R1.EntityPlayer me = ((CraftPlayer) entity).getHandle();
 		Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> set = new HashSet<>();
 		if (f) {
 			set = rot_set;
@@ -382,10 +367,10 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void rotateEntityPacket(Entity entity, float y, float p) {
-		net.minecraft.world.entity.Entity me = ((CraftEntity) entity).getHandle();
+		net.minecraft.server.v1_15_R1.Entity me = ((CraftEntity) entity).getHandle();
 		byte ya = (byte) ((int) (y * 256.0F / 360.0F));
 		byte pa = (byte) ((int) (p * 256.0F / 360.0F));
-		PacketPlayOutEntity.PacketPlayOutEntityLook el = new PacketPlayOutEntity.PacketPlayOutEntityLook(me.getId(), ya, pa, me.isOnGround());
+		PacketPlayOutEntityLook el = new PacketPlayOutEntityLook(me.getId(), ya, pa, me.onGround);
 		PacketPlayOutEntityHeadRotation hr = new PacketPlayOutEntityHeadRotation(me, ya);
 		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(), Utils.renderLength),
 				new Packet[] { el, hr });
@@ -393,19 +378,19 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void playerConnectionLookAt(Entity entity, float yaw, float pitch) {
-		EntityPlayer me = ((CraftPlayer) entity).getHandle();
+		net.minecraft.server.v1_15_R1.EntityPlayer me = ((CraftPlayer) entity).getHandle();
 		me.playerConnection.sendPacket(new PacketPlayOutPosition(0, 0, 0, yaw, pitch, pos_set, 0));
 	}
 
 	@Override
 	public void playerConnectionSpin(Entity entity, float s) {
-		EntityPlayer me = ((CraftPlayer) entity).getHandle();
+		net.minecraft.server.v1_15_R1.EntityPlayer me = ((CraftPlayer) entity).getHandle();
 		me.playerConnection.sendPacket(new PacketPlayOutPosition(0, 0, 0, s, 0, rot_pos_set, 0));
 	}
 
 	@Override
 	public void changeHitBox(Entity entity, double a0, double a1, double a2) {
-		net.minecraft.world.entity.Entity me = ((CraftEntity) entity).getHandle();
+		net.minecraft.server.v1_15_R1.Entity me = ((CraftEntity) entity).getHandle();
 		me.getBoundingBox().a(a0, a1, a2);
 	}
 
@@ -417,28 +402,27 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void sendArmorstandEquipPacket(ArmorStand entity) {
-		
-		PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entity.getEntityId(),
-				Lists.newArrayList(Pair.of(EnumItemSlot.CHEST, new ItemStack(Blocks.DIAMOND_BLOCK, 1))));
+		PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entity.getEntityId(), EnumItemSlot.CHEST,
+				new ItemStack(Blocks.DIAMOND_BLOCK, 1));
 		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(), Utils.renderLength),
 				new Packet[] { packet });
 	}
 
 	@Override
 	public void teleportEntityPacket(Entity entity) {
-		net.minecraft.world.entity.Entity me = ((CraftEntity) entity).getHandle();
+		net.minecraft.server.v1_15_R1.Entity me = ((CraftEntity) entity).getHandle();
 		PacketPlayOutEntityTeleport tp = new PacketPlayOutEntityTeleport(me);
 		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(), Utils.renderLength), new Packet[] { tp });
 	}
 
 	@Override
 	public void moveEntityPacket(Entity entity, Location cl, double x, double y, double z) {
-		net.minecraft.world.entity.Entity me = ((CraftEntity) entity).getHandle();
+		net.minecraft.server.v1_15_R1.Entity me = ((CraftEntity) entity).getHandle();
 		double x1 = cl.getX() - me.locX();
 		double y1 = cl.getY() - me.locY();
 		double z1 = cl.getZ() - me.locZ();
 		PacketPlayOutEntityVelocity vp = new PacketPlayOutEntityVelocity(me.getId(),
-				new net.minecraft.world.phys.Vec3D(x1, y1, z1));
+				new net.minecraft.server.v1_15_R1.Vec3D(x1, y1, z1));
 		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(), Utils.renderLength), new Packet[] { vp });
 	}
 
@@ -620,7 +604,7 @@ public class Core implements Handler, Listener {
 					}
 					if (tE != null && tE.isAlive()) {
 						pathfindergoal = Optional.ofNullable(
-								new PathfinderGoalFollowEntity(
+								new com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals.PathfinderGoalFollowEntity(
 										e, tE, speed, zR, aR));
 					}
 				}
@@ -730,7 +714,7 @@ public class Core implements Handler, Listener {
 							}
 						}
 					}
-					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalTravelAround(e, speed, mR, tR, iT));
+					pathfindergoal = Optional.ofNullable(new PathfinderGoalTravelAround(e, speed, mR, tR, iT));
 					break;
 				}
 			}
@@ -792,7 +776,7 @@ public class Core implements Handler, Listener {
 		} else {
 			if (i > -1) {
 				try {
-					((Map) ai_pathfinderlist_c.get(goals)).clear();
+					((Map) ai_pathfinderlist_c.get((Object) goals)).clear();
 					LinkedHashSet<Object> list = (LinkedHashSet) ai_pathfinderlist_b.get((Object) goals);
 					Iterator<Object> iter = list.iterator();
 					while (iter.hasNext()) {
@@ -806,8 +790,8 @@ public class Core implements Handler, Listener {
 				}
 			} else {
 				try {
-					((Map) ai_pathfinderlist_c.get(goals)).clear();
-					((LinkedHashSet) ai_pathfinderlist_b.get(goals)).clear();
+					((Map) ai_pathfinderlist_c.get((Object) goals)).clear();
+					((LinkedHashSet) ai_pathfinderlist_b.get((Object) goals)).clear();
 				} catch (IllegalArgumentException | IllegalAccessException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -827,8 +811,8 @@ public class Core implements Handler, Listener {
 			while (iter.hasNext()) {
 				Object object = iter.next();
 				PathfinderGoal goal = (PathfinderGoal) NMSUtils.getPathfinderGoalFromPathFinderSelectorItem(object);
-				if (goal instanceof com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalTravelAround) {
-					((com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalTravelAround) goal).addTravelPoint(vector, remove);
+				if (goal instanceof PathfinderGoalTravelAround) {
+					((PathfinderGoalTravelAround) goal).addTravelPoint(vector, remove);
 				}
 			}
 		} catch (Exception ex) {
@@ -847,7 +831,7 @@ public class Core implements Handler, Listener {
 			while (iter.hasNext()) {
 				Object object = iter.next();
 				PathfinderGoal goal = (PathfinderGoal) NMSUtils.getPathfinderGoalFromPathFinderSelectorItem(object);
-				if (goal instanceof com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalTravelAround) {
+				if (goal instanceof PathfinderGoalTravelAround) {
 					((PathfinderGoalTravelAround) goal).clearTravelPoints();
 				}
 			}
@@ -863,7 +847,7 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public boolean addNBTTag(Entity e1, String s) {
-		net.minecraft.world.entity.Entity me = ((CraftEntity) e1).getHandle();
+		net.minecraft.server.v1_15_R1.Entity me = ((CraftEntity) e1).getHandle();
 		NBTTagCompound nbt1 = null, nbt2 = null, nbt3 = null;
 		if ((nbt1 = TFa(me)) != null) {
 			nbt3 = nbt1.clone();
@@ -875,18 +859,18 @@ public class Core implements Handler, Listener {
 			}
 			UUID u = me.getUniqueID();
 			nbt1.a(nbt2);
-			me.a_(u);
+			me.a(u);
 			if (nbt3.equals(nbt1)) {
 				return false;
 			}
-			me.load(nbt1);
+			me.f(nbt1);
 			return true;
 		}
 		return false;
 	}
 
 	private boolean getNBTValue(Entity e1, String s) {
-		net.minecraft.world.entity.Entity me = ((CraftEntity) e1).getHandle();
+		net.minecraft.server.v1_15_R1.Entity me = ((CraftEntity) e1).getHandle();
 		NBTTagCompound nbt1 = null, nbt2 = null;
 		boolean bl1 = false;
 		if ((nbt1 = TFa(me)) != null) {
@@ -914,7 +898,7 @@ public class Core implements Handler, Listener {
 		if (!bl1)
 			return bl1;
 		switch (nb1.getTypeId()) {
-		case CraftMagicNumbers.NBT.TAG_LIST:
+		case NBT.TAG_LIST:
 			NBTTagList nbl1 = (NBTTagList) nb1;
 			NBTTagList nbl2 = (NBTTagList) nb2;
 			for (int i1 = 0; i1 < nbl1.size(); i1++) {
@@ -926,7 +910,7 @@ public class Core implements Handler, Listener {
 					break;
 			}
 			break;
-		case CraftMagicNumbers.NBT.TAG_COMPOUND:
+		case NBT.TAG_COMPOUND:
 			NBTTagCompound nbt1 = (NBTTagCompound) nb1;
 			NBTTagCompound nbt2 = (NBTTagCompound) nb2;
 			if (nbt1.isEmpty() && !nbt2.isEmpty())
@@ -956,7 +940,7 @@ public class Core implements Handler, Listener {
 	}
 
 	private boolean testFor(Entity e, String c, char m) {
-		net.minecraft.world.entity.Entity me = ((CraftEntity) e).getHandle();
+		net.minecraft.server.v1_15_R1.Entity me = ((CraftEntity) e).getHandle();
 		NBTTagCompound nbt1 = null, nbt2 = null;
 		try {
 			nbt2 = MojangsonParser.parse(c);
@@ -971,7 +955,7 @@ public class Core implements Handler, Listener {
 		return true;
 	}
 
-	private NBTTagCompound TFa(net.minecraft.world.entity.Entity e) {
+	private NBTTagCompound TFa(net.minecraft.server.v1_15_R1.Entity e) {
 		NBTTagCompound nbt = null;
 		if (e.valid) {
 			try {
@@ -1030,38 +1014,38 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public boolean playerIsSleeping(Player p) {
-		EntityPlayer me = ((CraftPlayer) p).getHandle();
+		net.minecraft.server.v1_15_R1.EntityPlayer me = ((CraftPlayer) p).getHandle();
 		return me.isSleeping() || me.isDeeplySleeping();
 	}
 
 	@Override
 	public boolean playerIsRunning(Player p) {
-		EntityPlayer me = ((CraftPlayer) p).getHandle();
+		net.minecraft.server.v1_15_R1.EntityPlayer me = ((CraftPlayer) p).getHandle();
 		return me.isSprinting();
 	}
 
 	@Override
 	public boolean playerIsCrouching(Player p) {
-		EntityPlayer me = ((CraftPlayer) p).getHandle();
+		net.minecraft.server.v1_15_R1.EntityPlayer me = ((CraftPlayer) p).getHandle();
 		return me.isSneaking();
 	}
 
 	@Override
 	public boolean playerIsJumping(Player p) {
-		EntityPlayer me = ((CraftPlayer) p).getHandle();
-		return !me.isOnGround() && MathUtils.round(me.getMot().getY(), 5) != -0.00784;
+		net.minecraft.server.v1_15_R1.EntityPlayer me = ((CraftPlayer) p).getHandle();
+		return !me.onGround && MathUtils.round(me.getMot().getY(), 5) != -0.00784;
 	}
 
 	@Override
 	public void setDeath(Player p, boolean b) {
-		EntityPlayer me = ((CraftPlayer) p).getHandle();
+		net.minecraft.server.v1_15_R1.EntityPlayer me = ((CraftPlayer) p).getHandle();
 		me.dead = b;
 	}
 
 	@Override
 	public float getIndicatorPercentage(Player p) {
 		EntityHuman eh = ((CraftHumanEntity) p).getHandle();
-		return eh.getAttackCooldown(0.0f);
+		return eh.s(0.0f);
 	}
 
 	@Override
@@ -1074,7 +1058,7 @@ public class Core implements Handler, Listener {
 	@Override
 	public boolean setItemCooldown(Player p, int j1, int i1) {
 		EntityHuman eh = ((CraftHumanEntity) p).getHandle();
-		net.minecraft.world.item.Item i = i1 == -1 ? eh.inventory.getItemInHand().getItem()
+		net.minecraft.server.v1_15_R1.Item i = i1 == -1 ? eh.inventory.getItemInHand().getItem()
 				: eh.inventory.getItem(i1).getItem();
 		if (eh.getCooldownTracker().cooldowns.containsKey(i)) {
 			eh.getCooldownTracker().cooldowns.remove(i);
@@ -1106,7 +1090,6 @@ public class Core implements Handler, Listener {
 				border.setWarningDistance(1);
 			}
 		}
-		// TODO packet play out world border
 		ep.playerConnection.sendPacket(new PacketPlayOutWorldBorder(border, EnumWorldBorderAction.INITIALIZE));
 		border = null;
 	}
@@ -1142,7 +1125,7 @@ public class Core implements Handler, Listener {
 		if (ei.isHandRaised()) {
 			if (bl1)
 				System.err.println("hand not raised!");
-			ei.clearActiveItem();
+			ei.dH();
 		} else {
 			if (bl1)
 				System.err.println("hand is raised draws bow");
@@ -1180,8 +1163,8 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public boolean velocityChanged(Entity bukkit_entity) {
-		net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkit_entity).getHandle();
-		return entity.world.b(entity.getBoundingBox().grow(0.001, 0.001, 0.001));
+		net.minecraft.server.v1_15_R1.Entity entity = ((CraftEntity) bukkit_entity).getHandle();
+		return entity.world.a(entity.getBoundingBox().grow(0.001, 0.001, 0.001));
 	}
 
 	@Override
@@ -1199,7 +1182,7 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void sendPlayerAdvancement(Player player, Material material, String title, String description, String task) {
-		new FakeAdvancement(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.advancement.FakeDisplay(material, title, description, com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.advancement.FakeDisplay.AdvancementFrame.valueOf(task), null))
+		new FakeAdvancement(new FakeDisplay(material, title, description, AdvancementFrame.valueOf(task), null))
 				.displayToast(player);
 	}
 
@@ -1211,9 +1194,9 @@ public class Core implements Handler, Listener {
 			return true;
 		PathEntity pe = entity.getNavigation().a(target, 16);
 		if (pe == null) {
-			return entity.isOnGround() != true;
+			return entity.onGround != true;
 		} else {
-			PathPoint pp = pe.d();
+			PathPoint pp = pe.c();
 			return pp != null;
 		}
 	}

@@ -4,8 +4,6 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Predicate;
 
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.PacketReader;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalFollowEntity;
 import net.minecraft.server.v1_16_R3.*;
 import net.minecraft.server.v1_16_R3.PacketPlayOutEntity.PacketPlayOutEntityLook;
 import net.minecraft.server.v1_16_R3.PacketPlayOutPosition.EnumPlayerTeleportFlags;
@@ -42,28 +40,29 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.advancement.FakeAdvancement;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.advancement.FakeDisplay;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.advancement.FakeDisplay.AdvancementFrame;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.navigation.ControllerFly;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.navigation.ControllerVex;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.navigation.NavigationClimb;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathFinderGoalShoot;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalAttack;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalBreakBlocks;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalDoorBreak;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalDoorOpen;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalEntityGrowNotify;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalNotifyHeal;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalNotifyOnCollide;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalOtherTeams;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalReturnHome;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalTravelAround;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalVexA;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalVexD;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.advancement.FakeAdvancement;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.advancement.FakeDisplay;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.advancement.FakeDisplay.AdvancementFrame;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.navigation.ControllerFly;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.navigation.ControllerVex;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.navigation.NavigationClimb;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.pathfindergoals.PathFinderGoalShoot;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.pathfindergoals.PathfinderGoalAttack;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.pathfindergoals.PathfinderGoalBreakBlocks;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.pathfindergoals.PathfinderGoalDoorBreak;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.pathfindergoals.PathfinderGoalDoorOpen;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.pathfindergoals.PathfinderGoalEntityGrowNotify;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.pathfindergoals.PathfinderGoalMeleeRangeAttack;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.pathfindergoals.PathfinderGoalNotifyHeal;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.pathfindergoals.PathfinderGoalNotifyOnCollide;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.pathfindergoals.PathfinderGoalOtherTeams;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.pathfindergoals.PathfinderGoalReturnHome;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.pathfindergoals.PathfinderGoalTravelAround;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.pathfindergoals.PathfinderGoalVexA;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.pathfindergoals.PathfinderGoalVexD;
 import com.google.common.collect.Lists;
+import com.google.common.hash.Hashing;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 
@@ -101,15 +100,15 @@ public class Core implements Handler, Listener {
 
 	@EventHandler
 	public static void join(PlayerJoinEvent e) {
-		com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.PacketReader packet_reader = new com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.PacketReader(e.getPlayer());
+		PacketReader packet_reader = new PacketReader(e.getPlayer());
 		packet_reader.inject();
-		com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.PacketReader.readers.put(e.getPlayer().getUniqueId(), packet_reader);
+		PacketReader.readers.put(e.getPlayer().getUniqueId(), packet_reader);
 	}
 
 	@EventHandler
 	public static void quit(PlayerQuitEvent e) {
 		UUID uuid = e.getPlayer().getUniqueId();
-		com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.PacketReader packet_reader = com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.PacketReader.readers.get(uuid);
+		PacketReader packet_reader = PacketReader.readers.get(uuid);
 		if (packet_reader != null) {
 			packet_reader.uninject();
 			PacketReader.readers.remove(uuid);
@@ -188,7 +187,7 @@ public class Core implements Handler, Listener {
 
 	public List<Entity> getNearbyEntities(net.minecraft.server.v1_16_R3.World world, AxisAlignedBB bb,
 			Predicate<Entity> filter) {
-		List<net.minecraft.server.v1_16_R3.Entity> entityList = world.getEntities((net.minecraft.server.v1_16_R3.Entity) null, bb, null);
+		List<net.minecraft.server.v1_16_R3.Entity> entityList = world.getEntities(null, bb, null);
 		ArrayList<org.bukkit.entity.Entity> bukkitEntityList = new ArrayList<org.bukkit.entity.Entity>(
 				entityList.size());
 		for (net.minecraft.server.v1_16_R3.Entity entity : entityList) {
@@ -319,13 +318,13 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void playEndScreenForPlayer(Player player, float f) {
-		net.minecraft.server.v1_16_R3.EntityPlayer me = ((CraftPlayer) player).getHandle();
+		EntityPlayer me = ((CraftPlayer) player).getHandle();
 		me.playerConnection.sendPacket(new PacketPlayOutGameStateChange(new PacketPlayOutGameStateChange.a(4), f));
 	}
 
 	@Override
 	public void fakeEntityDeath(Entity entity, long d) {
-		net.minecraft.server.v1_16_R3.EntityLiving me = ((CraftLivingEntity) entity).getHandle();
+		EntityLiving me = ((CraftLivingEntity) entity).getHandle();
 		me.world.broadcastEntityEffect(me, (byte) 3);
 		PacketPlayOutEntityDestroy pd = new PacketPlayOutEntityDestroy(me.getId());
 		PacketPlayOutSpawnEntityLiving ps = new PacketPlayOutSpawnEntityLiving(me);
@@ -611,7 +610,7 @@ public class Core implements Handler, Listener {
 					}
 					if (tE != null && tE.isAlive()) {
 						pathfindergoal = Optional.ofNullable(
-								new PathfinderGoalFollowEntity(
+								new com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.pathfindergoals.PathfinderGoalFollowEntity(
 										e, tE, speed, zR, aR));
 					}
 				}

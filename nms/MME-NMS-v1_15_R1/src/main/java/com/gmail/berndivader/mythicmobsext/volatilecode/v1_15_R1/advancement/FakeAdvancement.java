@@ -1,25 +1,22 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3.advancement;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.advancement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import net.minecraft.server.v1_16_R3.Advancement;
-import net.minecraft.server.v1_16_R3.AdvancementDisplay;
-import net.minecraft.server.v1_16_R3.AdvancementProgress;
-import net.minecraft.server.v1_16_R3.AdvancementRewards;
-import net.minecraft.server.v1_16_R3.Criterion;
-import net.minecraft.server.v1_16_R3.CriterionInstance;
-import net.minecraft.server.v1_16_R3.IChatBaseComponent;
-import net.minecraft.server.v1_16_R3.LootSerializationContext;
-import net.minecraft.server.v1_16_R3.MinecraftKey;
-import net.minecraft.server.v1_16_R3.PacketPlayOutAdvancements;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
+import net.minecraft.server.v1_15_R1.Advancement;
+import net.minecraft.server.v1_15_R1.AdvancementDisplay;
+import net.minecraft.server.v1_15_R1.AdvancementProgress;
+import net.minecraft.server.v1_15_R1.AdvancementRewards;
+import net.minecraft.server.v1_15_R1.Criterion;
+import net.minecraft.server.v1_15_R1.CriterionInstance;
+import net.minecraft.server.v1_15_R1.IChatBaseComponent;
+import net.minecraft.server.v1_15_R1.MinecraftKey;
+import net.minecraft.server.v1_15_R1.PacketPlayOutAdvancements;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
-
-import com.google.gson.JsonObject;
 
 public class FakeAdvancement {
 	private FakeDisplay display;
@@ -45,12 +42,6 @@ public class FakeAdvancement {
 			public MinecraftKey a() {
 				return new MinecraftKey("minecraft", "impossible");
 			}
-			// MODIFIED
-			@Override
-			public JsonObject a(LootSerializationContext arg0) {
-				return null;
-			}
-			// MODIFIED
 		}));
 		ArrayList<String[]> fixed = new ArrayList<String[]>();
 		fixed.add(new String[] { "for_free" });

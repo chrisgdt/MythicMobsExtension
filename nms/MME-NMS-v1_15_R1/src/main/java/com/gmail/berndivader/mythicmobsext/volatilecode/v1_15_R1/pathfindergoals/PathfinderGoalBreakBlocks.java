@@ -1,15 +1,16 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.pathfindergoals;
 
 import java.util.HashSet;
 
-import net.minecraft.core.BlockPosition;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.ai.goal.PathfinderGoal;
+import net.minecraft.server.v1_15_R1.BlockPosition;
+import net.minecraft.server.v1_15_R1.EntityInsentient;
+import net.minecraft.server.v1_15_R1.EntityLiving;
+import net.minecraft.server.v1_15_R1.PathfinderGoal;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_17_R1.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_15_R1.event.CraftEventFactory;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -106,7 +107,7 @@ public class PathfinderGoalBreakBlocks extends PathfinderGoal {
 						if (!CraftEventFactory.callEntityChangeBlockEvent(entity, position,
 								entity.world.getType(position).getBlock().getBlockData()).isCancelled()) {
 							entity.world.triggerEffect(2001, position,
-									net.minecraft.world.level.block.Block.getCombinedId(entity.world.getType(position)));
+									net.minecraft.server.v1_15_R1.Block.getCombinedId(entity.world.getType(position)));
 							block.breakNaturally();
 							PathfinderGoalBreakBlocks.this.isBreaking = false;
 						}

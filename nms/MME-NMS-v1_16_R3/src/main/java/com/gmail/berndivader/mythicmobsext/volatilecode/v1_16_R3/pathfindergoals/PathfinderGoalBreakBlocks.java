@@ -109,7 +109,7 @@ public class PathfinderGoalBreakBlocks extends PathfinderGoal {
 							entity.world.triggerEffect(2001, position,
 									net.minecraft.server.v1_16_R3.Block.getCombinedId(entity.world.getType(position)));
 							block.breakNaturally();
-							com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.PathfinderGoalBreakBlocks.this.isBreaking = false;
+							PathfinderGoalBreakBlocks.this.isBreaking = false;
 						}
 					}
 				}.runTaskLater(Main.getPlugin(), 20L);

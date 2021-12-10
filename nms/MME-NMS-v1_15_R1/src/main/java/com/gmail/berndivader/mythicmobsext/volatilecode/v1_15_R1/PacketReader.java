@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R3;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,11 +9,11 @@ import org.bukkit.entity.Player;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
-import net.minecraft.server.v1_16_R3.Packet;
-import net.minecraft.server.v1_16_R3.PacketPlayInArmAnimation;
-import net.minecraft.server.v1_16_R3.PacketPlayInBlockDig;
-import net.minecraft.server.v1_16_R3.PacketPlayInFlying;
-import net.minecraft.server.v1_16_R3.PacketPlayInResourcePackStatus;
+import net.minecraft.server.v1_15_R1.Packet;
+import net.minecraft.server.v1_15_R1.PacketPlayInArmAnimation;
+import net.minecraft.server.v1_15_R1.PacketPlayInBlockDig;
+import net.minecraft.server.v1_15_R1.PacketPlayInFlying;
+import net.minecraft.server.v1_15_R1.PacketPlayInResourcePackStatus;
 
 public class PacketReader extends PacketReceivingHandler {
 

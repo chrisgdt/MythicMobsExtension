@@ -99,6 +99,13 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>MME-NMS-v1_15_R1</artifactId>
+            <version>${revision}</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>MME-NMS-v1_16_R1</artifactId>
             <version>${revision}</version>
             <type>jar</type>
@@ -121,6 +128,13 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>MME-NMS-v1_17_R1</artifactId>
+            <version>${revision}</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>MME-NMS-v1_18_R1</artifactId>
             <version>${revision}</version>
             <type>jar</type>
             <scope>compile</scope>
