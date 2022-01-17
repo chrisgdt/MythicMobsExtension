@@ -78,6 +78,13 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>MME-NMS-API</artifactId>
+            <version>${revision}</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>MME-NMS-v1_12_R1</artifactId>
             <version>${revision}</version>
             <type>jar</type>

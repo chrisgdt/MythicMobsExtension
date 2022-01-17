@@ -63,7 +63,7 @@
     <dependencies>
         <dependency>
             <groupId>com.gmail.berndivader</groupId>
-            <artifactId>MythicMobExtension</artifactId>
+            <artifactId>MME-NMS-API</artifactId>
             <version>${revision}</version>
             <type>jar</type>
         </dependency>

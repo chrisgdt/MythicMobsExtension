@@ -9,6 +9,7 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.navigation.Cont
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.navigation.ControllerVex;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.navigation.NavigationClimb;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_17_R1.pathfindergoals.*;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.MojangsonParser;
 import net.minecraft.nbt.NBTBase;
@@ -16,34 +17,29 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
-import net.minecraft.network.protocol.game.PacketPlayOutPosition.EnumPlayerTeleportFlags;
+import net.minecraft.network.protocol.game.PacketPlayOutPosition.RelativeArgument;
 
 import net.minecraft.server.AdvancementDataPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.stats.ServerStatisticManager;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.control.ControllerMove;
-import net.minecraft.world.entity.ai.goal.PathfinderGoal;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalAvoidTarget;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFleeSun;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalSelector;
-import net.minecraft.world.entity.ai.navigation.Navigation;
-import net.minecraft.world.entity.ai.navigation.NavigationFlying;
-import net.minecraft.world.entity.item.EntityItem;
-import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.entity.player.PlayerAbilities;
+import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.pathfinder.PathEntity;
 import net.minecraft.world.level.pathfinder.PathPoint;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.level.storage.WorldData;
+import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket.RelativeArgument;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.AxisAlignedBB;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -78,31 +74,15 @@ import com.mojang.datafixers.util.Pair;
 
 public class Core implements Handler, Listener {
 
-	static String nms_path;
-
 	private static Field ai_pathfinderlist_b;
 	private static Field ai_pathfinderlist_c;
 
-	private static Set<EnumPlayerTeleportFlags> rot_set = new HashSet<>(Arrays
-			.asList(new EnumPlayerTeleportFlags[] { EnumPlayerTeleportFlags.X_ROT, EnumPlayerTeleportFlags.Y_ROT, }));
-	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> rot_pos_set = new HashSet<>(
-			Arrays.asList(new EnumPlayerTeleportFlags[] { EnumPlayerTeleportFlags.X_ROT, EnumPlayerTeleportFlags.Y_ROT,
-					EnumPlayerTeleportFlags.X, EnumPlayerTeleportFlags.Y, EnumPlayerTeleportFlags.Z }));
-	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> pos_set = new HashSet<>(
-			Arrays.asList(new EnumPlayerTeleportFlags[] { EnumPlayerTeleportFlags.X, EnumPlayerTeleportFlags.Y,
-					EnumPlayerTeleportFlags.Z }));
-
-	static {
-		nms_path = "net.minecraft.server.v1_17_R1";
-		try {
-			ai_pathfinderlist_b = PathfinderGoalSelector.class.getDeclaredField("d");
-			ai_pathfinderlist_c = PathfinderGoalSelector.class.getDeclaredField("c");
-		} catch (NoSuchFieldException | SecurityException e) {
-			e.printStackTrace();
-		}
-		ai_pathfinderlist_b.setAccessible(true);
-		ai_pathfinderlist_c.setAccessible(true);
-	}
+	private static final Set<RelativeArgument> rot_set = new HashSet<>(
+			Arrays.asList(RelativeArgument.X_ROT, RelativeArgument.Y_ROT));
+	private static final Set<RelativeArgument> rot_pos_set = new HashSet<>(
+			Arrays.asList(RelativeArgument.X_ROT, RelativeArgument.Y_ROT, RelativeArgument.X, RelativeArgument.Y, RelativeArgument.Z));
+	private static final Set<RelativeArgument> pos_set = new HashSet<>(
+			Arrays.asList(RelativeArgument.X, RelativeArgument.Y, RelativeArgument.Z));
 
 	public Core() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
@@ -142,7 +122,7 @@ public class Core implements Handler, Listener {
 				for (int i1 = 0; i1 < players.size(); i1++) {
 					CraftPlayer cp = (CraftPlayer) players.get(i1);
 					for (int i2 = 0; i2 < packets.length; i2++) {
-						cp.getHandle().playerConnection.sendPacket(packets[i2]);
+						cp.getHandle().connection.send(packets[i2]);
 					}
 
 				}
@@ -157,7 +137,7 @@ public class Core implements Handler, Listener {
 				for (int i1 = 0; i1 < players.size(); i1++) {
 					CraftPlayer cp = (CraftPlayer) players.get(i1);
 					for (int i2 = 0; i2 < packets.length; i2++) {
-						cp.getHandle().playerConnection.sendPacket(packets[i2]);
+						cp.getHandle().connection.send(packets[i2]);
 					}
 
 				}
@@ -167,20 +147,18 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public List<Entity> getNearbyEntities(Entity bukkit_entity, int range) {
-		net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkit_entity).getHandle();
-		return this.getNearbyEntities(entity.getWorld(), entity.getBoundingBox().grow(range, range, range), null);
+		return this.getNearbyEntities(bukkit_entity.getWorld(), bukkit_entity.getBoundingBox().expand(range, range, range), null);
 	}
 
 	@Override
 	public List<Entity> getNearbyEntities(Entity bukkit_entity, int range, Predicate<Entity> filter) {
-		net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkit_entity).getHandle();
-		return this.getNearbyEntities(entity.getWorld(), entity.getBoundingBox().grow(range, range, range), filter);
+		return this.getNearbyEntities(bukkit_entity.getWorld(), bukkit_entity.getBoundingBox().expand(range, range, range), filter);
 	}
 
 	@Override
 	public List<Entity> getNearbyEntities(World bukkit_world, BoundingBox bukkit_aabb, Predicate<Entity> filter) {
 		return this.getNearbyEntities(
-				((CraftWorld) bukkit_world).getHandle(), new AxisAlignedBB(bukkit_aabb.getMinX(), bukkit_aabb.getMinY(),
+				((CraftWorld) bukkit_world).getHandle(), new AABB(bukkit_aabb.getMinX(), bukkit_aabb.getMinY(),
 						bukkit_aabb.getMinZ(), bukkit_aabb.getMaxX(), bukkit_aabb.getMaxY(), bukkit_aabb.getMaxZ()),
 				filter);
 	}
@@ -190,16 +168,15 @@ public class Core implements Handler, Listener {
 			Predicate<Entity> filter) {
 		BoundingBox bukkit_aabb = BoundingBox.of(bukkit_location, x, y, z);
 		return this.getNearbyEntities(
-				((CraftWorld) bukkit_world).getHandle(), new AxisAlignedBB(bukkit_aabb.getMinX(), bukkit_aabb.getMinY(),
+				((CraftWorld) bukkit_world).getHandle(), new AABB(bukkit_aabb.getMinX(), bukkit_aabb.getMinY(),
 						bukkit_aabb.getMinZ(), bukkit_aabb.getMaxX(), bukkit_aabb.getMaxY(), bukkit_aabb.getMaxZ()),
 				filter);
 	}
 
-	public List<Entity> getNearbyEntities(net.minecraft.world.level.World world, AxisAlignedBB bb,
+	public List<Entity> getNearbyEntities(net.minecraft.world.level.Level world, AABB bb,
 										  Predicate<Entity> filter) {
-		List<net.minecraft.world.entity.Entity> entityList = world.getEntities(null, bb, null);
-		ArrayList<org.bukkit.entity.Entity> bukkitEntityList = new ArrayList<org.bukkit.entity.Entity>(
-				entityList.size());
+		List<net.minecraft.world.entity.Entity> entityList = world.getEntities(null, bb);
+		ArrayList<org.bukkit.entity.Entity> bukkitEntityList = new ArrayList<>(entityList.size());
 		for (net.minecraft.world.entity.Entity entity : entityList) {
 			CraftEntity bukkitEntity = entity.getBukkitEntity();
 			if (filter != null && !filter.test(bukkitEntity))
@@ -211,116 +188,116 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void setFieldOfViewPacketSend(Player player, float f1) {
-		EntityPlayer me = ((CraftPlayer) player).getHandle();
-		PlayerAbilities arg1 = (PlayerAbilities) Utils.cloneObject(me.abilities);
+		ServerPlayer me = ((CraftPlayer) player).getHandle();
+		Abilities abilities = (Abilities) Utils.cloneObject(me.getAbilities());
 		if (f1 != 0) {
-			player.setMetadata(Utils.meta_WALKSPEED, new FixedMetadataValue(Main.getPlugin(), arg1.walkSpeed));
+			player.setMetadata(Utils.meta_WALKSPEED, new FixedMetadataValue(Main.getPlugin(), abilities.walkingSpeed));
 		} else if (player.hasMetadata(Utils.meta_WALKSPEED)) {
 			f1 = player.getMetadata(Utils.meta_WALKSPEED).get(0).asFloat();
 		}
-		arg1.walkSpeed = f1;
-		me.playerConnection.sendPacket(new PacketPlayOutAbilities(arg1));
+		abilities.walkingSpeed = f1;
+		me.connection.send(new ClientboundPlayerAbilitiesPacket(abilities));
 	}
 
 	@Override
 	public void playBlockBreak(int eid, Location location, int stage) {
-		BlockPosition blockPosition = new BlockPosition(location.getBlockX(), location.getBlockY(),
+		BlockPos blockPosition = new BlockPos(location.getBlockX(), location.getBlockY(),
 				location.getBlockZ());
 		List<Player> players = Utils.getPlayersInRange(location, Utils.renderLength);
-		PacketPlayOutBlockBreakAnimation packet = new PacketPlayOutBlockBreakAnimation(eid, blockPosition, stage);
+		ClientboundBlockDestructionPacket packet = new ClientboundBlockDestructionPacket(eid, blockPosition, stage);
 		sendPlayerPacketsAsync(players, new Packet[] { packet });
 	}
 
 	@Override
 	public void forceSpectate(Player player, Entity e, boolean bl1) {
 		LivingEntity entity = (LivingEntity) e;
-		EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-		entityPlayer.playerConnection.sendPacket(new PacketPlayOutCamera(((CraftEntity) entity).getHandle()));
+		ServerPlayer ServerPlayer = ((CraftPlayer) player).getHandle();
+		ServerPlayer.connection.send(new ClientboundSetCameraPacket(((CraftEntity) entity).getHandle()));
 		if (bl1) {
-			dupePlayer(entityPlayer, player.getLocation());
+			dupePlayer(ServerPlayer, player.getLocation());
 			entity.remove();
 		}
 	}
 
-	void dupePlayer(EntityPlayer entityplayer, Location location) {
-		WorldServer worldServer = ((CraftWorld) location.getWorld()).getHandle();
-		MinecraftServer minecraftServer = entityplayer.getWorld().getMinecraftServer();
+	void dupePlayer(ServerPlayer serverPlayer, Location location) {
+		ServerLevel worldServer = ((CraftWorld) location.getWorld()).getHandle();
+		MinecraftServer minecraftServer = serverPlayer.getCommandSenderWorld().getServer();
 		PlayerList playerList = minecraftServer.getPlayerList();
 
-		entityplayer.stopRiding();
-		playerList.players.remove(entityplayer);
-		Map<String, EntityPlayer> ppn = (Map<String, EntityPlayer>) NMSUtils.getField("playersByName",
+		serverPlayer.stopRiding();
+		playerList.players.remove(serverPlayer);
+		Map<String, ServerPlayer> ppn = (Map<String, ServerPlayer>) NMSUtils.getField("playersByName",
 				playerList.getClass().getSuperclass(), playerList);
-		ppn.remove(entityplayer.getName().toLowerCase(Locale.ROOT));
+		ppn.remove(serverPlayer.getName().getContents().toLowerCase(Locale.ROOT));
 		NMSUtils.setFinalField("playersByName", playerList.getClass().getSuperclass(), playerList, ppn);
-		entityplayer.getWorldServer().removePlayer(entityplayer);
-		EntityPlayer entityplayer1 = entityplayer;
-		entityplayer.viewingCredits = false;
-		entityplayer1.playerConnection = entityplayer.playerConnection;
-		entityplayer1.copyFrom(entityplayer, true);
-		entityplayer1.e(entityplayer.getId());
-		entityplayer1.a(entityplayer.getMainHand());
-		for (String s : entityplayer.getScoreboardTags()) {
-			entityplayer1.addScoreboardTag(s);
+		serverPlayer.getCommandSenderWorld().removePlayer(serverPlayer);
+		ServerPlayer serverPlayer1 = serverPlayer;
+		serverPlayer.wonGame = false;
+		serverPlayer1.connection = serverPlayer.connection;
+		serverPlayer1.restoreFrom(serverPlayer, true);
+		serverPlayer1.setId(serverPlayer.getId());
+		serverPlayer1.setMainArm(serverPlayer.getMainArm());
+		for (String s : serverPlayer.getTags()) {
+			serverPlayer1.addTag(s);
 		}
-		WorldData worlddata = worldServer.getWorldData();
-		location.setWorld(minecraftServer.getWorldServer(entityplayer.getSpawnDimension()).getWorld());
-		entityplayer1.forceSetPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(),
+		LevelData worlddata = worldServer.getLevelData();
+		location.setWorld(minecraftServer.getLevel(serverPlayer.getRespawnDimension()).getWorld());
+		serverPlayer1.forceSetPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(),
 				location.getPitch());
-		entityplayer1.playerConnection.sendPacket(new PacketPlayOutRespawn(
-				entityplayer1.world.getDimensionManager(), entityplayer1.world.getDimensionKey(),
-				BiomeManager.a(entityplayer1.getWorldServer().getSeed()),
-				entityplayer1.playerInteractManager.getGameMode(), entityplayer1.playerInteractManager.c(),
-				entityplayer1.getWorldServer().isDebugWorld(), entityplayer1.getWorldServer().isFlatWorld(), true));
-		entityplayer1.playerConnection.sendPacket(new PacketPlayOutViewDistance(worldServer.spigotConfig.viewDistance));
-		entityplayer1.spawnIn(worldServer);
-		entityplayer1.dead = false;
-		entityplayer1.playerConnection.teleport(new Location(worldServer.getWorld(), entityplayer1.locX(),
-				entityplayer1.locY(), entityplayer1.locZ(), entityplayer1.yaw, entityplayer1.pitch));
-		entityplayer1.setSneaking(false);
+		serverPlayer1.connection.send(new ClientboundRespawnPacket(
+				serverPlayer1.level.dimensionType(), serverPlayer1.level.dimension(),
+				BiomeManager.obfuscateSeed(serverPlayer1.getLevel().getSeed()),
+				serverPlayer1.playerInteractManager.getGameMode(), serverPlayer1.playerInteractManager.c(),
+				serverPlayer1.getWorldServer().isDebugWorld(), serverPlayer1.getWorldServer().isFlatWorld(), true));
+		serverPlayer1.connection.send(new PacketPlayOutViewDistance(worldServer.spigotConfig.viewDistance));
+		serverPlayer1.spawnIn(worldServer);
+		serverPlayer1.dead = false;
+		serverPlayer1.connection.teleport(new Location(worldServer.getWorld(), serverPlayer1.locX(),
+				serverPlayer1.locY(), serverPlayer1.locZ(), serverPlayer1.yaw, serverPlayer1.pitch));
+		serverPlayer1.setSneaking(false);
 		BlockPosition blockPosition1 = worldServer.getSpawn();
-		entityplayer1.playerConnection.sendPacket(new PacketPlayOutSpawnPosition(blockPosition1, 0));
-		entityplayer1.playerConnection.sendPacket(
+		serverPlayer1.connection.send(new PacketPlayOutSpawnPosition(blockPosition1, 0));
+		serverPlayer1.connection.send(
 				new PacketPlayOutServerDifficulty(worlddata.getDifficulty(), worlddata.isDifficultyLocked()));
-		entityplayer1.playerConnection.sendPacket(
-				new PacketPlayOutExperience(entityplayer1.exp, entityplayer1.expTotal, entityplayer1.expLevel));
-		playerList.a(entityplayer1, worldServer);
-		playerList.d(entityplayer1);
-		if (!entityplayer.playerConnection.isDisconnected()) {
-			worldServer.addPlayerRespawn(entityplayer1);
-			// worldServer.addEntity(entityplayer1);
-			playerList.players.add(entityplayer1);
-			ppn = (Map<String, EntityPlayer>) NMSUtils.getField("playersByName", playerList.getClass().getSuperclass(),
+		serverPlayer1.connection.send(
+				new PacketPlayOutExperience(serverPlayer1.exp, serverPlayer1.expTotal, serverPlayer1.expLevel));
+		playerList.a(serverPlayer1, worldServer);
+		playerList.d(serverPlayer1);
+		if (!serverPlayer.connection.isDisconnected()) {
+			worldServer.addPlayerRespawn(serverPlayer1);
+			// worldServer.addEntity(ServerPlayer1);
+			playerList.players.add(serverPlayer1);
+			ppn = (Map<String, ServerPlayer>) NMSUtils.getField("playersByName", playerList.getClass().getSuperclass(),
 					playerList);
-			ppn.put(entityplayer1.getName(), entityplayer1);
+			ppn.put(serverPlayer1.getName(), serverPlayer1);
 			NMSUtils.setFinalField("playersByName", playerList.getClass().getSuperclass(), playerList, ppn);
-			Map<UUID, EntityPlayer> j = (Map<UUID, EntityPlayer>) NMSUtils.getField("j",
+			Map<UUID, ServerPlayer> j = (Map<UUID, ServerPlayer>) NMSUtils.getField("j",
 					playerList.getClass().getSuperclass(), playerList);
-			j.put(entityplayer1.getUniqueID(), entityplayer1);
+			j.put(serverPlayer1.getUniqueID(), serverPlayer1);
 			NMSUtils.setFinalField("j", playerList.getClass().getSuperclass(), playerList, j);
 		}
-		entityplayer1.setHealth(entityplayer1.getHealth());
-		entityplayer.updateAbilities();
-		for (Object o1 : entityplayer.getEffects()) {
+		serverPlayer1.setHealth(serverPlayer1.getHealth());
+		serverPlayer.updateAbilities();
+		for (Object o1 : serverPlayer.getEffects()) {
 			MobEffect mobEffect = (MobEffect) o1;
-			entityplayer.playerConnection.sendPacket(new PacketPlayOutEntityEffect(entityplayer.getId(), mobEffect));
+			serverPlayer.connection.send(new PacketPlayOutEntityEffect(serverPlayer.getId(), mobEffect));
 		}
-		entityplayer.triggerDimensionAdvancements(worldServer);
-		if (entityplayer.playerConnection.isDisconnected()) {
+		serverPlayer.triggerDimensionAdvancements(worldServer);
+		if (serverPlayer.connection.isDisconnected()) {
 			AdvancementDataPlayer advancementdataplayer;
-			if (!entityplayer.getBukkitEntity().isPersistent()) {
+			if (!serverPlayer.getBukkitEntity().isPersistent()) {
 				return;
 			}
-			playerList.playerFileData.save(entityplayer);
-			ServerStatisticManager serverstatisticmanager = entityplayer.getStatisticManager();
+			playerList.playerFileData.save(serverPlayer);
+			ServerStatisticManager serverstatisticmanager = serverPlayer.getStatisticManager();
 			if (serverstatisticmanager != null) {
 				serverstatisticmanager.save();
 			}
-			if ((advancementdataplayer = entityplayer.getAdvancementData()) != null) {
+			if ((advancementdataplayer = serverPlayer.getAdvancementData()) != null) {
 				advancementdataplayer.b();
 			}
 		}
-		playerList.updateClient(entityplayer);
+		playerList.updateClient(serverPlayer);
 	}
 
 	public void forceEntitySitting(Entity entity) {
@@ -328,16 +305,16 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void playEndScreenForPlayer(Player player, float f) {
-		EntityPlayer me = ((CraftPlayer) player).getHandle();
-		me.playerConnection.sendPacket(new PacketPlayOutGameStateChange(new PacketPlayOutGameStateChange.a(4), f));
+		ServerPlayer me = ((CraftPlayer) player).getHandle();
+		me.connection.send(new PacketPlayOutGameStateChange(new PacketPlayOutGameStateChange.a(4), f));
 	}
 
 	@Override
 	public void fakeEntityDeath(Entity entity, long d) {
-		EntityLiving me = ((CraftLivingEntity) entity).getHandle();
+		net.minecraft.world.entity.LivingEntity me = ((CraftLivingEntity) entity).getHandle();
 		me.world.broadcastEntityEffect(me, (byte) 3);
 		PacketPlayOutEntityDestroy pd = new PacketPlayOutEntityDestroy(me.getId());
-		PacketPlayOutSpawnEntityLiving ps = new PacketPlayOutSpawnEntityLiving(me);
+		PacketPlayOutSpawnnet.minecraft.world.entity.LivingEntity ps = new PacketPlayOutSpawnnet.minecraft.world.entity.LivingEntity(me);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -349,8 +326,8 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void forceCancelEndScreenPlayer(Player player) {
-		EntityPlayer me = ((CraftPlayer) player).getHandle();
-		me.playerConnection.sendPacket(new PacketPlayOutCloseWindow(0));
+		ServerPlayer me = ((CraftPlayer) player).getHandle();
+		me.connection.send(new PacketPlayOutCloseWindow(0));
 	}
 
 	@Override
@@ -366,18 +343,18 @@ public class Core implements Handler, Listener {
 
 	private void playerConnectionTeleport(Entity entity, double x, double y, double z, float yaw, float pitch,
 			boolean f, boolean g) {
-		EntityPlayer me = ((CraftPlayer) entity).getHandle();
-		Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> set = new HashSet<>();
+		ServerPlayer me = ((CraftPlayer) entity).getHandle();
+		Set<RelativeArgument> set = new HashSet<>();
 		if (f) {
 			set = rot_set;
 			yaw = 0.0F;
 			pitch = 0.0F;
 		}
 		if (g) {
-			set.add(EnumPlayerTeleportFlags.Y);
+			set.add(RelativeArgument.Y);
 			y = 0.0D;
 		}
-		me.playerConnection.sendPacket(new PacketPlayOutPosition(x, y, z, yaw, pitch, set, 0));
+		me.connection.send(new PacketPlayOutPosition(x, y, z, yaw, pitch, set, 0));
 	}
 
 	@Override
@@ -393,14 +370,14 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void playerConnectionLookAt(Entity entity, float yaw, float pitch) {
-		EntityPlayer me = ((CraftPlayer) entity).getHandle();
-		me.playerConnection.sendPacket(new PacketPlayOutPosition(0, 0, 0, yaw, pitch, pos_set, 0));
+		ServerPlayer me = ((CraftPlayer) entity).getHandle();
+		me.connection.send(new PacketPlayOutPosition(0, 0, 0, yaw, pitch, pos_set, 0));
 	}
 
 	@Override
 	public void playerConnectionSpin(Entity entity, float s) {
-		EntityPlayer me = ((CraftPlayer) entity).getHandle();
-		me.playerConnection.sendPacket(new PacketPlayOutPosition(0, 0, 0, s, 0, rot_pos_set, 0));
+		ServerPlayer me = ((CraftPlayer) entity).getHandle();
+		me.connection.send(new PacketPlayOutPosition(0, 0, 0, s, 0, rot_pos_set, 0));
 	}
 
 	@Override
@@ -444,7 +421,7 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public boolean inMotion(LivingEntity entity) {
-		EntityInsentient e = (EntityInsentient) ((CraftLivingEntity) entity).getHandle();
+		Mob e = (Mob) ((CraftLivingEntity) entity).getHandle();
 		if (e.lastX != e.locX() || e.lastY != e.locY() || e.lastZ != e.locZ())
 			return true;
 		return false;
@@ -454,10 +431,10 @@ public class Core implements Handler, Listener {
 	@Override
 	public void aiTargetSelector(LivingEntity entity, String uGoal, LivingEntity target) {
 		World w = entity.getWorld();
-		EntityInsentient e = (EntityInsentient) ((CraftLivingEntity) entity).getHandle();
-		EntityLiving tE = null;
+		Mob e = (Mob) ((CraftLivingEntity) entity).getHandle();
+		net.minecraft.world.entity.LivingEntity tE = null;
 		if (target != null) {
-			tE = (EntityLiving) ((CraftLivingEntity) entity).getHandle();
+			tE = (net.minecraft.world.entity.LivingEntity) ((CraftLivingEntity) entity).getHandle();
 		}
 		Field goalsField;
 		int i = 0;
@@ -482,7 +459,7 @@ public class Core implements Handler, Listener {
 			}
 		}
 		try {
-			goalsField = EntityInsentient.class.getDeclaredField("targetSelector");
+			goalsField = Mob.class.getDeclaredField("targetSelector");
 			goalsField.setAccessible(true);
 			PathfinderGoalSelector goals = (PathfinderGoalSelector) goalsField.get((Object) e);
 			switch (goal) {
@@ -503,10 +480,10 @@ public class Core implements Handler, Listener {
 	@Override
 	public void aiPathfinderGoal(LivingEntity entity, String uGoal, LivingEntity target) {
 		World w = entity.getWorld();
-		EntityInsentient e = (EntityInsentient) ((CraftLivingEntity) entity).getHandle();
-		EntityLiving tE = null;
+		Mob e = (Mob) ((CraftLivingEntity) entity).getHandle();
+		net.minecraft.world.entity.LivingEntity tE = null;
 		if (target != null)
-			tE = (EntityLiving) ((CraftLivingEntity) target).getHandle();
+			tE = (net.minecraft.world.entity.LivingEntity) ((CraftLivingEntity) target).getHandle();
 		int i = -1;
 		String goal = uGoal;
 		String data = null;
@@ -565,7 +542,7 @@ public class Core implements Handler, Listener {
 				break;
 			}
 			case "shootattack": {
-				if (e instanceof EntityInsentient) {
+				if (e instanceof Mob) {
 					double d1 = 1.0d;
 					int i1 = 20, i2 = 60;
 					float f1 = 15.0f;
@@ -588,7 +565,7 @@ public class Core implements Handler, Listener {
 							}
 						}
 					}
-					pathfindergoal = Optional.ofNullable(new PathFinderGoalShoot((EntityInsentient) e, d1, i1, i2, f1));
+					pathfindergoal = Optional.ofNullable(new PathFinderGoalShoot((Mob) e, d1, i1, i2, f1));
 				}
 				break;
 			}
@@ -615,7 +592,7 @@ public class Core implements Handler, Listener {
 					if (data1 != null && (uuid = Utils.isUUID(data1)) != null) {
 						Entity ee = NMSUtils.getEntity(w, uuid);
 						if (ee instanceof LivingEntity) {
-							tE = (EntityLiving) ((CraftLivingEntity) (LivingEntity) ee).getHandle();
+							tE = (net.minecraft.world.entity.LivingEntity) ((CraftLivingEntity) (LivingEntity) ee).getHandle();
 						}
 					}
 					if (tE != null && tE.isAlive()) {
@@ -642,14 +619,14 @@ public class Core implements Handler, Listener {
 				break;
 			}
 			case "notifycollide": {
-				if (e instanceof EntityInsentient) {
+				if (e instanceof Mob) {
 					int c = data != null && MathUtils.isNumeric(data) ? Integer.parseInt(data) : 5;
 					pathfindergoal = Optional.ofNullable(new PathfinderGoalNotifyOnCollide(e, c));
 				}
 				break;
 			}
 			case "notifyheal": {
-				if (e instanceof EntityLiving) {
+				if (e instanceof net.minecraft.world.entity.LivingEntity) {
 					pathfindergoal = Optional.ofNullable(new PathfinderGoalNotifyHeal(e, "mme_heal"));
 				}
 				break;
@@ -735,14 +712,14 @@ public class Core implements Handler, Listener {
 				}
 			}
 			case "doorsopen": {
-				if (e instanceof EntityInsentient) {
+				if (e instanceof Mob) {
 					boolean bl1 = data != null ? Boolean.parseBoolean(data) : false;
 					pathfindergoal = Optional.ofNullable(new PathfinderGoalDoorOpen(e, bl1));
 				}
 				break;
 			}
 			case "doorsbreak": {
-				if (e instanceof EntityInsentient) {
+				if (e instanceof Mob) {
 					boolean bl1 = data != null ? Boolean.parseBoolean(data) : false;
 					pathfindergoal = Optional.ofNullable(new PathfinderGoalDoorBreak(e, bl1));
 				}
@@ -768,12 +745,12 @@ public class Core implements Handler, Listener {
 				}
 				break;
 			case "vexa": {
-				if (e instanceof EntityInsentient) {
+				if (e instanceof Mob) {
 					pathfindergoal = Optional.ofNullable(new PathfinderGoalVexA(e));
 				}
 			}
 			case "vexd": {
-				if (e instanceof EntityInsentient) {
+				if (e instanceof Mob) {
 					pathfindergoal = Optional.ofNullable(new PathfinderGoalVexD(e));
 				}
 			}
@@ -818,7 +795,7 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void addTravelPoint(Entity bukkit_entity, Vec3D vector, boolean remove) {
-		EntityInsentient entity = (EntityInsentient) ((CraftLivingEntity) bukkit_entity).getHandle();
+		Mob entity = (Mob) ((CraftLivingEntity) bukkit_entity).getHandle();
 		PathfinderGoalSelector goals = entity.goalSelector;
 		try {
 			((Map) ai_pathfinderlist_c.get((Object) goals)).clear();
@@ -838,7 +815,7 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void clearTravelPoints(Entity bukkit_entity) {
-		EntityInsentient entity = (EntityInsentient) ((CraftLivingEntity) bukkit_entity).getHandle();
+		Mob entity = (Mob) ((CraftLivingEntity) bukkit_entity).getHandle();
 		PathfinderGoalSelector goals = entity.goalSelector;
 		try {
 			((Map) ai_pathfinderlist_c.get((Object) goals)).clear();
@@ -1030,31 +1007,31 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public boolean playerIsSleeping(Player p) {
-		EntityPlayer me = ((CraftPlayer) p).getHandle();
+		ServerPlayer me = ((CraftPlayer) p).getHandle();
 		return me.isSleeping() || me.isDeeplySleeping();
 	}
 
 	@Override
 	public boolean playerIsRunning(Player p) {
-		EntityPlayer me = ((CraftPlayer) p).getHandle();
+		ServerPlayer me = ((CraftPlayer) p).getHandle();
 		return me.isSprinting();
 	}
 
 	@Override
 	public boolean playerIsCrouching(Player p) {
-		EntityPlayer me = ((CraftPlayer) p).getHandle();
+		ServerPlayer me = ((CraftPlayer) p).getHandle();
 		return me.isSneaking();
 	}
 
 	@Override
 	public boolean playerIsJumping(Player p) {
-		EntityPlayer me = ((CraftPlayer) p).getHandle();
+		ServerPlayer me = ((CraftPlayer) p).getHandle();
 		return !me.isOnGround() && MathUtils.round(me.getMot().getY(), 5) != -0.00784;
 	}
 
 	@Override
 	public void setDeath(Player p, boolean b) {
-		EntityPlayer me = ((CraftPlayer) p).getHandle();
+		ServerPlayer me = ((CraftPlayer) p).getHandle();
 		me.dead = b;
 	}
 
@@ -1091,7 +1068,7 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void setWorldborder(Player p, int density, boolean play) {
-		EntityPlayer ep = ((CraftPlayer) p).getHandle();
+		ServerPlayer ep = ((CraftPlayer) p).getHandle();
 		WorldBorder border = ep.world.getWorldBorder();
 		if (play) {
 			border = new WorldBorder();
@@ -1107,29 +1084,29 @@ public class Core implements Handler, Listener {
 			}
 		}
 		// TODO packet play out world border
-		ep.playerConnection.sendPacket(new PacketPlayOutWorldBorder(border, EnumWorldBorderAction.INITIALIZE));
+		ep.connection.send(new PacketPlayOutWorldBorder(border, EnumWorldBorderAction.INITIALIZE));
 		border = null;
 	}
 
 	@Override
 	public void setMNc(LivingEntity e1, String s1) {
-		EntityInsentient ei = (EntityInsentient) ((CraftLivingEntity) e1).getHandle();
+		Mob ei = (Mob) ((CraftLivingEntity) e1).getHandle();
 		switch (s1) {
 		case "FLY":
-			NMSUtils.setField("navigation", EntityInsentient.class, ei, new NavigationFlying(ei, ei.world));
-			NMSUtils.setField("moveController", EntityInsentient.class, ei, new ControllerFly(ei));
+			NMSUtils.setField("navigation", Mob.class, ei, new NavigationFlying(ei, ei.world));
+			NMSUtils.setField("moveController", Mob.class, ei, new ControllerFly(ei));
 			break;
 		case "VEX":
-			NMSUtils.setField("navigation", EntityInsentient.class, ei, new Navigation(ei, ei.world));
-			NMSUtils.setField("moveController", EntityInsentient.class, ei, new ControllerVex(ei));
+			NMSUtils.setField("navigation", Mob.class, ei, new Navigation(ei, ei.world));
+			NMSUtils.setField("moveController", Mob.class, ei, new ControllerVex(ei));
 			break;
 		case "WALK":
-			NMSUtils.setField("navigation", EntityInsentient.class, ei, new Navigation(ei, ei.world));
-			NMSUtils.setField("moveController", EntityInsentient.class, ei, new ControllerMove(ei));
+			NMSUtils.setField("navigation", Mob.class, ei, new Navigation(ei, ei.world));
+			NMSUtils.setField("moveController", Mob.class, ei, new ControllerMove(ei));
 			break;
 		case "CLIMB":
-			NMSUtils.setField("navigation", EntityInsentient.class, ei, new NavigationClimb(ei, ei.world));
-			NMSUtils.setField("moveController", EntityInsentient.class, ei, new ControllerMove(ei));
+			NMSUtils.setField("navigation", Mob.class, ei, new NavigationClimb(ei, ei.world));
+			NMSUtils.setField("moveController", Mob.class, ei, new ControllerMove(ei));
 			break;
 		}
 	}
@@ -1138,7 +1115,7 @@ public class Core implements Handler, Listener {
 	public void forceBowDraw(LivingEntity e1, LivingEntity target, boolean bl1) {
 		if (bl1)
 			System.err.println("try to draw bow");
-		EntityInsentient ei = (EntityInsentient) ((CraftLivingEntity) e1).getHandle();
+		Mob ei = (Mob) ((CraftLivingEntity) e1).getHandle();
 		if (ei.isHandRaised()) {
 			if (bl1)
 				System.err.println("hand not raised!");
@@ -1152,8 +1129,8 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void changeResPack(Player p, String url, String hash) {
-		EntityPlayer player = ((CraftPlayer) p).getHandle();
-		player.playerConnection.sendPacket(new PacketPlayOutResourcePackSend(url, hash));
+		ServerPlayer player = ((CraftPlayer) p).getHandle();
+		player.connection.send(new PacketPlayOutResourcePackSend(url, hash));
 	}
 
 	@Override
@@ -1163,7 +1140,7 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void playAnimationPacket(LivingEntity e, Integer[] ints) {
-		EntityLiving living = (EntityLiving) ((CraftLivingEntity) e).getHandle();
+		net.minecraft.world.entity.LivingEntity living = (net.minecraft.world.entity.LivingEntity) ((CraftLivingEntity) e).getHandle();
 		PacketPlayOutAnimation[] packets = new PacketPlayOutAnimation[ints.length];
 		for (int j = 0; j < ints.length; j++) {
 			packets[j] = new PacketPlayOutAnimation(living, ints[j]);
@@ -1175,7 +1152,7 @@ public class Core implements Handler, Listener {
 	public void playAnimationPacket(LivingEntity e, int id) {
 		sendPlayerPacketsAsync(Utils.getPlayersInRange(e.getLocation(), Utils.renderLength),
 				new PacketPlayOutAnimation[] {
-						new PacketPlayOutAnimation((EntityLiving) ((CraftLivingEntity) e).getHandle(), id) });
+						new PacketPlayOutAnimation((net.minecraft.world.entity.LivingEntity) ((CraftLivingEntity) e).getHandle(), id) });
 	}
 
 	@Override
@@ -1186,8 +1163,8 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public Vec3D getPredictedMotion(LivingEntity bukkit_source, LivingEntity bukkit_target, float delta) {
-		EntityLiving target = ((CraftLivingEntity) bukkit_target).getHandle();
-		EntityLiving source = ((CraftLivingEntity) bukkit_source).getHandle();
+		net.minecraft.world.entity.LivingEntity target = ((CraftLivingEntity) bukkit_target).getHandle();
+		net.minecraft.world.entity.LivingEntity source = ((CraftLivingEntity) bukkit_source).getHandle();
 
 		double delta_x = target.locX() + (target.locX() - target.lastX) * delta - source.locX();
 		double delta_y = target.locY() + (target.locY() - target.lastY) * delta + target.getHeadHeight() - 0.15f
@@ -1205,8 +1182,8 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public boolean isReachable1(LivingEntity bukkit_entity, LivingEntity bukkit_target) {
-		EntityLiving target = ((CraftLivingEntity) bukkit_target).getHandle();
-		EntityInsentient entity = (EntityInsentient) ((CraftLivingEntity) bukkit_entity).getHandle();
+		net.minecraft.world.entity.LivingEntity target = ((CraftLivingEntity) bukkit_target).getHandle();
+		Mob entity = (Mob) ((CraftLivingEntity) bukkit_entity).getHandle();
 		if (target == null)
 			return true;
 		PathEntity pe = entity.getNavigation().a(target, 16);
