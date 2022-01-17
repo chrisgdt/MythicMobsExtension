@@ -19,6 +19,8 @@ repositories {
 }
 
 dependencies {
+    compileOnly  ("org.spigotmc:spigot-1.18.1:+") // manually compiled then 'mvn install:install-file'
+    compileOnly  ("org.spigotmc:spigot-1.17.1:+") // manually compiled then 'mvn install:install-file'
     compileOnly  ("org.spigotmc:spigot-1.16.5:+")
     compileOnly  ("org.spigotmc:spigot-1.16.3R:+")
     compileOnly  ("org.spigotmc:spigot-1.16.1R:+")
