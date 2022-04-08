@@ -1,6 +1,13 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EntityEquipment;
@@ -8,30 +15,24 @@ import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 @ExternalAnnotation(name = "exchange,exchangeweaponry", author = "BerndiVader")
 public class ExchangeWeaponry extends SkillMechanic implements ITargetedEntitySkill {
 	
 	private final String destination;
 	private final String where;
 	
-	public ExchangeWeaponry(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public ExchangeWeaponry(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.destination = mlc.getString(new String[] { "destination", "d" }, "OFFHAND");
 		this.where = mlc.getString(new String[] { "where", "w" }, "HAND");
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (!target.isLiving())
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		LivingEntity entity = (LivingEntity) target.getBukkitEntity();
 		EntityEquipment equipment = entity.getEquipment();
 		
@@ -55,7 +56,7 @@ public class ExchangeWeaponry extends SkillMechanic implements ITargetedEntitySk
 				equipment.setBoots(getItem(where,equipment,true));
 				break;
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 	static boolean isValidMaterial(ItemStack stack) {

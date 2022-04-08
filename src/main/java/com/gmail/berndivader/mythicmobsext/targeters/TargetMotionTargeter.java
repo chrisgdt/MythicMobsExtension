@@ -2,6 +2,12 @@ package com.gmail.berndivader.mythicmobsext.targeters;
 
 import java.util.HashSet;
 
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -11,12 +17,6 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 @ExternalAnnotation(name = "targetmotion,triggermotion,selfmotion,ownermotion", author = "BerndiVader")
 public class TargetMotionTargeter extends ISelectorLocation {
 	String selector;
@@ -24,8 +24,8 @@ public class TargetMotionTargeter extends ISelectorLocation {
 	double dyo;
 	boolean iy;
 
-	public TargetMotionTargeter(MythicLineConfig mlc) {
-		super(mlc);
+	public TargetMotionTargeter(SkillExecutor manager, MythicLineConfig mlc) {
+		super(manager, mlc);
 		selector = mlc.getLine().toLowerCase().split("motion")[0];
 		dyo = mlc.getDouble("yoffset", 0d);
 		iy = mlc.getBoolean("ignorey", true);

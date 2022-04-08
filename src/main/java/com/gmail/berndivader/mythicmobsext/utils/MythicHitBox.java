@@ -1,8 +1,8 @@
 package com.gmail.berndivader.mythicmobsext.utils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.AbstractWorld;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.adapters.AbstractWorld;
 
 public class MythicHitBox {
 	AbstractWorld world;

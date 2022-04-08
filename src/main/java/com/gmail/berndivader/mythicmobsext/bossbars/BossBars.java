@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
+import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
@@ -16,9 +18,6 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.bossbars.mechanics.CreateBossBar;
 import com.gmail.berndivader.mythicmobsext.bossbars.mechanics.ProgressBossBar;
 import com.gmail.berndivader.mythicmobsext.bossbars.mechanics.RemoveBossBar;
-
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 
 public class BossBars implements Listener {
 	static HashMap<UUID, List<BossBar>> bars;
@@ -90,15 +89,18 @@ public class BossBars implements Listener {
 		switch (e.getMechanicName().toLowerCase()) {
 		case "createbossbar":
 		case "createbossbar_ext":
-			e.register(new CreateBossBar(e.getContainer().getConfigLine(), e.getConfig()));
+			e.register(new CreateBossBar(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			//e.register(new CreateBossBar(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "removebossbar":
 		case "removebossbar_ext":
-			e.register(new RemoveBossBar(e.getContainer().getConfigLine(), e.getConfig()));
+			e.register(new RemoveBossBar(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			//e.register(new RemoveBossBar(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "progressbossbar":
 		case "progressbossbar_ext":
-			e.register(new ProgressBossBar(e.getContainer().getConfigLine(), e.getConfig()));
+			e.register(new ProgressBossBar(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			//e.register(new ProgressBossBar(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		}
 	}

@@ -1,5 +1,8 @@
 package com.gmail.berndivader.mythicmobsext.placeholders;
 
+import io.lumine.mythic.api.skills.placeholders.PlaceholderManager;
+import io.lumine.mythic.bukkit.events.MythicReloadedEvent;
+import io.lumine.mythic.core.skills.placeholders.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -9,10 +12,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
-import io.lumine.xikage.mythicmobs.skills.placeholders.Placeholder;
-import io.lumine.xikage.mythicmobs.skills.placeholders.PlaceholderManager;
 
 public class PlaceholderRegistery implements Listener {
 

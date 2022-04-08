@@ -1,28 +1,29 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.disguise;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.compatibility.CompatibilityManager;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.bukkit.compatibility.CompatibilityManager;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 
 public class ParsedDisguiseMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
 	PlaceholderString disguise;
 
-	public ParsedDisguiseMechanic(String skill, MythicLineConfig mlc) {
-
-		super(skill, mlc);
+	public ParsedDisguiseMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		this.disguise = mlc.getPlaceholderString(new String[] { "disguise", "d" }, "Notch");
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (CompatibilityManager.LibsDisguises != null) {
 			String d = disguise.get(data, target);
 			switch (d.toUpperCase()) {
@@ -30,10 +31,10 @@ public class ParsedDisguiseMechanic extends SkillMechanic implements ITargetedEn
 			case "ALEX":
 				break;
 			default:
-				CompatibilityManager.LibsDisguises.setDisguise((ActiveMob) data.getCaster(), d, false);
+				CompatibilityManager.LibsDisguises.setDisguise((ActiveMob) data.getCaster(), d);
 			}
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.ERROR;
 	}
 }

@@ -5,6 +5,8 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.concurrent.ThreadLocalRandom;
 
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.bukkit.BukkitAdapter;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -15,9 +17,6 @@ import org.bukkit.util.Vector;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec2D;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 
 /**
  * Various math utility methods.
@@ -122,7 +121,7 @@ public final class MathUtils {
 	/**
 	 * atan, fixed-style
 	 * 
-	 * @param double value
+	 * @param value
 	 * @return float
 	 */
 	private static float atan(double value) {

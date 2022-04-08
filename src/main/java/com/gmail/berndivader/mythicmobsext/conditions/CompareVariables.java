@@ -6,13 +6,14 @@ import java.util.regex.Pattern;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.GenericCaster;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityComparisonCondition;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.mobs.GenericCaster;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.conditions.IEntityComparisonCondition;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillMetadataImpl;
+import io.lumine.mythic.core.skills.SkillTriggers;
 
 @ExternalAnnotation(name = "comparevariable,cmpvar", author = "BerndiVader")
 public class CompareVariables extends AbstractCustomCondition implements IEntityComparisonCondition {
@@ -27,7 +28,7 @@ public class CompareVariables extends AbstractCustomCondition implements IEntity
 
 	@Override
 	public boolean check(AbstractEntity caster, AbstractEntity target) {
-		SkillMetadata data = new SkillMetadata(SkillTrigger.API, new GenericCaster(caster), target);
+		SkillMetadata data = new SkillMetadataImpl(SkillTriggers.API, new GenericCaster(caster), target);
 		String outcome = compare.get(data, target);
 		Matcher matcher = pattern.matcher(outcome);
 		if (matcher.find()) {

@@ -1,13 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.events;
 
+import io.lumine.mythic.api.skills.SkillCaster;
+import io.lumine.mythic.core.drops.DropTable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-
-import io.lumine.xikage.mythicmobs.drops.DropTable;
-import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 
 public class MythicMobsExtItemDropEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();

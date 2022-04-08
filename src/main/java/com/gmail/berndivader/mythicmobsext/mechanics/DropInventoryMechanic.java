@@ -3,7 +3,16 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import java.util.Collections;
 import java.util.List;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillString;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -11,10 +20,6 @@ import org.bukkit.inventory.ItemStack;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name = "dropinventory", author = "BerndiVader")
 public class DropInventoryMechanic extends SkillMechanic implements ITargetedEntitySkill {
@@ -24,9 +29,9 @@ public class DropInventoryMechanic extends SkillMechanic implements ITargetedEnt
 	private int p;
 	boolean c;
 
-	public DropInventoryMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public DropInventoryMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		String tmp = mlc.getString(new String[] { "item" }, null);
 		this.holding = new HoldingItem();
@@ -51,13 +56,13 @@ public class DropInventoryMechanic extends SkillMechanic implements ITargetedEnt
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving()) {
 			HoldingItem holding = this.holding.clone();
 			if (holding != null) {
 				holding.parseSlot(data, target);
 				if (holding.getBagName() != null)
-					holding.setBagName(new PlaceholderString(holding.getBagName()).get(data, target));
+					holding.setBagName(new PlaceholderStringImpl(holding.getBagName()).get(data, target));
 				final LivingEntity entity = (LivingEntity) target.getBukkitEntity();
 				final Location location = target.getBukkitEntity().getLocation();
 				for (int a = 0; a < this.p; a++) {
@@ -73,7 +78,7 @@ public class DropInventoryMechanic extends SkillMechanic implements ITargetedEnt
 				}
 			}
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 }

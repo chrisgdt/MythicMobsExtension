@@ -2,7 +2,13 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.Optional;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -13,11 +19,6 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-
 @ExternalAnnotation(name = "push,pushto", author = "BerndiVader")
 public class PushCasterMechanic extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 
@@ -26,9 +27,9 @@ public class PushCasterMechanic extends SkillMechanic implements ITargetedEntity
 	double reducemagnetobydistance;
 	Optional<RangedDouble> clamp = Optional.empty();
 
-	public PushCasterMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public PushCasterMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.s = mlc.getFloat("speed", 1.0f);
 		this.exact = mlc.getBoolean("exact", false);
@@ -45,16 +46,16 @@ public class PushCasterMechanic extends SkillMechanic implements ITargetedEntity
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity t) {
 		return cast(data, t.getLocation(), t);
 	}
 
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation l) {
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation l) {
 		return cast(data, l, null);
 	}
 
-	public boolean cast(SkillMetadata data, AbstractLocation l, AbstractEntity target) {
+	public SkillResult cast(SkillMetadata data, AbstractLocation l, AbstractEntity target) {
 		final Location dest = this.magneto ? data.getCaster().getEntity().getBukkitEntity().getLocation()
 				: BukkitAdapter.adapt(l);
 		final Entity caster = this.magneto && target != null ? target.getBukkitEntity()
@@ -104,7 +105,7 @@ public class PushCasterMechanic extends SkillMechanic implements ITargetedEntity
 				System.err.println("Push mechanic executed.\nWith mod vector " + mod_delta.toString());
 			}
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 }

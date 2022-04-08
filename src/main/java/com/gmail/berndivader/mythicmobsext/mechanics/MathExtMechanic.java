@@ -3,7 +3,17 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;;
+import io.lumine.mythic.core.skills.SkillString;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -16,21 +26,15 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.jboolexpr.MathInterpreter;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-
 @ExternalAnnotation(name = "mathex", author = "BerndiVader")
 public class MathExtMechanic extends SkillMechanic implements ITargetedEntitySkill, INoTargetSkill {
 	PlaceholderString eval;
 	String[] parse;
 	HashMap<String, Double> variables;
 
-	public MathExtMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public MathExtMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		variables = new HashMap<>();
 		String temp;
@@ -38,23 +42,23 @@ public class MathExtMechanic extends SkillMechanic implements ITargetedEntitySki
 			temp = SkillString.unparseMessageSpecialChars(temp.substring(1, temp.length() - 1));
 		}
 		;
-		eval = new PlaceholderString(temp);
+		eval = new PlaceholderStringImpl(temp);
 		String s1 = mlc.getString(new String[] { "storage", "store", "s" }, "<mob.meta.test>");
 		parse = (s1.substring(1, s1.length() - 1)).split(Pattern.quote("."));
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		return eval(data, target.getBukkitEntity(), null);
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		return eval(data, data.getCaster().getEntity().getBukkitEntity(),
 				data.getCaster().getEntity().getBukkitEntity().getLocation());
 	}
 
-	boolean eval(SkillMetadata data, Entity e1, Location l1) {
+	SkillResult eval(SkillMetadata data, Entity e1, Location l1) {
 		Entity target = null;
 		double s1 = MathInterpreter.parse(this.eval.get(data, BukkitAdapter.adapt(e1)), variables).eval();
 		switch (parse[0]) {
@@ -101,7 +105,7 @@ public class MathExtMechanic extends SkillMechanic implements ITargetedEntitySki
 						.getScore(parse[2]).setScore((int) (s1));
 			}
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 }

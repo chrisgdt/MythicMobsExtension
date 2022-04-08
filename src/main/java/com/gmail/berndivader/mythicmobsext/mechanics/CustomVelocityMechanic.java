@@ -1,16 +1,17 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 @ExternalAnnotation(name = "customvelocity", author = "BerndiVader")
 public class CustomVelocityMechanic extends SkillMechanic implements ITargetedEntitySkill {
@@ -20,9 +21,9 @@ public class CustomVelocityMechanic extends SkillMechanic implements ITargetedEn
 	protected boolean debug;
 	private char c;
 
-	public CustomVelocityMechanic(String line, MythicLineConfig mlc) {
-		super(line, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public CustomVelocityMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.debug = mlc.getBoolean("debug", false);
 		this.velocityX = mlc.getDouble(new String[] { "velocityx", "vx", "x" }, 0.0D);
@@ -32,7 +33,7 @@ public class CustomVelocityMechanic extends SkillMechanic implements ITargetedEn
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		Entity e = target.getBukkitEntity();
 		Vector v = e.getVelocity().clone();
 		Vector vb = v.clone();
@@ -56,6 +57,6 @@ public class CustomVelocityMechanic extends SkillMechanic implements ITargetedEn
 		if (Double.isNaN(v.length()) || Double.isInfinite(v.length()))
 			v = vb;
 		e.setVelocity(v);
-		return true;
+		return SkillResult.SUCCESS;
 	}
 }

@@ -2,30 +2,33 @@ package com.gmail.berndivader.mythicmobsext.healthbar;
 
 import java.util.UUID;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 
 public class UpdateHealthbar extends SkillMechanic implements ITargetedEntitySkill {
 
-	public UpdateHealthbar(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public UpdateHealthbar(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.line = skill;
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		UUID uuid = target.getUniqueId();
 		if (HealthbarHandler.healthbars.containsKey(uuid)) {
 			Healthbar h = HealthbarHandler.healthbars.get(uuid);
 			if (h != null) {
 				h.updateHealth();
-				return true;
+				return SkillResult.SUCCESS;
 			}
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 }

@@ -1,10 +1,16 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.quests;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillString;
 import org.bukkit.entity.Player;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import me.blackvein.quests.Quest;
 import me.blackvein.quests.Quester;
 import me.blackvein.quests.Quests;
@@ -14,9 +20,9 @@ public class QuestsMechanic extends SkillMechanic implements ITargetedEntitySkil
 	String s1, s2;
 	int i1;
 
-	public QuestsMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public QuestsMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		s1 = mlc.getString("quest", "").toLowerCase();
 		i1 = mlc.getInteger("stage", 0);
@@ -26,7 +32,7 @@ public class QuestsMechanic extends SkillMechanic implements ITargetedEntitySkil
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity e) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity e) {
 		if (e.isPlayer()) {
 			Player p = (Player) e.getBukkitEntity();
 			Quester q = quests.getQuester(p.getUniqueId());
@@ -66,7 +72,7 @@ public class QuestsMechanic extends SkillMechanic implements ITargetedEntitySkil
 				}
 			}
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 }

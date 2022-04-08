@@ -3,17 +3,16 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillString;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 
 @ExternalAnnotation(name = "parsedstance,pstance", author = "BerndiVader")
 public class ParsedStanceMechanic extends SkillMechanic
@@ -21,37 +20,37 @@ public class ParsedStanceMechanic extends SkillMechanic
 
 	protected PlaceholderString stance;
 
-	public ParsedStanceMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public ParsedStanceMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		String s = mlc.getString(new String[] { "stance", "s" });
 		if (s.startsWith("\"") && s.endsWith("\""))
 			s = s.substring(1, s.length() - 1);
 		s = SkillString.parseMessageSpecialChars(s);
-		this.stance = new PlaceholderString(s);
+		this.stance = new PlaceholderStringImpl(s);
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		return castCast(data, data.getCaster().getEntity(), null);
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		return castCast(data, target, null);
 	}
 
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation target) {
 		return castCast(data, null, target);
 	}
 
-	private boolean castCast(SkillMetadata data, AbstractEntity e1, AbstractLocation l1) {
+	private SkillResult castCast(SkillMetadata data, AbstractEntity e1, AbstractLocation l1) {
 		if (Utils.mobmanager.isActiveMob(data.getCaster().getEntity())) {
 			ActiveMob am = Utils.mobmanager.getMythicMobInstance(data.getCaster().getEntity());
 			String s = this.stance.get(data, e1);
 			am.setStance(s);
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 }

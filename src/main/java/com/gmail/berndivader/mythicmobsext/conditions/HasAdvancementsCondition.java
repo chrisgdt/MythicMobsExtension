@@ -3,15 +3,14 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.IEntityCondition;
 import org.bukkit.Bukkit;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
 @ExternalAnnotation(name = "advancement,hasadvancement,advancements,hasadvancements", author = "BerndiVader")
 public class HasAdvancementsCondition extends AbstractCustomCondition implements IEntityCondition {

@@ -3,26 +3,29 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 
 @ExternalAnnotation(name = "fakedeath", author = "BerndiVader")
 public class FakeEntityDeathMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private long d;
 
-	public FakeEntityDeathMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public FakeEntityDeathMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		this.d = (long) mlc.getInteger(new String[] { "duration", "dur" }, 60);
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving()) {
 			Volatile.handler.fakeEntityDeath(target.getBukkitEntity(), d);
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 }

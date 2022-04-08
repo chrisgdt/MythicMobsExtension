@@ -1,22 +1,23 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import java.util.Optional;
-
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderInt;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.items.MythicItem;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.items.MythicItem;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderInt;
+import java.util.Optional;
 
 @ExternalAnnotation(name = "transmuteitem", author = "Seyarada")
 public class TransmuteItem extends SkillMechanic implements ITargetedEntitySkill {
@@ -27,8 +28,8 @@ public class TransmuteItem extends SkillMechanic implements ITargetedEntitySkill
 	Material resultMaterial;
 	String resultMLC;
 	
-	public TransmuteItem(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public TransmuteItem(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		amount = PlaceholderInt.of(mlc.getString(new String[] {"amount", "a"}, "-1"));
 		
 		String baseMLC = mlc.getString(new String[] {"item", "i"}, "STONE");
@@ -36,7 +37,7 @@ public class TransmuteItem extends SkillMechanic implements ITargetedEntitySkill
 			Material baseMaterial = Material.valueOf(baseMLC);
 			baseItem = new ItemStack(baseMaterial);
 		} catch (Exception e) {
-			Optional<MythicItem> t = MythicMobs.inst().getItemManager().getItem(baseMLC);
+			Optional<MythicItem> t = Utils.mythicmobs.getItemManager().getItem(baseMLC);
             ItemStack item = BukkitAdapter.adapt(t.get().generateItemStack(1));
             baseItem = item;
 		}
@@ -50,7 +51,7 @@ public class TransmuteItem extends SkillMechanic implements ITargetedEntitySkill
 			Material resultMaterial = Material.valueOf(resultMLC);
 			resultItem = new ItemStack(resultMaterial, quantity);
 		} catch (Exception e) {
-			Optional<MythicItem> t = MythicMobs.inst().getItemManager().getItem(resultMLC);
+			Optional<MythicItem> t = Utils.mythicmobs.getItemManager().getItem(resultMLC);
             ItemStack mythicItem = BukkitAdapter.adapt(t.get().generateItemStack(quantity));
             resultItem = mythicItem;
 		}
@@ -59,7 +60,7 @@ public class TransmuteItem extends SkillMechanic implements ITargetedEntitySkill
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity p) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity p) {
 		
 		int altAmount = Integer.valueOf(amount.get(data, p));
 		if (p.isPlayer()) {
@@ -92,7 +93,7 @@ public class TransmuteItem extends SkillMechanic implements ITargetedEntitySkill
 			}
 		}
 		
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 }

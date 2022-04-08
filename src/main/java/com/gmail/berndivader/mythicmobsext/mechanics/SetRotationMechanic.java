@@ -1,5 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -8,12 +15,6 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 @ExternalAnnotation(name = "setrotation", author = "BerndiVader")
 public class SetRotationMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	public static String str = "mmRotate";
@@ -21,17 +22,17 @@ public class SetRotationMechanic extends SkillMechanic implements ITargetedEntit
 	private float pitchOff;
 	private long d;
 
-	public SetRotationMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public SetRotationMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		this.yawOff = mlc.getFloat(new String[] { "yawoffset", "yaw", "yo", "y" }, 5.0F);
 		this.pitchOff = mlc.getFloat(new String[] { "pitchoffset", "pitch", "po", "p" }, 0F);
 		this.d = mlc.getLong(new String[] { "duration", "dur" }, 1);
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isPlayer())
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		if (target.getBukkitEntity().hasMetadata(str))
 			target.getBukkitEntity().removeMetadata(str, Main.getPlugin());
 		final float yo = this.yawOff, po = this.pitchOff;
@@ -57,7 +58,6 @@ public class SetRotationMechanic extends SkillMechanic implements ITargetedEntit
 				c++;
 			}
 		}.runTaskTimerAsynchronously(Main.getPlugin(), 1L, 1L);
-		;
-		return true;
+		return SkillResult.SUCCESS;
 	}
 }

@@ -1,22 +1,23 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 @ExternalAnnotation(name = "customsound", author = "BerndiVader")
 public class CustomSound extends SkillMechanic implements ITargetedEntitySkill {
 	String type;
 	float volume, pitch;
 
-	public CustomSound(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public CustomSound(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 
 		type = mlc.getString("type", "block.chest.open");
 		volume = mlc.getFloat("volume", 1f);
@@ -24,11 +25,12 @@ public class CustomSound extends SkillMechanic implements ITargetedEntitySkill {
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity var2) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity var2) {
 		if (var2.isPlayer()) {
-			return playSoundAtPlayer(this.type, this.volume, this.pitch, (Player) var2.getBukkitEntity());
+			playSoundAtPlayer(this.type, this.volume, this.pitch, (Player) var2.getBukkitEntity());
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 
 	private static boolean playSoundAtPlayer(String name, float volume, float pitch, Player player) {

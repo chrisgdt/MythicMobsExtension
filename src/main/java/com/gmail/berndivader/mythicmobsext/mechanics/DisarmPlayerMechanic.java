@@ -6,6 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -16,19 +23,13 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.items.WhereEnum;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 @ExternalAnnotation(name = "disarm", author = "BerndiVader")
 public class DisarmPlayerMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	long dt;
 	List<WhereEnum> whats;
 
-	public DisarmPlayerMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public DisarmPlayerMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		this.dt = mlc.getLong(new String[] { "duration", "dur" }, 180);
 
 		whats = new ArrayList<>();
@@ -39,7 +40,7 @@ public class DisarmPlayerMechanic extends SkillMechanic implements ITargetedEnti
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		ItemStack equipped_item;
 		HashMap<WhereEnum, ItemStack> stores = new HashMap<>();
 		if (!target.isPlayer()) {
@@ -182,7 +183,7 @@ public class DisarmPlayerMechanic extends SkillMechanic implements ITargetedEnti
 				}
 			}
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 	static ItemStack unequipHand(LivingEntity entity) {

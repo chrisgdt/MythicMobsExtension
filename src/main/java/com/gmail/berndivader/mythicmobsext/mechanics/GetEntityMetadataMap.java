@@ -5,7 +5,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillCondition;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.Entity;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
@@ -13,12 +22,6 @@ import org.bukkit.plugin.Plugin;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 @ExternalAnnotation(name = "getentitymeta,getplayermeta", author = "BerndiVader")
 public class GetEntityMetadataMap extends SkillMechanic implements ITargetedEntitySkill {
@@ -37,9 +40,9 @@ public class GetEntityMetadataMap extends SkillMechanic implements ITargetedEnti
 	UsageEnum usage;
 	String data;
 
-	public GetEntityMetadataMap(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public GetEntityMetadataMap(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		use_players = mlc.getLine().toLowerCase().startsWith("getplayermeta");
 		data = mlc.getString("data", "ANY");
@@ -51,7 +54,7 @@ public class GetEntityMetadataMap extends SkillMechanic implements ITargetedEnti
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		Entity target = abstract_entity.getBukkitEntity();
 		Map<String, Map<Plugin, MetadataValue>> map = this.filter(
 				use_players ? NMSUtils.getPlayerMetadataMap(target) : NMSUtils.getEntityMetadataMap(target.getServer()),
@@ -78,7 +81,7 @@ public class GetEntityMetadataMap extends SkillMechanic implements ITargetedEnti
 				}
 			}
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 	Map<String, Map<Plugin, MetadataValue>> filter(Map<String, Map<Plugin, MetadataValue>> map, UUID entity_uuid) {

@@ -2,6 +2,15 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.List;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,13 +21,6 @@ import com.gmail.berndivader.mythicmobsext.items.ModdingItem;
 import com.gmail.berndivader.mythicmobsext.items.ModdingItem.ACTION;
 import com.gmail.berndivader.mythicmobsext.items.WhereEnum;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-
 @ExternalAnnotation(name="modifyloreline", author="nicochulo2001")
 public class ModifyLoreLine extends SkillMechanic implements ITargetedEntitySkill {
 	ModdingItem moddingItem;
@@ -26,14 +28,14 @@ public class ModifyLoreLine extends SkillMechanic implements ITargetedEntitySkil
 	PlaceholderString loreTextUnprocessed;
 	String loreAction;
 
-	public ModifyLoreLine(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public ModifyLoreLine(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 
 		String slot = mlc.getString(new String[] { "slot", "s"}, "-1");
 		String what = mlc.getString(new String[] { "what", "w"}, "HAND").toUpperCase();
 		String bag = mlc.getString(new String[] { "bagname", "name", "bag", "b", "n"}, null);
 		loreLine = mlc.getString(new String[] { "loreline", "line", "l"}, null);
-		loreTextUnprocessed = new PlaceholderString(mlc.getString(new String[] { "loretext", "text", "t"}, null));
+		loreTextUnprocessed = new PlaceholderStringImpl(mlc.getString(new String[] { "loretext", "text", "t"}, null));
 		loreAction = mlc.getString(new String[] { "loreaction", "action", "a"}, "SET").toUpperCase();
 		WhereEnum where = WhereEnum.valueOf(what);
 		ACTION action = ACTION.SET;
@@ -44,7 +46,7 @@ public class ModifyLoreLine extends SkillMechanic implements ITargetedEntitySkil
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving()) {
 			LivingEntity entity = (LivingEntity) target.getBukkitEntity();
 			ItemStack itemStack = moddingItem.getItemStackByWhere(data, target, entity);
@@ -86,8 +88,8 @@ public class ModifyLoreLine extends SkillMechanic implements ITargetedEntitySkil
 			
 			if(target.getBukkitEntity() instanceof Player)
 				((Player)target.getBukkitEntity()).updateInventory();
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 }

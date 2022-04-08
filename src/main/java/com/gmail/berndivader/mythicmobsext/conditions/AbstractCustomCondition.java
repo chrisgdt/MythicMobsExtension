@@ -2,10 +2,11 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillCondition;
-import io.lumine.xikage.mythicmobs.skills.conditions.ConditionAction;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.ISkillCondition;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillCondition;
+import io.lumine.mythic.core.skills.conditions.ConditionAction;
 
 public class AbstractCustomCondition extends SkillCondition {
 	boolean dba, debug;

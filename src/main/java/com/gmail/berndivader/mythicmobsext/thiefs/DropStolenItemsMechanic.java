@@ -3,24 +3,25 @@ package com.gmail.berndivader.mythicmobsext.thiefs;
 import java.util.Iterator;
 import java.util.UUID;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.INoTargetSkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 public class DropStolenItemsMechanic extends SkillMechanic implements INoTargetSkill {
 
-	public DropStolenItemsMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public DropStolenItemsMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		Entity e1 = data.getCaster().getEntity().getBukkitEntity();
 		Iterator<Thief> ti = Thiefs.thiefhandler.getThiefs().iterator();
 		UUID uuid = e1.getUniqueId();
@@ -31,6 +32,6 @@ public class DropStolenItemsMechanic extends SkillMechanic implements INoTargetS
 				ti.remove();
 			}
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 }

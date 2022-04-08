@@ -6,7 +6,16 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.lang3.tuple.Pair;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.mobs.MobManager;
+import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.api.skills.SkillTrigger;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillCondition;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillTriggers;
+import io.lumine.mythic.core.skills.TriggeredSkill;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -37,14 +46,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
-import io.lumine.xikage.mythicmobs.mobs.MobManager;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
-import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
-
 public class PlayerManager implements Listener {
 	public static String meta_MYTHICPLAYER = "MythicPlayer";
 	public static String meta_NOACTIVEMOB = "NOACTIVEMOB";
@@ -54,7 +55,7 @@ public class PlayerManager implements Listener {
 	public static String signal_QUIT = "QUIT";
 	public static String signal_DEATH = "DEATH";
 	private MythicPlayers mythicplayers;
-	private MobManager mobmanager = MythicPlayers.mythicmobs.getMobManager();
+	private MobManager mobmanager = Utils.mobmanager;
 	private ConcurrentHashMap<UUID, ActivePlayer> activePlayers = new ConcurrentHashMap<UUID, ActivePlayer>();
 
 	public PlayerManager(MythicPlayers mythicplayers) {
@@ -63,14 +64,14 @@ public class PlayerManager implements Listener {
 	}
 
 	public ActivePlayer registerActiveMob(ActivePlayer ap) {
-		this.activePlayers.put(ap.getUniqueId(), ap);
-		mobmanager.registerActiveMob(ap);
+		this.activePlayers.put(ap.getPlayer().getUniqueId(), ap);
+		//mobmanager.registerActiveMob(ap);
 		return ap;
 	}
 
 	public void unregisterActivePlayer(UUID uuid) {
 		this.activePlayers.remove(uuid);
-		mobmanager.unregisterActiveMob(uuid);
+		//mobmanager.unregisterActiveMob(uuid);
 	}
 
 	public boolean isActivePlayer(UUID uuid) {
@@ -95,7 +96,7 @@ public class PlayerManager implements Listener {
 		if (mm.hasFaction()) {
 			ap.setFaction(mm.getFaction());
 			ap.getEntity().getBukkitEntity().setMetadata(meta_FACTION,
-					new FixedMetadataValue(MythicPlayers.mythicmobs, mm.getFaction()));
+					new FixedMetadataValue(Utils.mythicmobs, mm.getFaction()));
 		}
 	}
 
@@ -109,7 +110,7 @@ public class PlayerManager implements Listener {
 	}
 
 	public void removeActivePlayer(ActivePlayer ap) {
-		Location l = ap.getEntity().getBukkitEntity().getLocation().clone();
+		Location l = ap.getPlayer().getLocation().clone();
 		l.setY(0);
 		AbstractEntity d = BukkitAdapter.adapt(l.getWorld().spawnEntity(l, EntityType.BAT));
 		ap.setEntity(d);
@@ -118,25 +119,26 @@ public class PlayerManager implements Listener {
 	}
 
 	public boolean attachActivePlayer(LivingEntity l, boolean dotrigger) {
-		MythicMob mm = mobmanager.getMythicMob(l.getMetadata(meta_MYTHICPLAYER).get(0).asString());
-		if (mm == null) {
+		Optional<MythicMob> omm = mobmanager.getMythicMob(l.getMetadata(meta_MYTHICPLAYER).get(0).asString());
+		if (!omm.isPresent()) {
 			l.removeMetadata(meta_MYTHICPLAYER, mythicplayers.plugin());
 			return false;
 		}
-		ActivePlayer ap = new ActivePlayer(l.getUniqueId(), BukkitAdapter.adapt(l), mm, 1);
+		MythicMob mm = omm.get();
+		ActivePlayer ap = new ActivePlayer(BukkitAdapter.adapt(l), mm, 1);
 		this.addMythicPlayerToFaction(mm, ap);
 		this.registerActiveMob(ap);
 		if (dotrigger)
-			new TriggeredSkill(SkillTrigger.SPAWN, ap, null, true);
+			new TriggeredSkill(SkillTriggers.SPAWN, ap, null, true);
 		return true;
 	}
 
 	public boolean createActivePlayer(LivingEntity l, MythicMob mm) {
 		l.setMetadata(meta_MYTHICPLAYER, new FixedMetadataValue(mythicplayers.plugin(), mm.getInternalName()));
-		ActivePlayer ap = new ActivePlayer(l.getUniqueId(), BukkitAdapter.adapt(l), mm, 1);
+		ActivePlayer ap = new ActivePlayer(BukkitAdapter.adapt(l), mm, 1);
 		this.addMythicPlayerToFaction(mm, ap);
 		this.registerActiveMob(ap);
-		new TriggeredSkill(SkillTrigger.SPAWN, ap, null, true);
+		new TriggeredSkill(SkillTriggers.SPAWN, ap, null, true);
 		return true;
 	}
 
@@ -182,7 +184,7 @@ public class PlayerManager implements Listener {
 	public void onMythicPlayerDamage(EntityDamageEvent e) {
 		if (e.isCancelled())
 			return;
-		if (mobmanager == null || mobmanager.isActiveMob(e.getEntity().getUniqueId()))
+		if (mobmanager == null || mobmanager.getActiveMobs().contains(e.getEntity()))
 			return;
 		Entity victim = e.getEntity();
 		DamageCause cause = e.getCause();
@@ -195,7 +197,7 @@ public class PlayerManager implements Listener {
 			AbstractEntity trigger = null;
 			if (e instanceof EntityDamageByEntityEvent)
 				trigger = BukkitAdapter.adapt(((EntityDamageByEntityEvent) e).getDamager());
-			new TriggeredSkill(SkillTrigger.DAMAGED, ap, trigger, true);
+			new TriggeredSkill(SkillTriggers.DAMAGED, ap, trigger, true);
 		}
 	}
 
@@ -203,7 +205,7 @@ public class PlayerManager implements Listener {
 	public void onMythicPlayerToggleSneak(PlayerToggleSneakEvent e) {
 		if (e.isCancelled() || !this.isActivePlayer(e.getPlayer().getUniqueId()))
 			return;
-		SkillTrigger st = e.getPlayer().isSneaking() ? SkillTrigger.UNCROUCH : SkillTrigger.CROUCH;
+		SkillTrigger st = e.getPlayer().isSneaking() ? SkillTriggers.UNCROUCH : SkillTriggers.CROUCH;
 		new TriggeredSkill(st, this.getActivePlayer(e.getPlayer().getUniqueId()).get(), null, true);
 	}
 
@@ -214,24 +216,24 @@ public class PlayerManager implements Listener {
 			TriggeredSkill ts = null;
 			switch (e.getAction()) {
 			case RIGHT_CLICK_AIR:
-				ts = new TriggeredSkill(SkillTrigger.RIGHTCLICK, ap, ap.getEntity(), true);
+				ts = new TriggeredSkill(SkillTriggers.RIGHTCLICK, ap, ap.getEntity(), true);
 				break;
 			case RIGHT_CLICK_BLOCK:
-				ts = new TriggeredSkill(SkillTrigger.RIGHTCLICK, ap,
+				ts = new TriggeredSkill(SkillTriggers.RIGHTCLICK, ap,
 						BukkitAdapter.adapt(e.getClickedBlock().getLocation()), ap.getEntity(),
 						new ArrayList<SkillMechanic>(), true);
 				break;
 			case LEFT_CLICK_AIR:
 				ts = e.getPlayer().getInventory().getItemInMainHand() != null
-						? new TriggeredSkill(SkillTrigger.USE, ap, ap.getEntity(), true)
-						: new TriggeredSkill(SkillTrigger.SWING, ap, ap.getEntity(), true);
+						? new TriggeredSkill(SkillTriggers.USE, ap, ap.getEntity(), true)
+						: new TriggeredSkill(SkillTriggers.SWING, ap, ap.getEntity(), true);
 				break;
 			case LEFT_CLICK_BLOCK:
 				ts = e.getPlayer().getInventory().getItemInMainHand() != null
-						? new TriggeredSkill(SkillTrigger.USE, ap,
+						? new TriggeredSkill(SkillTriggers.USE, ap,
 								BukkitAdapter.adapt(e.getClickedBlock().getLocation()), ap.getEntity(),
 								new ArrayList<SkillMechanic>(), true)
-						: new TriggeredSkill(SkillTrigger.SWING, ap,
+						: new TriggeredSkill(SkillTriggers.SWING, ap,
 								BukkitAdapter.adapt(e.getClickedBlock().getLocation()), ap.getEntity(),
 								new ArrayList<SkillMechanic>(), true);
 				break;
@@ -316,7 +318,7 @@ public class PlayerManager implements Listener {
 			ActivePlayer ap = maybeActivePlayer.get();
 			e.getPlayer().setMetadata(meta_READYREASON,
 					new FixedMetadataValue(mythicplayers.plugin(), meta_ITEMCHANGE));
-			new TriggeredSkill(SkillTrigger.READY, ap, ap.getEntity(), true);
+			new TriggeredSkill(SkillTriggers.READY, ap, ap.getEntity(), true);
 		}
 	}
 

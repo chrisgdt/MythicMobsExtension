@@ -14,6 +14,10 @@ import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
+import io.lumine.mythic.bukkit.events.MythicReloadedEvent;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.mobs.MobExecutor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -22,14 +26,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.mobs.MobManager;
-
 public class CachedOwnerHandler implements Listener {
 	protected final static Plugin plugin = Main.getPlugin();
-	protected final static MobManager mobmanager = Utils.mobmanager;
+	protected final static MobExecutor mobmanager = Utils.mobmanager;
 	protected final static String cacheFileName = "CachedOwners.txt";
 	protected static ConcurrentHashMap<UUID, UUID> cachedOwners;
 	protected static File dir;
@@ -57,10 +56,12 @@ public class CachedOwnerHandler implements Listener {
 		String mechanicsName = e.getMechanicName().toLowerCase();
 		switch (mechanicsName) {
 		case "setcachedowner":
-			e.register(new CachedOwnerSkill(e.getContainer().getConfigLine(), e.getConfig()));
+			e.register(new CachedOwnerSkill(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			//e.register(new CachedOwnerSkill(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "restorecachedowner":
-			e.register(new RestoreCachedOwnerMechanic(e.getContainer().getConfigLine(), e.getConfig()));
+			e.register(new RestoreCachedOwnerMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			//e.register(new RestoreCachedOwnerMechanic(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		}
 	}

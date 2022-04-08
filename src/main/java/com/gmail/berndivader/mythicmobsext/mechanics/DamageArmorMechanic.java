@@ -3,7 +3,16 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -12,15 +21,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 @ExternalAnnotation(name = "damagearmor", author = "BerndiVader")
 public class DamageArmorMechanic extends SkillMechanic implements ITargetedEntitySkill {
@@ -28,9 +28,9 @@ public class DamageArmorMechanic extends SkillMechanic implements ITargetedEntit
 	protected int rndMin, rndMax;
 	protected String signal;
 
-	public DamageArmorMechanic(String line, MythicLineConfig mlc) {
-		super(line, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public DamageArmorMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.armortype = new HashSet<>();
 		this.armortype.addAll(
@@ -48,9 +48,9 @@ public class DamageArmorMechanic extends SkillMechanic implements ITargetedEntit
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target == null || !target.isLiving() || target.isDead()) {
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		}
 		if (target.getBukkitEntity().getType().equals(EntityType.SNOWMAN)) {
 			NMSUtils.setSnowmanPumpkin((Snowman) target.getBukkitEntity(), false);
@@ -61,7 +61,7 @@ public class DamageArmorMechanic extends SkillMechanic implements ITargetedEntit
 		boolean broken = false;
 		int damageValue = this.rndMin + (int) (Math.random() * ((this.rndMax - this.rndMin) + 1));
 
-		if(e.getEquipment()==null) return false;
+		if(e.getEquipment()==null) return SkillResult.CONDITION_FAILED;
 
 		if (this.armortype.contains("offhand") || this.armortype.contains("all")) {
 			armor = e.getEquipment().getItemInOffHand();
@@ -132,6 +132,6 @@ public class DamageArmorMechanic extends SkillMechanic implements ITargetedEntit
 			am = (ActiveMob) data.getCaster();
 		if (am != null && broken && this.signal != null)
 			am.signalMob(BukkitAdapter.adapt(e), this.signal);
-		return true;
+		return SkillResult.SUCCESS;
 	}
 }

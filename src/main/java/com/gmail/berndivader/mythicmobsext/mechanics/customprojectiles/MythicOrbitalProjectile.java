@@ -6,33 +6,27 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.adapters.TaskManager;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.exceptions.InvalidMobTypeException;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.utils.BlockUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.CustomProjectile;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.utils.MythicHitBox;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.TaskManager;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.api.exceptions.InvalidMobTypeException;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.IParentSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillCaster;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
-import io.lumine.xikage.mythicmobs.util.BlockUtil;
 
 @ExternalAnnotation(name = "mythicorbitalprojectile", author = "BerndiVader")
 public class MythicOrbitalProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
@@ -46,8 +40,8 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 	protected boolean invisible, ct, tc, lifetime;
 	protected String tag;
 
-	public MythicOrbitalProjectile(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public MythicOrbitalProjectile(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		this.pEntityName = mlc.getString(new String[] { "pobject", "projectilemythic", "pmythic" }, "MINECART");
 		this.pEntitySpin = mlc.getFloat("pspin", 0.0F);
 		this.pEntityPitchOffset = mlc.getInteger("ppOff", 0);
@@ -68,17 +62,17 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 	}
 
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
-		return false;
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation target) {
+		return SkillResult.MISSING_COMPATIBILITY;
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		try {
 			new ProjectileRunner(data, this.pEntityName, target);
-			return true;
+			return SkillResult.SUCCESS;
 		} catch (Exception ex) {
-			return false;
+			return SkillResult.ERROR;
 		}
 	}
 
@@ -166,7 +160,7 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 				}
 			}
 			if (this.tag != null) {
-				this.tag = SkillString.parseMobVariables(this.tag, this.pam, this.am.getEntity().getTarget(),
+				this.tag = Utils.parseMobVariables(this.tag, this.pam, this.am.getEntity().getTarget(),
 						this.am.getEntity());
 				this.pEntity.setMetadata(this.tag, new FixedMetadataValue(Main.getPlugin(), null));
 			}

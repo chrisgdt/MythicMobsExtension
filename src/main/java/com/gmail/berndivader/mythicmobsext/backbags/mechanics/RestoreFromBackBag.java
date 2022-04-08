@@ -1,6 +1,11 @@
 package com.gmail.berndivader.mythicmobsext.backbags.mechanics;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -15,10 +20,6 @@ import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
 import com.gmail.berndivader.mythicmobsext.items.WhereEnum;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-
 public class RestoreFromBackBag extends SkillMechanic implements INoTargetSkill, ITargetedEntitySkill {
 	int to_slot;
 	WhereEnum what;
@@ -26,9 +27,9 @@ public class RestoreFromBackBag extends SkillMechanic implements INoTargetSkill,
 	PlaceholderString meta_name, from_slot, bag_name;
 	HoldingItem holding;
 
-	public RestoreFromBackBag(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public RestoreFromBackBag(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		from_slot = mlc.getPlaceholderString("fromslot", "-1");
 		to_slot = mlc.getInteger("toslot", -1);
@@ -38,12 +39,12 @@ public class RestoreFromBackBag extends SkillMechanic implements INoTargetSkill,
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		return castAtEntity(data, data.getCaster().getEntity());
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		int inventory_slot = -1;
 		try {
 			inventory_slot = Integer.parseInt(from_slot.get(data, abstract_entity));
@@ -108,7 +109,7 @@ public class RestoreFromBackBag extends SkillMechanic implements INoTargetSkill,
 				}
 			}
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 	static void clearItem(ItemStack item) {

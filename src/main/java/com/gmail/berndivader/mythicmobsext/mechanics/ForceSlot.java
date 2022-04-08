@@ -1,34 +1,35 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 @ExternalAnnotation(name = "forceslot", author = "BerndiVader")
 public class ForceSlot extends SkillMechanic implements ITargetedEntitySkill {
 	int slot;
 
-	public ForceSlot(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public ForceSlot(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.slot = mlc.getInteger("slot", 0);
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity abstract_target) {
 		if (abstract_target.isPlayer()) {
 			Player player = (Player) abstract_target.getBukkitEntity();
 			player.getInventory().setHeldItemSlot(slot);
 		}
-		return false;
+		return SkillResult.SUCCESS;
 	}
 
 }

@@ -2,11 +2,10 @@ package com.gmail.berndivader.mythicmobsext.events;
 
 import java.util.Optional;
 
+import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 
 public class EntityCollideEvent extends Event {
 	static final HandlerList handlers = new HandlerList();

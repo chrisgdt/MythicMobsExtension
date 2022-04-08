@@ -1,5 +1,15 @@
 package com.gmail.berndivader.mythicmobsext.guardianbeam;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.ITargetedLocationSkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -9,14 +19,6 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 @ExternalAnnotation(name = "guardianbeam", author = "BerndiVader")
 public class GuardianBeamMechanic extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
@@ -25,8 +27,8 @@ public class GuardianBeamMechanic extends SkillMechanic implements ITargetedEnti
 	double sideOffset;
 	double yOffset;
 
-	public GuardianBeamMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public GuardianBeamMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 
 		duration = mlc.getInteger("duration", 1);
 		forwardOffset = mlc.getDouble("forward", 1);
@@ -35,17 +37,17 @@ public class GuardianBeamMechanic extends SkillMechanic implements ITargetedEnti
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity e) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity e) {
 		return cast(data, e.getLocation(), e.getBukkitEntity());
 	}
 
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation l) {
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation l) {
 		return cast(data, l, null);
 
 	}
 
-	public boolean cast(SkillMetadata data, AbstractLocation l, Entity e) {
+	public SkillResult cast(SkillMetadata data, AbstractLocation l, Entity e) {
 
 		final Entity caster = data.getCaster().getEntity().getBukkitEntity();
 		final Location end = BukkitAdapter.adapt(l);
@@ -80,7 +82,7 @@ public class GuardianBeamMechanic extends SkillMechanic implements ITargetedEnti
 			}
 		}.runTaskTimer(Main.getPlugin(), 0l, 0l);
 
-		return false;
+		return SkillResult.SUCCESS;
 	}
 
 }

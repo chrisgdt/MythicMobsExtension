@@ -2,20 +2,20 @@ package com.gmail.berndivader.mythicmobsext.targeters;
 
 import java.util.HashSet;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillExecutor;
 import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 @ExternalAnnotation(name = "triggerstarget", author = "BerndiVader")
 public class TriggerTargetTargeter extends ISelectorEntity {
-	public TriggerTargetTargeter(MythicLineConfig mlc) {
-		super(mlc);
+	public TriggerTargetTargeter(SkillExecutor manager, MythicLineConfig mlc) {
+		super(manager, mlc);
 	}
 
 	@Override

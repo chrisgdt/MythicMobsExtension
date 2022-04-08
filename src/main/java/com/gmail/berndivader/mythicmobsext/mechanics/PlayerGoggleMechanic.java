@@ -1,5 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -11,25 +18,19 @@ import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 @ExternalAnnotation(name = "playergoggle,playergoggleat", author = "BerndiVader")
 public class PlayerGoggleMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	public static String str = "mmGoggle";
 	private long dur;
 	private Handler vh = Volatile.handler;
 
-	public PlayerGoggleMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public PlayerGoggleMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		this.dur = (long) mlc.getInteger(new String[] { "duration", "dur" }, 120);
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (!target.isPlayer() || target.getBukkitEntity().hasMetadata(str))
 			target.getBukkitEntity().removeMetadata(str, Main.getPlugin());
 		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
@@ -52,7 +53,7 @@ public class PlayerGoggleMechanic extends SkillMechanic implements ITargetedEnti
 				count++;
 			}
 		}.runTaskTimerAsynchronously(Main.getPlugin(), 1L, 1L);
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 }

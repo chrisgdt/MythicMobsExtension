@@ -2,9 +2,9 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.conditions.ILocationComparisonCondition;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.ILocationComparisonCondition;
 
 @ExternalAnnotation(name = "sameworld", author = "BerndiVader")
 public class SameWorldCondition extends AbstractCustomCondition implements ILocationComparisonCondition {

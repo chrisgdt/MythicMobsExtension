@@ -8,6 +8,11 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.ILocationCondition;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.World;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Creature;
@@ -23,12 +28,6 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
 public class EntitiesInRegionCondition extends AbstractCustomCondition implements ILocationCondition {
 

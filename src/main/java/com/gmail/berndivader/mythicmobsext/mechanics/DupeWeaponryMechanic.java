@@ -1,17 +1,18 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 @ExternalAnnotation(name = "dupeweaponry", author = "BerndiVader")
 public class DupeWeaponryMechanic extends SkillMechanic implements ITargetedEntitySkill {
@@ -19,9 +20,9 @@ public class DupeWeaponryMechanic extends SkillMechanic implements ITargetedEnti
 	boolean ignoreAir;
 	byte what;
 
-	public DupeWeaponryMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public DupeWeaponryMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		removeFromTarget = mlc.getBoolean(new String[] { "removefromtarget", "rft" }, false);
 		ignoreAir = mlc.getBoolean(new String[] { "ignoreair", "ia" }, true);
@@ -34,7 +35,7 @@ public class DupeWeaponryMechanic extends SkillMechanic implements ITargetedEnti
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving() && data.getCaster().getEntity().isLiving()) {
 			LivingEntity e = (LivingEntity) data.getCaster().getEntity().getBukkitEntity();
 			LivingEntity t = (LivingEntity) target.getBukkitEntity();
@@ -86,7 +87,7 @@ public class DupeWeaponryMechanic extends SkillMechanic implements ITargetedEnti
 				}
 			}
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 }

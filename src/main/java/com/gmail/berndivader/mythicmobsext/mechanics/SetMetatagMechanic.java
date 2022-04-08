@@ -1,6 +1,15 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillString;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 import org.bukkit.block.Block;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -9,21 +18,15 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.MetaTagValue;
 import com.gmail.berndivader.mythicmobsext.utils.MetaTagValue.ValueTypes;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-
 @ExternalAnnotation(name = "setmeta", author = "BerndiVader")
 public class SetMetatagMechanic extends SkillMechanic implements ITargetedLocationSkill, ITargetedEntitySkill {
 	protected PlaceholderString tag;
 	protected MetaTagValue mtv;
 	protected boolean useCaster;
 
-	public SetMetatagMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public SetMetatagMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.useCaster = mlc.getBoolean(new String[] { "usecaster", "uc" }, false);
 		String ms = mlc.getString(new String[] { "meta", "m" }, "");
@@ -43,18 +46,18 @@ public class SetMetatagMechanic extends SkillMechanic implements ITargetedLocati
 			}
 		}
 		if (t != null) {
-			this.tag = new PlaceholderString(t);
+			this.tag = new PlaceholderStringImpl(t);
 			mtv = new MetaTagValue(v, vt);
 		}
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		String parsedTag = this.tag.get(data, target);
 		if (parsedTag == null || parsedTag.isEmpty())
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		Object vo = this.mtv.getType().equals(ValueTypes.STRING)
-				? new PlaceholderString((String) this.mtv.getValue()).get(data, target)
+				? new PlaceholderStringImpl((String) this.mtv.getValue()).get(data, target)
 				: this.mtv.getValue();
 		if (this.useCaster) {
 			data.getCaster().getEntity().getBukkitEntity().setMetadata(parsedTag,
@@ -62,20 +65,19 @@ public class SetMetatagMechanic extends SkillMechanic implements ITargetedLocati
 		} else {
 			target.getBukkitEntity().setMetadata(parsedTag, new FixedMetadataValue(Main.getPlugin(), vo));
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation location) {
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation location) {
 		Block target = BukkitAdapter.adapt(location).getBlock();
 		String parsedTag = this.tag.get(data);
 		if (parsedTag == null || parsedTag.isEmpty())
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		Object vo = this.mtv.getType().equals(ValueTypes.STRING)
-				? new PlaceholderString((String) this.mtv.getValue()).get(data)
+				? new PlaceholderStringImpl((String) this.mtv.getValue()).get(data)
 				: this.mtv.getValue();
 		target.setMetadata(parsedTag, new FixedMetadataValue(Main.getPlugin(), vo));
-		return true;
+		return SkillResult.SUCCESS;
 	}
-
 }

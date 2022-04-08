@@ -11,16 +11,18 @@ import java.util.stream.Stream;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.logging.MythicLogger;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-import io.lumine.xikage.mythicmobs.skills.variables.Variable;
-import io.lumine.xikage.mythicmobs.skills.variables.VariableMechanic;
-import io.lumine.xikage.mythicmobs.skills.variables.VariableRegistry;
-import io.lumine.xikage.mythicmobs.skills.variables.VariableType;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.logging.MythicLogger;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.variables.Variable;
+import io.lumine.mythic.core.skills.variables.VariableMechanic;
+import io.lumine.mythic.core.skills.variables.VariableRegistry;
+import io.lumine.mythic.core.skills.variables.VariableType;
 
 @ExternalAnnotation(name="fileline", author="Seyarada")
 public class FileLine extends VariableMechanic implements ITargetedEntitySkill {
@@ -30,8 +32,8 @@ public class FileLine extends VariableMechanic implements ITargetedEntitySkill {
    int line;
    String fileName;
 
-   public FileLine(String skill, MythicLineConfig mlc) {
-      super(skill, mlc);
+   public FileLine(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+       super(manager, skill, mlc);
       
       fileName = mlc.getString(new String[] { "file", "f"}, "");
       file = new File(Main.getPlugin().getDataFolder().getPath() + "/files/" + fileName);
@@ -47,7 +49,7 @@ public class FileLine extends VariableMechanic implements ITargetedEntitySkill {
 
    }
 
-   public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+   public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 	   String result = null;
 	   int size = 0;
 	   Path path = Paths.get(Main.getPlugin().getDataFolder().getPath() + "/files/" + fileName);
@@ -65,7 +67,7 @@ public class FileLine extends VariableMechanic implements ITargetedEntitySkill {
       
       if (variables == null) {
          MythicLogger.errorMechanicConfig(this, this.config, "Failed to get variable registry");
-         return false;
+         return SkillResult.CONDITION_FAILED;
         
       } else {
          Variable var = null;
@@ -81,7 +83,7 @@ public class FileLine extends VariableMechanic implements ITargetedEntitySkill {
          }
 
          variables.put(this.key, var);
-         return true;
+         return SkillResult.SUCCESS;
       }
    }
 }

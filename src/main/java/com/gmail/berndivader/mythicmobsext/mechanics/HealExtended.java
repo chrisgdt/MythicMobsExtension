@@ -1,5 +1,14 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.INoTargetSkill;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
@@ -9,24 +18,8 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.RandomDouble;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-
 @ExternalAnnotation(name = "heal", author = "BerndiVader")
-public 
-class 
-HealExtended 
-extends 
-SkillMechanic 
-implements 
-ITargetedEntitySkill, 
-INoTargetSkill
-{
+public class HealExtended extends SkillMechanic implements ITargetedEntitySkill, INoTargetSkill {
 	double healByDistance;
 	boolean incHealByDistance;
 	boolean power;
@@ -37,10 +30,10 @@ INoTargetSkill
 	RegainReason reason;
 	PlaceholderString amountPlaceholder;
 	
-	public HealExtended(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public HealExtended(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		
-		amountPlaceholder=PlaceholderString.of(mlc.getString("amount","0"));
+		amountPlaceholder= PlaceholderString.of(mlc.getString("amount","0"));
 		power=mlc.getBoolean("power",false);
 		percentage=mlc.getBoolean("percent",false);
 		caster=mlc.getBoolean("caster",false);
@@ -62,8 +55,8 @@ INoTargetSkill
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_target) {
-		if(!(abstract_target.getBukkitEntity() instanceof LivingEntity)) return false;
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity abstract_target) {
+		if(!(abstract_target.getBukkitEntity() instanceof LivingEntity)) return SkillResult.CONDITION_FAILED;
 		
 		LivingEntity t=(LivingEntity)abstract_target.getBukkitEntity();
 		LivingEntity c=(LivingEntity)data.getCaster().getEntity().getBukkitEntity();
@@ -89,11 +82,11 @@ INoTargetSkill
 		if(!event.isCancelled()) {
 			t.setHealth(MathUtils.clamp(t.getHealth()+event.getAmount(),0d,t.getMaxHealth()));
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		return castAtEntity(data,data.getCaster().getEntity());
 	}
 }

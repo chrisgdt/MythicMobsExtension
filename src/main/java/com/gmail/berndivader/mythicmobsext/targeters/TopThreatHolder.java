@@ -4,16 +4,17 @@ import java.util.HashSet;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
 
 @ExternalAnnotation(name = "tth,topthreatholder", author = "BerndiVader")
 public class TopThreatHolder extends ISelectorEntity {
 
-	public TopThreatHolder(MythicLineConfig mlc) {
-		super(mlc);
+	public TopThreatHolder(SkillExecutor manager, MythicLineConfig mlc) {
+		super(manager, mlc);
 	}
 
 	@Override

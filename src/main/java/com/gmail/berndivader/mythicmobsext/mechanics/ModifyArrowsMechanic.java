@@ -1,35 +1,36 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 @ExternalAnnotation(name = "modifyarrows", author = "BerndiVader")
 public class ModifyArrowsMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private int a;
 	private char m;
 
-	public ModifyArrowsMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public ModifyArrowsMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		this.m = mlc.getString(new String[] { "mode", "m" }, "c").toUpperCase().charAt(0);
 		this.a = mlc.getInteger(new String[] { "amount", "a" }, 1);
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving()) {
 			modifyArrowsAtEntity(target.getBukkitEntity(), this.a, this.m);
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 
 	/*

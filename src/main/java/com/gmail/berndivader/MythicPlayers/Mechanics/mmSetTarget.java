@@ -1,17 +1,18 @@
 package com.gmail.berndivader.MythicPlayers.Mechanics;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.INoTargetSkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 public class mmSetTarget extends SkillMechanic implements INoTargetSkill {
 
@@ -19,9 +20,9 @@ public class mmSetTarget extends SkillMechanic implements INoTargetSkill {
 	protected boolean targetself;
 	int length;
 
-	public mmSetTarget(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public mmSetTarget(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.filter = mlc.getString(new String[] { "filter", "f" }, "").split(",");
 		this.targetself = mlc.getBoolean(new String[] { "selfnotarget", "snt" }, false);
@@ -29,7 +30,7 @@ public class mmSetTarget extends SkillMechanic implements INoTargetSkill {
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		LivingEntity le;
 		if (data.getCaster().getEntity().isPlayer() && (data.getCaster() instanceof ActiveMob)) {
 			ActiveMob am = (ActiveMob) data.getCaster();
@@ -46,7 +47,7 @@ public class mmSetTarget extends SkillMechanic implements INoTargetSkill {
 				am.getThreatTable().targetHighestThreat();
 			}
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 }

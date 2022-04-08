@@ -3,10 +3,10 @@ package com.gmail.berndivader.mythicmobsext.compatibility.worldguard;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.ILocationCondition;
+import io.lumine.mythic.bukkit.BukkitAdapter;
 
 public class WorldGuardStateFlagCondition extends AbstractCustomCondition implements ILocationCondition {
 

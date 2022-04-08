@@ -2,21 +2,20 @@ package com.gmail.berndivader.mythicmobsext.targeters;
 
 import java.util.HashSet;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillExecutor;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 @ExternalAnnotation(name = "lastdamager", author = "BerndiVader")
 public class LastDamagerTargeter extends ISelectorEntity {
 
-	public LastDamagerTargeter(MythicLineConfig mlc) {
-		super(mlc);
+	public LastDamagerTargeter(SkillExecutor manager, MythicLineConfig mlc) {
+		super(manager, mlc);
 	}
 
 	@Override

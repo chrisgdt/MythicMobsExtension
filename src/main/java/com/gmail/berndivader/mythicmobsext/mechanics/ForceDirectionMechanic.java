@@ -2,7 +2,14 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -14,21 +21,15 @@ import com.gmail.berndivader.mythicmobsext.utils.Vec2D;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 @ExternalAnnotation(name = "forcedirection", author = "BerndiVader")
 public class ForceDirectionMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	BlockFace faceing;
 	long duration;
 	double noise;
 
-	public ForceDirectionMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public ForceDirectionMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		faceing = BlockFace.valueOf(mlc.getString("faceing", "north").toUpperCase());
 		duration = mlc.getInteger("duration", 1);
@@ -36,9 +37,9 @@ public class ForceDirectionMechanic extends SkillMechanic implements ITargetedEn
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (!target.isPlayer())
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		Player p = (Player) target.getBukkitEntity();
 		Location source = p.getEyeLocation();
 		double dx = 0, dz = 0;
@@ -83,7 +84,7 @@ public class ForceDirectionMechanic extends SkillMechanic implements ITargetedEn
 				count++;
 			}
 		}.runTaskTimerAsynchronously(Main.getPlugin(), 1L, 1L);
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 }

@@ -7,15 +7,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.IMetaSkill;
-import io.lumine.xikage.mythicmobs.skills.Skill;
-import io.lumine.xikage.mythicmobs.skills.SkillManager;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 
 @ExternalAnnotation(name = "customrandomskill,advrandomskill", author = "BerndiVader")
 public class CustomRandomSkillMechanic extends SkillMechanic implements IMetaSkill {
@@ -23,8 +21,8 @@ public class CustomRandomSkillMechanic extends SkillMechanic implements IMetaSki
 	LinkedList<SkillEntry> entrylist;
 	boolean b1, shuffle;
 
-	public CustomRandomSkillMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public CustomRandomSkillMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		this.target_creative = true;
 		skillmanager = Utils.mythicmobs.getSkillManager();
 		this.entrylist = new LinkedList<>();
@@ -53,7 +51,7 @@ public class CustomRandomSkillMechanic extends SkillMechanic implements IMetaSki
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		double r = ThreadLocalRandom.current().nextDouble();
 		if (shuffle)
 			Collections.shuffle(entrylist);
@@ -63,11 +61,11 @@ public class CustomRandomSkillMechanic extends SkillMechanic implements IMetaSki
 			if (r <= sentry.getChance(data)) {
 				if (sentry.isSkillPresent() && sentry.getSkill().isUsable(data)) {
 					sentry.getSkill().execute(data);
-					return true;
+					return SkillResult.SUCCESS;
 				}
 			}
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 
 	public class SkillEntry {
@@ -77,7 +75,7 @@ public class CustomRandomSkillMechanic extends SkillMechanic implements IMetaSki
 
 		public SkillEntry(int priority, String chance, String skill) {
 			this.skill = skillmanager.getSkill(skill);
-			this.chance = new PlaceholderString(chance);
+			this.chance = new PlaceholderStringImpl(chance);
 			this.priority = priority;
 		}
 

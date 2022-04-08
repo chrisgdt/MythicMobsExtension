@@ -1,14 +1,13 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.IEntityCondition;
+import io.lumine.mythic.core.logging.MythicLogger;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.logging.MythicLogger;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
 @ExternalAnnotation(name = "spawnreason,spawnreason_ext", author = "BerndiVader")
 public class SpawnReasonCondition extends AbstractCustomCondition implements IEntityCondition {

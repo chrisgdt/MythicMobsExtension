@@ -1,22 +1,19 @@
 package com.gmail.berndivader.mythicmobsext.targeters;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.gmail.berndivader.mythicmobsext.conditions.ThreatTable;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob.ThreatTable;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
 
 @ExternalAnnotation(name = "ttt,threattabletargeter", author = "BerndiVader")
 public class ThreatTableTargeter extends ISelectorEntity {
@@ -32,8 +29,8 @@ public class ThreatTableTargeter extends ISelectorEntity {
 		}
 	}
 
-	public ThreatTableTargeter(MythicLineConfig mlc) {
-		super(mlc);
+	public ThreatTableTargeter(SkillExecutor manager, MythicLineConfig mlc) {
+		super(manager, mlc);
 		r1 = new RangedDouble(mlc.getString("range", ">0"));
 		r2 = new RangedDouble(mlc.getString("threat", ">0"));
 	}

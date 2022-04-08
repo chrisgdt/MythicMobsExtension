@@ -1,22 +1,25 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillString;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 import org.bukkit.entity.Entity;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-
 @ExternalAnnotation(name = "setnbt", author = "BerndiVader")
 public class SetNbtMechanic extends SkillMechanic implements ITargetedEntitySkill, INoTargetSkill {
 	PlaceholderString s1;
 
-	public SetNbtMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public SetNbtMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		String tmp = mlc.getString("nbt");
 		if (tmp.startsWith("\"") && tmp.endsWith("\"")) {
@@ -24,23 +27,27 @@ public class SetNbtMechanic extends SkillMechanic implements ITargetedEntitySkil
 		} else {
 			tmp = "{}";
 		}
-		s1 = new PlaceholderString(tmp);
+		s1 = new PlaceholderStringImpl(tmp);
 	}
 
 	@Override
-	public boolean cast(SkillMetadata var1) {
+	public SkillResult cast(SkillMetadata var1) {
 		Entity e = var1.getCaster().getEntity().getBukkitEntity();
 		return setNbt(e, s1.get(var1));
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata var1, AbstractEntity var2) {
+	public SkillResult castAtEntity(SkillMetadata var1, AbstractEntity var2) {
 		Entity e = var2.getBukkitEntity();
 		return setNbt(e, s1.get(var1, var2));
 	}
 
-	boolean setNbt(Entity e1, String s1) {
-		return Volatile.handler.addNBTTag(e1, s1);
+	SkillResult setNbt(Entity e1, String s1) {
+		if (Volatile.handler.addNBTTag(e1, s1)) {
+			return SkillResult.SUCCESS;
+		} else {
+			return SkillResult.CONDITION_FAILED;
+		}
 	}
 
 }

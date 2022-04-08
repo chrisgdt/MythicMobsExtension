@@ -13,6 +13,17 @@ import javax.imageio.ImageReader;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.stream.ImageInputStream;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.ITargetedLocationSkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -28,18 +39,8 @@ import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.jboolexpr.MathInterpreter;
 import com.gmail.berndivader.mythicmobsext.utils.RandomDouble;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-
 @ExternalAnnotation(name="particleimage", author="Seyarada")
-public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill  {
+public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 
 // TODO:
 // Optimize this
@@ -59,33 +60,33 @@ public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill
 	PlaceholderString scaleAmount;
 	Particle particle;
 	
-	public ParticleImage(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public ParticleImage(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		file = mlc.getString(new String[] {"file", "f"}, null);
 		scaleAmount = PlaceholderString.of(mlc.getString(new String[] {"scale", "s"}, "4"));
 		backgroundColor = mlc.getString(new String[] {"bgcolor", "color", "c"}, "white");
 		resize = mlc.getString("resize", "false");
-		interval = mlc.getLong("interval", 5);
+		interval = mlc.getLong(new String[]{"interval"}, 5);
 		skip = mlc.getInteger("skip", 5);
 		transform = mlc.getString("transform", "x,0,y");
 		particle = Particle.valueOf(mlc.getString(new String[] {"particle", "p"}, "REDSTONE").toUpperCase());
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity p) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity p) {
 		scale = new RandomDouble(scaleAmount.get(data,p)).rollDouble();
 		Location loc = BukkitAdapter.adapt(p.getLocation());
 		start(loc);
-		return true;
+		return SkillResult.SUCCESS;
 	}
 	
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation aL) {
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation aL) {
 		AbstractEntity caster = data.getTrigger();
 		scale = new RandomDouble(scaleAmount.get(data,caster)).rollDouble();
 		Location loc = BukkitAdapter.adapt(aL);
 		start(loc);
-		return false;
+		return SkillResult.SUCCESS;
 	}
 
 	public void start(Location loc) {

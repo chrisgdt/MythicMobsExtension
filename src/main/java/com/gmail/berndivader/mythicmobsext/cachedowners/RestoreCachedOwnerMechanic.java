@@ -2,28 +2,29 @@ package com.gmail.berndivader.mythicmobsext.cachedowners;
 
 import java.util.UUID;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.INoTargetSkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 public class RestoreCachedOwnerMechanic extends SkillMechanic implements INoTargetSkill {
 
-	public RestoreCachedOwnerMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public RestoreCachedOwnerMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		if (data.getCaster() instanceof ActiveMob) {
 			ActiveMob am = (ActiveMob) data.getCaster();
 			UUID owner_uuid = CachedOwnerHandler.getMobOwner(am.getUniqueId());
@@ -36,9 +37,9 @@ public class RestoreCachedOwnerMechanic extends SkillMechanic implements INoTarg
 							.setOwner((AnimalTamer) ((Player) target.getBukkitEntity()));
 					((Wolf) data.getCaster().getEntity().getBukkitEntity()).setTamed(true);
 				}
-				return true;
+				return SkillResult.SUCCESS;
 			}
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 }

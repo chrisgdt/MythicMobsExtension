@@ -6,18 +6,18 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.targeters.ILocationSelector;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.utils.quicksort.QuickSort;
 import com.gmail.berndivader.mythicmobsext.utils.quicksort.QuickSortPair;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 
 public abstract class ISelectorLocation extends ILocationSelector {
 
@@ -27,8 +27,8 @@ public abstract class ISelectorLocation extends ILocationSelector {
 	double side_offset, forward_offset, y_offset;
 	boolean use_relative;
 
-	public ISelectorLocation(MythicLineConfig mlc) {
-		super(mlc);
+	public ISelectorLocation(SkillExecutor manager, MythicLineConfig mlc) {
+		super(manager, mlc);
 		filters = new ArrayList<FilterEnum>();
 		String[] parse = mlc.getString("filter", "").toUpperCase().split(",");
 		if (mlc.getBoolean("sortbydistance", false))

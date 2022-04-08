@@ -4,17 +4,18 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.UUID;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
 @ExternalAnnotation(name = "amir,activemobsinradius", author = "BerndiVader")
@@ -25,8 +26,8 @@ public class ActiveMobsInRadius extends ISelectorEntity {
 	RangedDouble a;
 	double r;
 
-	public ActiveMobsInRadius(MythicLineConfig mlc) {
-		super(mlc);
+	public ActiveMobsInRadius(SkillExecutor manager, MythicLineConfig mlc) {
+		super(manager, mlc);
 		ml = mlc.getString(new String[] { "mobtypes", "types", "mobs", "mob", "type", "t", "m" }, "ALL").toUpperCase()
 				.split(",");
 		if (ml.length == 1 && (ml[0].equals("ALL") || ml[0].equals("ANY"))) {

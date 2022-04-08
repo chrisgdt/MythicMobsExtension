@@ -2,17 +2,22 @@ package com.gmail.berndivader.mythicmobsext.healthbar;
 
 import java.util.ArrayList;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillString;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-
 public class SpeechBubbleMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private PlaceholderString text;
 	private String id;
@@ -24,9 +29,10 @@ public class SpeechBubbleMechanic extends SkillMechanic implements ITargetedEnti
 	private boolean b1;
 	private boolean b2;
 
-	public SpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public SpeechBubbleMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.line = skill;
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.id = mlc.getString("id", "bubble");
 		this.offset = mlc.getDouble(new String[] { "offset", "o" }, 2.1D);
@@ -40,13 +46,13 @@ public class SpeechBubbleMechanic extends SkillMechanic implements ITargetedEnti
 		if (txt.startsWith("\"") && txt.endsWith("\"")) {
 			txt = txt.substring(1, txt.length() - 1);
 		}
-		text = new PlaceholderString(SkillString.unparseMessageSpecialChars(txt));
+		text = new PlaceholderStringImpl(SkillString.unparseMessageSpecialChars(txt));
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (!data.getCaster().getEntity().isLiving())
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		if (HealthbarHandler.speechbubbles
 				.containsKey(data.getCaster().getEntity().getUniqueId().toString() + this.id)) {
 			SpeechBubble sb = HealthbarHandler.speechbubbles
@@ -75,7 +81,7 @@ public class SpeechBubbleMechanic extends SkillMechanic implements ITargetedEnti
 			l1.add(0, entity.getEyeHeight(), 0);
 		}
 		new SpeechBubble(entity, this.id, l1, this.offset, this.time, a1, this.so, this.fo, b1, this.ll, this.b2);
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 }

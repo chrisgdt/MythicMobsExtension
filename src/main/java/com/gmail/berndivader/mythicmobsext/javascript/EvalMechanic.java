@@ -4,6 +4,17 @@ import java.util.regex.Pattern;
 
 import javax.script.ScriptException;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.INoTargetSkill;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillString;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -15,24 +26,14 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-
 @ExternalAnnotation(name = "math", author = "BerndiVader")
 public class EvalMechanic extends SkillMechanic implements INoTargetSkill, ITargetedEntitySkill {
 	PlaceholderString eval;
 	String js = "mme_eval";
 	String[] parse;
 
-	public EvalMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public EvalMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		String temp = mlc.getString(new String[] { "evaluate", "eval", "e" }, "");
 		if ((temp.startsWith("\""))) {
 			temp = SkillString.unparseMessageSpecialChars(temp.substring(1, temp.length() - 1));
@@ -44,17 +45,17 @@ public class EvalMechanic extends SkillMechanic implements INoTargetSkill, ITarg
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		return eval(data, target.getBukkitEntity(), null);
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		return eval(data, data.getCaster().getEntity().getBukkitEntity(),
 				data.getCaster().getEntity().getBukkitEntity().getLocation());
 	}
 
-	boolean eval(SkillMetadata data, Entity e1, Location l1) {
+	SkillResult eval(SkillMetadata data, Entity e1, Location l1) {
 		double s1 = 0d;
 		try {
 			if(Nashorn.invocable!=null) {
@@ -106,7 +107,7 @@ public class EvalMechanic extends SkillMechanic implements INoTargetSkill, ITarg
 						.getScore(parse[2]).setScore((int) (s1));
 			}
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 }

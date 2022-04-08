@@ -2,22 +2,23 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.Optional;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.INoTargetSkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.items.MythicItem;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.items.MythicItem;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name = "asequip", author = "BerndiVader")
 public class EquipArmorstandMechanic extends SkillMechanic implements INoTargetSkill {
@@ -28,9 +29,9 @@ public class EquipArmorstandMechanic extends SkillMechanic implements INoTargetS
 	int slot;
 	int pos;
 	
-	public EquipArmorstandMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public EquipArmorstandMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		parse = mlc.getString(new String[] { "item", "i" }).split(":");
 		item = PlaceholderString.of(parse[0]);
@@ -39,7 +40,7 @@ public class EquipArmorstandMechanic extends SkillMechanic implements INoTargetS
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		if (data.getCaster().getEntity().getBukkitEntity() instanceof ArmorStand) {
 			AbstractEntity target = data.getCaster().getEntity();
 			
@@ -56,23 +57,23 @@ public class EquipArmorstandMechanic extends SkillMechanic implements INoTargetS
 			
 			switch (slot) {
 				case 0: {
-					as.setItemInHand(is);
+					as.getEquipment().setItemInHand(is);
 					break;
 					}
 				case 1: {
-					as.setBoots(is);
+					as.getEquipment().setBoots(is);
 					break;
 					}
 				case 2: {
-					as.setLeggings(is);
+					as.getEquipment().setLeggings(is);
 					break;
 					}
 				case 3: {
-					as.setChestplate(is);
+					as.getEquipment().setChestplate(is);
 					break;
 					}
 				case 4: {
-					as.setHelmet(is);
+					as.getEquipment().setHelmet(is);
 					break;
 					}
 				case 5: {
@@ -80,8 +81,8 @@ public class EquipArmorstandMechanic extends SkillMechanic implements INoTargetS
 					break;
 				}
 			}
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 }

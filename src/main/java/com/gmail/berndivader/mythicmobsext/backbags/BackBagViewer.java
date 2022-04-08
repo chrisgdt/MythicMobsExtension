@@ -4,6 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.mobs.GenericCaster;
+import io.lumine.mythic.api.skills.Skill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillMetadataImpl;
+import io.lumine.mythic.core.skills.SkillTriggers;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -26,14 +34,6 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.mechanics.CreateItem;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.mobs.GenericCaster;
-import io.lumine.xikage.mythicmobs.skills.Skill;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 
 public class BackBagViewer implements Listener {
 	Entity owner;
@@ -129,7 +129,7 @@ public class BackBagViewer implements Listener {
 		if (maybe_skill.isPresent()) {
 			Skill skill = maybe_skill.get();
 			AbstractEntity abstract_target = BukkitAdapter.adapt(viewer);
-			SkillMetadata data = new SkillMetadata(SkillTrigger.API, new GenericCaster(BukkitAdapter.adapt(owner)),
+			SkillMetadata data = new SkillMetadataImpl(SkillTriggers.API, new GenericCaster(BukkitAdapter.adapt(owner)),
 					abstract_target);
 			data.setEntityTarget(abstract_target);
 			if (skill.isUsable(data))

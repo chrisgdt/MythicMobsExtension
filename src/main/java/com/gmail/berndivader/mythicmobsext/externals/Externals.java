@@ -9,17 +9,16 @@ import java.util.HashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import io.lumine.mythic.bukkit.events.MythicReloadedEvent;
+import io.lumine.mythic.core.skills.SkillCondition;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillTargeter;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
-import io.lumine.xikage.mythicmobs.skills.SkillCondition;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 
 public class Externals implements Listener {
 	public ExternalsLoader loader;

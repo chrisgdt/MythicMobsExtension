@@ -2,21 +2,24 @@ package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 
 import java.util.Optional;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.EntityManager;
-import io.lumine.xikage.mythicmobs.mobs.MobManager;
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.mobs.MobManager;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.mobs.EntityManager;
+import io.lumine.mythic.core.mobs.MobExecutor;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 public class CustomProjectile extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
-	protected MythicMobs mythicmobs;
+	protected MythicBukkit mythicmobs;
 	protected EntityManager entitymanager;
 	protected SkillManager skillmanager;
-	protected MobManager mobmanager;
+	protected MobExecutor mobmanager;
 
 	protected Optional<Skill> onTickSkill = Optional.empty();
 	protected Optional<Skill> onHitSkill = Optional.empty();
@@ -69,9 +72,9 @@ public class CustomProjectile extends SkillMechanic implements ITargetedEntitySk
 	protected float pEntitySpin;
 	protected float pEntityPitchOffset;
 
-	public CustomProjectile(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public CustomProjectile(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.mythicmobs = Utils.mythicmobs;
 		this.entitymanager = this.mythicmobs.getEntityManager();
@@ -160,13 +163,13 @@ public class CustomProjectile extends SkillMechanic implements ITargetedEntitySk
 	}
 
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
-		return false;
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation target) {
+		return SkillResult.MISSING_COMPATIBILITY;
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		return false;
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
+		return SkillResult.MISSING_COMPATIBILITY;
 	}
 
 	protected static enum ProjectileType {

@@ -11,14 +11,32 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
 
-import org.apache.commons.lang3.tuple.Pair;
+import com.gmail.berndivader.mythicmobsext.conditions.ThreatTable;
+import io.lumine.mythic.api.MythicPlugin;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.mobs.MobManager;
+import io.lumine.mythic.api.skills.SkillCaster;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.bukkit.entities.BukkitWolf;
+import io.lumine.mythic.core.config.MythicLineConfigImpl;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.mobs.MobExecutor;
+import io.lumine.mythic.core.skills.*;
+import io.lumine.mythic.core.spawning.spawners.SpawnerManager;
+import io.lumine.mythic.core.utils.Patterns;
+import io.lumine.mythic.utils.numbers.Numbers;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -46,6 +64,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
@@ -61,18 +80,6 @@ import com.gmail.berndivader.mythicmobsext.mechanics.PlayerSpinMechanic;
 
 import fr.neatmonster.nocheatplus.checks.CheckType;
 import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.mobs.MobManager;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob.ThreatTable;
-import io.lumine.xikage.mythicmobs.skills.SkillCaster;
-import io.lumine.xikage.mythicmobs.skills.SkillCondition;
-import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
-import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
-import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
@@ -83,8 +90,8 @@ import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
 
 public class Utils implements Listener {
-	public static MythicMobs mythicmobs;
-	public static MobManager mobmanager;
+	public static MythicBukkit mythicmobs;
+	public static MobExecutor mobmanager;
 	public static int serverV;
 	public static int renderLength;
 	public static HashMap<UUID, Vec3D> players;
@@ -133,9 +140,9 @@ public class Utils implements Listener {
 	static boolean papi_ispresent;
 	
 	static MetaRunner metaRunner;
-	
+
 	static {
-		mythicmobs = MythicMobs.inst();
+		mythicmobs = MythicBukkit.inst();
 		mobmanager = mythicmobs.getMobManager();
 		renderLength = 512;
 		str_PLUGINPATH = Main.getPlugin().getDataFolder().toString();
@@ -233,7 +240,7 @@ public class Utils implements Listener {
 				World w = e.getLocation().getWorld();
 				Location l = e.getLocation();
 				for (int i = 0; i < amount; i++) {
-					FallingBlock fb = w.spawnFallingBlock(l, Material.FIRE, (byte) 0);
+					FallingBlock fb = w.spawnFallingBlock(l, Material.FIRE.createBlockData());
 					fb.setVelocity(new Vector(UndoBlockListener.getRandomVel(-0.5, 0.5),
 							UndoBlockListener.getRandomVel(0.3, 0.8), UndoBlockListener.getRandomVel(-0.5, 0.5)));
 				}
@@ -277,7 +284,7 @@ public class Utils implements Listener {
 		final Entity s = (Entity) e.getEntity().getShooter();
 		final ActiveMob am = mobmanager.getMythicMobInstance(s);
 		if (am != null) {
-			TriggeredSkill ts = new TriggeredSkill(SkillTrigger.SHOOT, am, am.getEntity().getTarget(), true);
+			TriggeredSkill ts = new TriggeredSkill(SkillTriggers.SHOOT, am, am.getEntity().getTarget(), true);
 			e.setCancelled(ts.getCancelled());
 		}
 	}
@@ -296,7 +303,7 @@ public class Utils implements Listener {
 				&& entityDamageEvent instanceof EntityDamageByEntityEvent) {
 			LivingEntity damager = getAttacker(((EntityDamageByEntityEvent) entityDamageEvent).getDamager());
 			if (damager != null && mobmanager.isActiveMob(damager.getUniqueId())) {
-				new TriggeredSkill(SkillTrigger.KILL, mobmanager.getMythicMobInstance(damager),
+				new TriggeredSkill(SkillTriggers.KILL, mobmanager.getMythicMobInstance(damager),
 						BukkitAdapter.adapt(e.getEntity()), true);
 			}
 		}
@@ -355,13 +362,13 @@ public class Utils implements Listener {
 	public void triggerDamageForNoneEntity(EntityDamageEvent e) {
 		TriggeredSkill ts;
 		final Entity victim = e.getEntity();
-		if (e instanceof EntityDamageByEntityEvent || !(victim instanceof LivingEntity) || victim instanceof Player
-				|| mobmanager.getVoidList().contains(victim.getUniqueId()))
+		if (e instanceof EntityDamageByEntityEvent || !(victim instanceof LivingEntity) || victim instanceof Player)
+				//|| mobmanager.getVoidList().contains(victim.getUniqueId()))
 			return;
 		ActiveMob am = mobmanager.getMythicMobInstance(victim);
 		if (am == null || !am.getType().getConfig().getBoolean("onDamageForOtherCause"))
 			return;
-		ts = new TriggeredSkill(SkillTrigger.DAMAGED, am, null, true);
+		ts = new TriggeredSkill(SkillTriggers.DAMAGED, am, null, true);
 		if (ts.getCancelled())
 			e.setCancelled(true);
 	}
@@ -442,8 +449,8 @@ public class Utils implements Listener {
 	}
 
 	public static void doDamage(SkillCaster am, AbstractEntity t, double damage, boolean ignorearmor,
-			boolean preventKnockback, boolean preventImmunity, List<EntityType> ignores, boolean ignoreabs,
-			boolean debug, DamageCause cause, boolean ncp, boolean strict) {
+								boolean preventKnockback, boolean preventImmunity, List<EntityType> ignores, boolean ignoreabs,
+								boolean debug, DamageCause cause, boolean ncp, boolean strict) {
 		LivingEntity target;
 		am.setUsingDamageSkill(true);
 		if (am instanceof ActiveMob)
@@ -605,7 +612,7 @@ public class Utils implements Listener {
 	public static void triggerShoot(Entity caster, Entity trigger) {
 		final ActiveMob am = mobmanager.getMythicMobInstance(caster);
 		if (am != null) {
-			new TriggeredSkill(SkillTrigger.SHOOT, am, am.getEntity().getTarget(), true);
+			new TriggeredSkill(SkillTriggers.SHOOT, am, am.getEntity().getTarget(), true);
 		}
 	}
 
@@ -738,14 +745,15 @@ public class Utils implements Listener {
 	/**
 	 * 
 	 * @param targeter_string {@link String}
-	 * @return skill_targeter {@link SkillTargeter}
+	 * @return skill_targeter {@link io.lumine.mythic.core.skills.SkillTargeter}
 	 */
 
 	public static SkillTargeter parseSkillTargeter(String targeter_string) {
 		String search = targeter_string.substring(1);
-		MythicLineConfig mlc = new MythicLineConfig(search);
+		MythicLineConfig mlc = new MythicLineConfigImpl(search);
 		String name = search.contains("{") ? search.substring(0, search.indexOf("{")) : search;
-		return SkillTargeter.getMythicTargeter(name, mlc);
+
+		return Utils.mythicmobs.getSkillManager().getTargeter(name, mlc);
 	}
 	
 	public static Object getTagValue(Object nbt, JsonElement json_element) {
@@ -795,6 +803,430 @@ public class Utils implements Listener {
 				}
 				
 			}.runTaskTimer(Main.getPlugin(),Config.meta_delay,Config.meta_delay);
+		}
+	}
+
+
+
+	// COPIED FROM io.lumine.xikage.mythicmobs.mobs.MobManager of io.lumine.xikage:MythicMobs:4.5.0
+	public static AbstractLocation findSafeSpawnLocation(AbstractLocation b, int radiusXZ, int radiusY,
+														 int mob_height, boolean Ymod, boolean onSurface) {
+		Location base = BukkitAdapter.adapt(b);
+		if (radiusXZ <= 0) {
+			radiusXZ = 1;
+		}
+
+		if (radiusY <= 0) {
+			radiusY = 1;
+		}
+
+		double x = base.getX() - (double)radiusXZ + (double)Numbers.randomInt(radiusXZ * 2);
+		double z = base.getZ() - (double)radiusXZ + (double)Numbers.randomInt(radiusXZ * 2);
+		double y;
+		if (Ymod) {
+			y = base.getY() - (double)radiusY + (double)Numbers.randomInt(radiusY * 2);
+		} else {
+			y = base.getY() + (double)Numbers.randomInt(radiusY);
+		}
+
+		Location loc = new Location(base.getWorld(), x, y, z);
+		int j;
+		if (loc.getBlock().getType().isSolid()) {
+			j = 10;
+
+			while(loc.getBlock().getType().isSolid()) {
+				x = base.getX() - (double)radiusXZ + (double) Numbers.randomInt(radiusXZ * 2);
+				z = base.getZ() - (double)radiusXZ + (double)Numbers.randomInt(radiusXZ * 2);
+				if (Ymod) {
+					y = base.getY() - (double)radiusY + (double)Numbers.randomInt(radiusY * 2);
+				} else {
+					y = base.getY() + (double)Numbers.randomInt(radiusY);
+				}
+
+				loc = new Location(base.getWorld(), x, y, z);
+				--j;
+				if (j == 0) {
+					loc = new Location(base.getWorld(), base.getX(), base.getY() + 1.0D, base.getZ());
+					break;
+				}
+			}
+		}
+
+		if (onSurface && !loc.getBlock().getRelative(BlockFace.DOWN).getType().isSolid()) {
+			j = loc.getWorld().getHighestBlockYAt(loc);
+			if ((double)j <= loc.getY()) {
+				loc.setY(j + 1);
+			} else {
+				for(int j_ = 10; !loc.getBlock().getRelative(BlockFace.DOWN).getType().isSolid(); --j_) {
+					if (j_ == 0) {
+						loc = new Location(base.getWorld(), base.getX(), base.getY() + 1.0D, base.getZ());
+						break;
+					}
+
+					loc.setY(loc.getY() - 1.0D);
+				}
+			}
+		}
+
+		return BukkitAdapter.adapt(loc);
+	}
+
+	public static AbstractLocation findSafeSpawnLocation(AbstractLocation base, int radiusXZ, int radiusY,
+														 int mob_height, boolean yMod) {
+		return findSafeSpawnLocation(base, radiusXZ, radiusY, mob_height, yMod, false);
+	}
+
+	public static AbstractLocation findSafeSpawnLocation(AbstractLocation base, int radiusXZ,
+														 int radiusY, int mob_height) {
+		return findSafeSpawnLocation(base, radiusXZ, radiusY, mob_height, true, false);
+	}
+
+	public static AbstractLocation findSafeSpawnLocation(AbstractLocation base, int radius, int mob_height) {
+		return findSafeSpawnLocation(base, radius, radius, mob_height, true, false);
+	}
+
+
+	// COPIED FROM io.lumine.xikage.mythicmobs.skills.MobManager of io.lumine.xikage:MythicMobs:4.5.0
+	public static String parseMobVariables(String s, SkillCaster caster, AbstractEntity target, AbstractEntity trigger) {
+		if (s == null) {
+			return null;
+		} else {
+			Matcher Rmatcher;
+			int rand;
+			Long time = System.nanoTime();
+			ActiveMob am;
+			Wolf w;
+			int score;
+			String objective;
+			Objective obj;
+			if (s.contains("<mob")) {
+				s = s.replace("<mob.hp>", String.valueOf((int)caster.getEntity().getHealth()));
+				s = s.replace("<mob.php>", String.valueOf((int)(caster.getEntity().getHealth() / caster.getEntity().getMaxHealth())));
+				s = s.replace("<mob.mhp>", String.valueOf(caster.getEntity().getMaxHealth()));
+				s = s.replace("<mob.thp>", String.valueOf(caster.getEntity().getHealth()));
+				s = s.replace("<mob.uuid>", String.valueOf(caster.getEntity().getUniqueId().toString()));
+				if (caster instanceof ActiveMob) {
+					am = (ActiveMob)caster;
+					if (am.getType().getDisplayName() != null) {
+						s = s.replace("<mob.name>", am.getDisplayName());
+					} else {
+						s = s.replace("<mob.name>", "Unknown");
+					}
+
+					s = s.replace("<mob.level>", String.valueOf(am.getLevel()));
+					s = s.replace("<mob.stance>", am.getStance());
+					if (am.getType().getMythicEntity() instanceof BukkitWolf) {
+						w = (Wolf)BukkitAdapter.adapt(am.getEntity());
+						if (w.getOwner() != null) {
+							s = s.replace("<mob.owner.name>", w.getOwner().getName().toString());
+							s = s.replace("<mob.owner.uuid>", w.getOwner().getUniqueId().toString());
+						}
+					}
+
+					if (am.hasThreatTable()) {
+						if (am.getThreatTable().inCombat()) {
+							s = s.replace("<mob.tt.top>", am.getThreatTable().getTopThreatHolder().getName());
+						} else {
+							s = s.replace("<mob.tt.top>", "Unknown");
+						}
+					}
+				} else if (caster.getEntity().isPlayer()) {
+					s = s.replace("<mob.name>", caster.getEntity().asPlayer().getName());
+				}
+
+				s = s.replace("<mob.l.w>", caster.getEntity().getWorld().getName().toString());
+				if (s.contains("<mob.l.x")) {
+					if (s.contains("<mob.l.x%")) {
+						Rmatcher = Patterns.MSMobX.matcher(s);
+						Rmatcher.find();
+						rand = Numbers.randomInt(2) == 1 ? Numbers.randomInt(1 + Integer.parseInt(Rmatcher.group(1))) : 0 - Numbers.randomInt(Integer.parseInt(Rmatcher.group(1)));
+						s = s.replace("<mob.l.x%" + Rmatcher.group(1) + ">", Integer.toString(caster.getLocation().getBlockX() + rand));
+					} else {
+						s = s.replace("<mob.l.x>", Integer.toString(caster.getLocation().getBlockX()));
+					}
+				}
+
+				if (s.contains("<mob.l.y")) {
+					if (s.contains("<mob.l.y%")) {
+						Rmatcher = Patterns.MSMobY.matcher(s);
+						Rmatcher.find();
+						rand = Numbers.randomInt(2) == 1 ? Numbers.randomInt(1 + Integer.parseInt(Rmatcher.group(1))) : 0 - Numbers.randomInt(Integer.parseInt(Rmatcher.group(1)));
+						s = s.replace("<mob.l.y%" + Rmatcher.group(1) + ">", Integer.toString(caster.getLocation().getBlockY() + rand));
+					} else {
+						s = s.replace("<mob.l.y>", Integer.toString(caster.getLocation().getBlockY()));
+					}
+				}
+
+				if (s.contains("<mob.l.z")) {
+					if (s.contains("<mob.l.z%")) {
+						Rmatcher = Patterns.MSMobZ.matcher(s);
+						Rmatcher.find();
+						rand = Numbers.randomInt(2) == 1 ? Numbers.randomInt(1 + Integer.parseInt(Rmatcher.group(1))) : 0 - Numbers.randomInt(Integer.parseInt(Rmatcher.group(1)));
+						s = s.replace("<mob.l.z%" + Rmatcher.group(1) + ">", Integer.toString(caster.getLocation().getBlockZ() + rand));
+					} else {
+						s = s.replace("<mob.l.z>", Integer.toString(caster.getLocation().getBlockZ()));
+					}
+				}
+
+				if (s.contains("<mob.score.")) {
+					for(Rmatcher = Patterns.MobScore.matcher(s); Rmatcher.find(); s = s.replace("<mob.score." + objective + ">", "" + score)) {
+						objective = Rmatcher.group(1);
+						obj = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(objective);
+						score = 0;
+						if (obj != null) {
+							score = obj.getScore(caster.getEntity().getUniqueId().toString()).getScore();
+						}
+					}
+				}
+			}
+
+			if (s.contains("<caster")) {
+				s = s.replace("<caster.hp>", String.valueOf((int)caster.getEntity().getHealth()));
+				s = s.replace("<caster.php>", String.valueOf((int)(caster.getEntity().getHealth() / caster.getEntity().getMaxHealth())));
+				s = s.replace("<caster.mhp>", String.valueOf(caster.getEntity().getMaxHealth()));
+				s = s.replace("<caster.thp>", String.valueOf(caster.getEntity().getHealth()));
+				s = s.replace("<caster.uuid>", String.valueOf(caster.getEntity().getUniqueId().toString()));
+				if (caster instanceof ActiveMob) {
+					am = (ActiveMob)caster;
+					if (am.getType().getDisplayName() != null) {
+						s = s.replace("<caster.name>", am.getDisplayName());
+					} else {
+						s = s.replace("<caster.name>", "Unknown");
+					}
+
+					s = s.replace("<caster.level>", String.valueOf(am.getLevel()));
+					s = s.replace("<caster.stance>", am.getStance());
+					if (am.getType().getMythicEntity() instanceof BukkitWolf) {
+						w = (Wolf)BukkitAdapter.adapt(am.getEntity());
+						if (w.getOwner() != null) {
+							s = s.replace("<caster.owner.name>", w.getOwner().getName().toString());
+							s = s.replace("<caster.owner.uuid>", w.getOwner().getUniqueId().toString());
+						}
+					}
+
+					if (am.hasThreatTable()) {
+						if (am.getThreatTable().inCombat()) {
+							s = s.replace("<caster.tt.top>", am.getThreatTable().getTopThreatHolder().getName());
+						} else {
+							s = s.replace("<caster.tt.top>", "Unknown");
+						}
+					}
+				} else if (caster.getEntity().isPlayer()) {
+					s = s.replace("<caster.name>", caster.getEntity().asPlayer().getName());
+				}
+
+				s = s.replace("<caster.l.w>", caster.getEntity().getWorld().getName().toString());
+				if (s.contains("<caster.l.x")) {
+					if (s.contains("<caster.l.x%")) {
+						Rmatcher = Patterns.MSMobX.matcher(s);
+						Rmatcher.find();
+						rand = Numbers.randomInt(2) == 1 ? Numbers.randomInt(1 + Integer.parseInt(Rmatcher.group(1))) : 0 - Numbers.randomInt(Integer.parseInt(Rmatcher.group(1)));
+						s = s.replace("<caster.l.x%" + Rmatcher.group(1) + ">", Integer.toString(caster.getLocation().getBlockX() + rand));
+					} else {
+						s = s.replace("<caster.l.x>", Integer.toString(caster.getLocation().getBlockX()));
+					}
+				}
+
+				if (s.contains("<caster.l.y")) {
+					if (s.contains("<caster.l.y%")) {
+						Rmatcher = Patterns.MSMobY.matcher(s);
+						Rmatcher.find();
+						rand = Numbers.randomInt(2) == 1 ? Numbers.randomInt(1 + Integer.parseInt(Rmatcher.group(1))) : 0 - Numbers.randomInt(Integer.parseInt(Rmatcher.group(1)));
+						s = s.replace("<caster.l.y%" + Rmatcher.group(1) + ">", Integer.toString(caster.getLocation().getBlockY() + rand));
+					} else {
+						s = s.replace("<caster.l.y>", Integer.toString(caster.getLocation().getBlockY()));
+					}
+				}
+
+				if (s.contains("<caster.l.z")) {
+					if (s.contains("<caster.l.z%")) {
+						Rmatcher = Patterns.MSMobZ.matcher(s);
+						Rmatcher.find();
+						rand = Numbers.randomInt(2) == 1 ? Numbers.randomInt(1 + Integer.parseInt(Rmatcher.group(1))) : 0 - Numbers.randomInt(Integer.parseInt(Rmatcher.group(1)));
+						s = s.replace("<caster.l.z%" + Rmatcher.group(1) + ">", Integer.toString(caster.getLocation().getBlockZ() + rand));
+					} else {
+						s = s.replace("<caster.l.z>", Integer.toString(caster.getLocation().getBlockZ()));
+					}
+				}
+
+				if (s.contains("<caster.score.")) {
+					for(Rmatcher = Patterns.MobScore.matcher(s); Rmatcher.find(); s = s.replace("<caster.score." + objective + ">", "" + score)) {
+						objective = Rmatcher.group(1);
+						obj = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(objective);
+						score = 0;
+						if (obj != null) {
+							score = obj.getScore(caster.getEntity().getUniqueId().toString()).getScore();
+						}
+					}
+				}
+			}
+
+			if (s.contains("<target") && target != null) {
+				if (target != null && target.isPlayer()) {
+					s = s.replace("<target.name>", target.asPlayer().getName());
+				} else if (target != null && target.getName() != null) {
+					s = s.replace("<target.name>", target.getName());
+				}
+
+				s = s.replace("<target.hp>", String.valueOf((int)target.getHealth()));
+				s = s.replace("<target.uuid>", String.valueOf(target.getUniqueId().toString()));
+				if (caster instanceof ActiveMob && ((ActiveMob)caster).hasThreatTable()) {
+					s = s.replace("<target.threat>", String.valueOf(((ActiveMob)caster).getThreatTable().getThreat(target)));
+				}
+
+				s = s.replace("<target.l.w>", target.getWorld().getName().toString());
+				if (s.contains("<target.l.x")) {
+					if (s.contains("<target.l.x%")) {
+						Rmatcher = Patterns.MSTargetX.matcher(s);
+						Rmatcher.find();
+						rand = Numbers.randomInt(2) == 1 ? Numbers.randomInt(1 + Integer.parseInt(Rmatcher.group(1))) : 0 - Numbers.randomInt(Integer.parseInt(Rmatcher.group(1)));
+						s = s.replace("<target.l.x%" + Rmatcher.group(1) + ">", Integer.toString(target.getLocation().getBlockX() + rand));
+					} else {
+						s = s.replace("<target.l.x>", Integer.toString(target.getLocation().getBlockX()));
+					}
+				}
+
+				if (s.contains("<target.l.y")) {
+					if (s.contains("<target.l.y%")) {
+						Rmatcher = Patterns.MSTargetY.matcher(s);
+						Rmatcher.find();
+						rand = Numbers.randomInt(2) == 1 ? Numbers.randomInt(1 + Integer.parseInt(Rmatcher.group(1))) : 0 - Numbers.randomInt(Integer.parseInt(Rmatcher.group(1)));
+						s = s.replace("<target.l.y%" + Rmatcher.group(1) + ">", Integer.toString(target.getLocation().getBlockY() + rand));
+					} else {
+						s = s.replace("<target.l.y>", Integer.toString(target.getLocation().getBlockY()));
+					}
+				}
+
+				if (s.contains("<target.l.z")) {
+					if (s.contains("<target.l.z%")) {
+						Rmatcher = Patterns.MSTargetZ.matcher(s);
+						Rmatcher.find();
+						rand = Numbers.randomInt(2) == 1 ? Numbers.randomInt(1 + Integer.parseInt(Rmatcher.group(1))) : 0 - Numbers.randomInt(Integer.parseInt(Rmatcher.group(1)));
+						s = s.replace("<target.l.z%" + Rmatcher.group(1) + ">", Integer.toString(target.getLocation().getBlockZ() + rand));
+					} else {
+						s = s.replace("<target.l.z>", Integer.toString(target.getLocation().getBlockZ()));
+					}
+				}
+
+				if (s.contains("<target.score.")) {
+					for(Rmatcher = Patterns.TargetScore.matcher(s); Rmatcher.find(); s = s.replace("<target.score." + objective + ">", "" + score)) {
+						objective = Rmatcher.group(1);
+						obj = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(objective);
+						score = 0;
+						if (obj != null) {
+							if (target.isPlayer()) {
+								score = obj.getScore(target.asPlayer().getName()).getScore();
+							} else {
+								score = obj.getScore(target.getUniqueId().toString()).getScore();
+							}
+						}
+					}
+				}
+			}
+
+			if (s.contains("<trigger")) {
+				if (trigger != null) {
+					if (trigger.isPlayer()) {
+						s = s.replace("<trigger.name>", trigger.asPlayer().getName());
+					} else if (trigger.getName() != null) {
+						s = s.replace("<trigger.name>", trigger.getName());
+					} else {
+						s = s.replace("<trigger.name>", "Unknown");
+					}
+
+					s = s.replace("<trigger.hp>", String.valueOf((int)trigger.getHealth()));
+					s = s.replace("<trigger.uuid>", String.valueOf(trigger.getUniqueId().toString()));
+					if (caster instanceof ActiveMob && ((ActiveMob)caster).hasThreatTable()) {
+						s = s.replace("<trigger.threat>", String.valueOf(((ActiveMob)caster).getThreatTable().getThreat(trigger)));
+					}
+
+					s = s.replace("<trigger.l.w>", trigger.getWorld().getName().toString());
+					if (s.contains("<trigger.l.x")) {
+						if (s.contains("<trigger.l.x%")) {
+							Rmatcher = Patterns.MSTriggerX.matcher(s);
+							Rmatcher.find();
+							rand = Numbers.randomInt(2) == 1 ? Numbers.randomInt(1 + Integer.parseInt(Rmatcher.group(1))) : 0 - Numbers.randomInt(Integer.parseInt(Rmatcher.group(1)));
+							s = s.replace("<trigger.l.x%" + Rmatcher.group(1) + ">", Integer.toString(trigger.getLocation().getBlockX() + rand));
+						} else {
+							s = s.replace("<trigger.l.x>", Integer.toString(trigger.getLocation().getBlockX()));
+						}
+					}
+
+					if (s.contains("<trigger.l.y")) {
+						if (s.contains("<trigger.l.y%")) {
+							Rmatcher = Patterns.MSTriggerY.matcher(s);
+							Rmatcher.find();
+							rand = Numbers.randomInt(2) == 1 ? Numbers.randomInt(1 + Integer.parseInt(Rmatcher.group(1))) : 0 - Numbers.randomInt(Integer.parseInt(Rmatcher.group(1)));
+							s = s.replace("<trigger.l.y%" + Rmatcher.group(1) + ">", Integer.toString(trigger.getLocation().getBlockY() + rand));
+						} else {
+							s = s.replace("<trigger.l.y>", Integer.toString(trigger.getLocation().getBlockY()));
+						}
+					}
+
+					if (s.contains("<trigger.l.z")) {
+						if (s.contains("<trigger.l.z%")) {
+							Rmatcher = Patterns.MSTriggerZ.matcher(s);
+							Rmatcher.find();
+							rand = Numbers.randomInt(2) == 1 ? Numbers.randomInt(1 + Integer.parseInt(Rmatcher.group(1))) : 0 - Numbers.randomInt(Integer.parseInt(Rmatcher.group(1)));
+							s = s.replace("<trigger.l.z%" + Rmatcher.group(1) + ">", Integer.toString(trigger.getLocation().getBlockZ() + rand));
+						} else {
+							s = s.replace("<trigger.l.z>", Integer.toString(trigger.getLocation().getBlockZ()));
+						}
+					}
+
+					if (s.contains("<trigger.score.")) {
+						for(Rmatcher = Patterns.TriggerScore.matcher(s); Rmatcher.find(); s = s.replace("<trigger.score." + objective + ">", "" + score)) {
+							objective = Rmatcher.group(1);
+							obj = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(objective);
+							score = 0;
+							if (obj != null) {
+								if (trigger.isPlayer()) {
+									score = obj.getScore(trigger.asPlayer().getName()).getScore();
+								} else {
+									score = obj.getScore(trigger.getUniqueId().toString()).getScore();
+								}
+							}
+						}
+					}
+				} else {
+					s = s.replace("<trigger.name>", "Unknown");
+				}
+			}
+
+			s = SkillString.parseMessageSpecialChars(s);
+			if (s.contains("<random")) {
+				for(Matcher pMatcher = Patterns.VariableRanges.matcher(s); pMatcher.find(); s = s.replace(pMatcher.group(0), "" + score)) {
+					int min = Integer.parseInt(pMatcher.group(1));
+					score = Integer.parseInt(pMatcher.group(2));
+					score = Numbers.randomInt(score - min + 1) + min;
+				}
+			}
+
+			if (s.contains("<global.score.")) {
+				for(Rmatcher = Patterns.GlobalScore.matcher(s); Rmatcher.find(); s = s.replace("<global.score." + objective + ">", "" + score)) {
+					objective = Rmatcher.group(1);
+					obj = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(objective);
+					score = 0;
+					if (obj != null) {
+						score = obj.getScore("__GLOBAL__").getScore();
+					}
+				}
+			}
+
+			String entry;
+			if (s.contains("<score.")) {
+				for(Rmatcher = Patterns.GenericScore.matcher(s); Rmatcher.find(); s = s.replace("<score." + objective + "." + entry + ">", "" + score)) {
+					objective = Rmatcher.group(1);
+					entry = Rmatcher.group(2);
+					obj = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(objective);
+					score = 0;
+					if (obj != null) {
+						score = obj.getScore(entry).getScore();
+					}
+				}
+			}
+
+			return s;
 		}
 	}
 	

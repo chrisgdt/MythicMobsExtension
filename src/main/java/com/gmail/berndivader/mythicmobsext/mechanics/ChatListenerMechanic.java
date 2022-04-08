@@ -2,7 +2,15 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.Optional;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillString;
+import io.lumine.mythic.core.skills.mechanics.AuraMechanic;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -17,13 +25,6 @@ import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.mechanics.AuraMechanic;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name = "chatlistener", author = "BerndiVader")
 public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntitySkill {
@@ -44,9 +45,9 @@ public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntit
 		response = "BOTRESPONSE";
 	}
 
-	public ChatListenerMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public ChatListenerMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.auraName = Optional.of(mlc.getString("chatname", "chatlistener"));
 		String s1 = mlc.getString("phrases", "").toLowerCase();
@@ -79,13 +80,13 @@ public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntit
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata arg0, AbstractEntity arg1) {
+	public SkillResult castAtEntity(SkillMetadata arg0, AbstractEntity arg1) {
 		if (!ignoreTrigger && !arg1.isPlayer())
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		if ((multi && !arg1.getBukkitEntity().hasMetadata(str + this.auraName))
 				|| (!multi && !arg0.getCaster().hasAura(auraName.get()))) {
 			new ChatListener(this, arg0, arg1);
-			return true;
+			return SkillResult.SUCCESS;
 		}
 		if (inuseSkill.isPresent()) {
 			Skill sk = inuseSkill.get();
@@ -93,7 +94,7 @@ public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntit
 			if (sk.isUsable(sd))
 				sk.execute(sd);
 		}
-		return false;
+		return SkillResult.ERROR;
 	}
 
 	class ChatListener extends ChatListenerMechanic.AuraTracker implements Runnable, IParentSkill, Listener {
@@ -137,7 +138,7 @@ public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntit
 				return;
 			boolean bl1 = phrases.length == 0;
 			String s2, s22;
-			final String s222 = s2 = s22 = new PlaceholderString(e.getMessage()).get(skillMetadata, p);
+			final String s222 = s2 = s22 = new PlaceholderStringImpl(e.getMessage()).get(skillMetadata, p);
 			if (!sense)
 				s2 = s2.toLowerCase();
 			Skill sk = null;
@@ -146,7 +147,7 @@ public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntit
 					e.getPlayer().getLocation().toVector())))) {
 				if (!bot) {
 					for (int i1 = 0; i1 < phrases.length; i1++) {
-						String s4 = new PlaceholderString(phrases[i1]).get(skillMetadata, p);
+						String s4 = new PlaceholderStringImpl(phrases[i1]).get(skillMetadata, p);
 						if (!sense)
 							s4 = s4.toLowerCase();
 						if (bl1 = buff.strict ? s2.equals(s4) : s2.contains(s4)) {
@@ -159,7 +160,7 @@ public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntit
 						if (cancelMatch)
 							e.setCancelled(true);
 						if (storage != null) {
-							String s3 = new PlaceholderString(storage).get(skillMetadata, p);
+							String s3 = new PlaceholderStringImpl(storage).get(skillMetadata, p);
 							skillMetadata.getCaster().getEntity().getBukkitEntity().setMetadata(s3,
 									new FixedMetadataValue(Main.getPlugin(), s22));
 						}

@@ -1,17 +1,18 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 @ExternalAnnotation(name = "nodamageticks", author = "BerndiVader")
 public class NoDamageTicksMechanic extends SkillMechanic implements ITargetedEntitySkill {
@@ -22,14 +23,14 @@ public class NoDamageTicksMechanic extends SkillMechanic implements ITargetedEnt
 		str = "mmenodelaydmg";
 	}
 
-	public NoDamageTicksMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public NoDamageTicksMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		j1 = mlc.getInteger("damagedelay", 1);
 		j2 = mlc.getInteger("duration", 1);
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity e) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity e) {
 		if (e.isLiving()) {
 			final LivingEntity e1 = (LivingEntity) e.getBukkitEntity();
 			e1.removeMetadata(str, Main.getPlugin());
@@ -43,7 +44,7 @@ public class NoDamageTicksMechanic extends SkillMechanic implements ITargetedEnt
 
 						@Override
 						public void run() {
-							if (e1 == null || e1.isDead() || !e1.hasMetadata(str)) {
+							if (e1.isDead() || !e1.hasMetadata(str)) {
 								this.cancel();
 							} else if (j4 == 0) {
 								e1.setMaximumNoDamageTicks(20);
@@ -55,8 +56,9 @@ public class NoDamageTicksMechanic extends SkillMechanic implements ITargetedEnt
 					}.runTaskTimer(Main.getPlugin(), 1L, 1L);
 				}
 			}.runTaskLater(Main.getPlugin(), 1L);
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 
 	private void j1(LivingEntity e) {

@@ -2,9 +2,9 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.conditions.ILocationComparisonCondition;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.ILocationComparisonCondition;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
 @ExternalAnnotation(name = "vdistance", author = "BerndiVader")

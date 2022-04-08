@@ -1,24 +1,24 @@
 package com.gmail.berndivader.MythicPlayers;
 
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import io.lumine.mythic.api.MythicPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-
 public class MythicPlayers {
 
 	static String pluginName = "MythicPlayers";
 
-	public static MythicMobs mythicmobs;
+	public static MythicPlugin mythicmobs;
 	private Plugin plugin;
 	private static MythicPlayers core;
 	private PlayerManager playermanager;
 
 	public MythicPlayers(Plugin plugin) {
 		core = this;
-		mythicmobs = MythicMobs.inst();
+		mythicmobs = Utils.mythicmobs;
 		this.plugin = plugin;
 		if (Bukkit.getServer().getPluginManager().getPlugin("MythicMobs") != null) {
 			this.playermanager = new PlayerManager(this);

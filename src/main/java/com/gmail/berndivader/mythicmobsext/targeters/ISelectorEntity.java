@@ -6,18 +6,18 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.targeters.IEntitySelector;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.utils.quicksort.QuickSort;
 import com.gmail.berndivader.mythicmobsext.utils.quicksort.QuickSortPair;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 
 public abstract class ISelectorEntity extends IEntitySelector {
 
@@ -28,8 +28,8 @@ public abstract class ISelectorEntity extends IEntitySelector {
 	boolean use_relative;
 	List<String> excludes, includes;
 
-	public ISelectorEntity(MythicLineConfig mlc) {
-		super(mlc);
+	public ISelectorEntity(SkillExecutor manager, MythicLineConfig mlc) {
+		super(manager, mlc);
 		filters = new ArrayList<FilterEnum>();
 		excludes = new ArrayList<String>();
 		includes = new ArrayList<String>();

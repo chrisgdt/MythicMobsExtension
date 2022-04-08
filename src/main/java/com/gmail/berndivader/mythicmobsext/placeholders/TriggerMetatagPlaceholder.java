@@ -2,11 +2,10 @@ package com.gmail.berndivader.mythicmobsext.placeholders;
 
 import java.util.function.BiFunction;
 
+import io.lumine.mythic.core.skills.placeholders.PlaceholderMeta;
 import org.bukkit.entity.Entity;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.skills.placeholders.PlaceholderMeta;
 
 public class TriggerMetatagPlaceholder extends MetatagPlaceholder {
 	public TriggerMetatagPlaceholder() {

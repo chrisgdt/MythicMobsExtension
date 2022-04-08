@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.mechanics.AuraMechanic;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -14,10 +18,6 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.mechanics.AuraMechanic;
 
 @ExternalAnnotation(name = "curse", author = "BerndiVader")
 public class Curse extends AuraMechanic implements ITargetedEntitySkill {
@@ -33,9 +33,9 @@ public class Curse extends AuraMechanic implements ITargetedEntitySkill {
 	
 	final static String str = "MME_CURSE";
 
-	public Curse(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public Curse(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.auraName = Optional.of(str);
 		reasons=new ArrayList<>();
@@ -72,13 +72,13 @@ public class Curse extends AuraMechanic implements ITargetedEntitySkill {
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstractEntity) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity abstractEntity) {
 		if (!abstractEntity.getBukkitEntity().hasMetadata(str)) {
 			new CurseTracker(this, data, abstractEntity);
-			return true;
+			return SkillResult.SUCCESS;
 		}
 	
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 
 	class CurseTracker extends Curse.AuraTracker implements Runnable, IParentSkill, Listener {

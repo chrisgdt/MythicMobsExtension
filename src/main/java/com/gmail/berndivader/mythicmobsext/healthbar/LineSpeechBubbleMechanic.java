@@ -1,9 +1,16 @@
 package com.gmail.berndivader.mythicmobsext.healthbar;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.*;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillString;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 
 public class LineSpeechBubbleMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private PlaceholderString oline;
@@ -11,9 +18,10 @@ public class LineSpeechBubbleMechanic extends SkillMechanic implements ITargeted
 	private String id;
 	private String cmp;
 
-	public LineSpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public LineSpeechBubbleMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.line = skill;
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.id = mlc.getString("id", "bubble");
 		this.cmp = mlc.getString(new String[] { "mode", "m" }, "replace").toLowerCase();
@@ -21,26 +29,26 @@ public class LineSpeechBubbleMechanic extends SkillMechanic implements ITargeted
 		String nl = mlc.getString(new String[] { "newline", "nl" }, null);
 		if (nl != null) {
 			if (nl.startsWith("\"") && nl.endsWith("\"")) {
-				this.nline = new PlaceholderString(
+				this.nline = new PlaceholderStringImpl(
 						SkillString.parseMessageSpecialChars((nl.substring(1, nl.length() - 1))));
 			} else {
-				this.nline = new PlaceholderString(nl);
+				this.nline = new PlaceholderStringImpl(nl);
 			}
 		}
 		if (ol != null) {
 			if (ol.startsWith("\"") && ol.endsWith("\"")) {
-				this.oline = new PlaceholderString(
+				this.oline = new PlaceholderStringImpl(
 						SkillString.unparseMessageSpecialChars(ol.substring(1, ol.length() - 1)));
 			} else {
-				this.oline = new PlaceholderString(ol);
+				this.oline = new PlaceholderStringImpl(ol);
 			}
 		} else {
-			this.oline = new PlaceholderString("");
+			this.oline = new PlaceholderStringImpl("");
 		}
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (HealthbarHandler.speechbubbles
 				.containsKey(data.getCaster().getEntity().getUniqueId().toString() + this.id)) {
 			SpeechBubble sb = HealthbarHandler.speechbubbles
@@ -82,9 +90,9 @@ public class LineSpeechBubbleMechanic extends SkillMechanic implements ITargeted
 				}
 				sb.lines();
 			}
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 
 }

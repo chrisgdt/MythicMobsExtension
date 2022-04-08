@@ -5,9 +5,9 @@ import java.text.SimpleDateFormat;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.IEntityCondition;
 
 @ExternalAnnotation(name = "datetime", author = "BerndiVader")
 public class DateCondition extends AbstractCustomCondition implements IEntityCondition {

@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
+import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,8 +21,6 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import fr.neatmonster.nocheatplus.NoCheatPlus;
 import fr.neatmonster.nocheatplus.checks.CheckType;
 import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 
 public class NoCheatPlusSupport implements Listener {
 	static String pluginName = "NoCheatPlus";
@@ -51,12 +51,12 @@ public class NoCheatPlusSupport implements Listener {
 		switch (s1) {
 		case "exemptplayer":
 		case "exemptplayer_ext": {
-			e.register(new ExemptPlayerMechanic(e.getConfig().getLine(), e.getConfig()));
+			e.register(new ExemptPlayerMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
 			break;
 		}
 		case "unexemptplayer":
 		case "unexemptplayer_ext": {
-			e.register(new UnExemptPlayerMechanic(e.getConfig().getLine(), e.getConfig()));
+			e.register(new UnExemptPlayerMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
 			break;
 		}
 		}

@@ -5,7 +5,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.ListIterator;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -14,23 +23,15 @@ import org.bukkit.inventory.PlayerInventory;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 public class StealMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private ArrayList<String> items;
 	private String signal_fail;
 	private String signal_ok;
 	private int[] iarr;
 
-	public StealMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public StealMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.items = new ArrayList<>(
 				Arrays.asList(mlc.getString(new String[] { "items", "item", "i" }, "ANY:1").toUpperCase().split(",")));
@@ -48,9 +49,9 @@ public class StealMechanic extends SkillMechanic implements ITargetedEntitySkill
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (!target.isPlayer() || target.isDead())
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		ActiveMob am = (ActiveMob) data.getCaster();
 		Player pl = (Player) BukkitAdapter.adapt(target);
 		Collections.shuffle(this.items, Main.random);
@@ -119,6 +120,6 @@ public class StealMechanic extends SkillMechanic implements ITargetedEntitySkill
 		}
 		if (!stolen && am != null)
 			am.signalMob(am.getEntity(), this.signal_fail);
-		return true;
+		return SkillResult.SUCCESS;
 	}
 }

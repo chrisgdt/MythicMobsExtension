@@ -1,6 +1,13 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import org.apache.commons.lang3.tuple.Pair;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillTriggers;
+import io.lumine.mythic.core.skills.TriggeredSkill;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
@@ -9,17 +16,13 @@ import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.*;
-
 @ExternalAnnotation(name = "resettarget,settarget_ext", author = "BerndiVader")
 public class ResetTargetMechanic extends SkillMechanic implements ITargetedEntitySkill, INoTargetSkill {
 	boolean event, trigger, set;
 	TargetReason reason;
 
-	public ResetTargetMechanic(String line, MythicLineConfig mlc) {
-		super(line, mlc);
+	public ResetTargetMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 
 		set = line.charAt(0) == 's';
 		event = mlc.getBoolean("event", false);
@@ -33,12 +36,12 @@ public class ResetTargetMechanic extends SkillMechanic implements ITargetedEntit
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		return this.castAtEntity(data, data.getCaster().getEntity());
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving()) {
 			if (data.getCaster().getEntity().isCreature()) {
 				Creature creature = (Creature) data.getCaster().getEntity().getBukkitEntity();
@@ -48,11 +51,11 @@ public class ResetTargetMechanic extends SkillMechanic implements ITargetedEntit
 						set ? target.getBukkitEntity() : null, reason, event);
 			}
 			if (trigger && Utils.mobmanager.isActiveMob(data.getCaster().getEntity())) {
-				new TriggeredSkill(SkillTrigger.TARGETCHANGE,
+				new TriggeredSkill(SkillTriggers.TARGETCHANGE,
 						Utils.mobmanager.getMythicMobInstance(data.getCaster().getEntity()), target, true);
 			}
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 }

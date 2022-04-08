@@ -1,24 +1,25 @@
 package com.gmail.berndivader.mythicmobsext.cachedowners;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 public class CachedOwnerSkill extends SkillMechanic implements ITargetedEntitySkill {
 
-	public CachedOwnerSkill(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public CachedOwnerSkill(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (data.getCaster() instanceof ActiveMob) {
 			ActiveMob am = (ActiveMob) data.getCaster();
 			am.setOwner(target.getUniqueId());
@@ -28,8 +29,8 @@ public class CachedOwnerSkill extends SkillMechanic implements ITargetedEntitySk
 				((Wolf) data.getCaster().getEntity().getBukkitEntity()).setTamed(true);
 			}
 			CachedOwnerHandler.addCachedOwner(am.getUniqueId(), target.getUniqueId());
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 }

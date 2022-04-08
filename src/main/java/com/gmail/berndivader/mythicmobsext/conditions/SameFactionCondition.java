@@ -3,12 +3,12 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.SkillCaster;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityComparisonCondition;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.SkillCaster;
+import io.lumine.mythic.api.skills.conditions.IEntityComparisonCondition;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillString;
 
 import org.bukkit.entity.Entity;
 
@@ -36,7 +36,7 @@ public class SameFactionCondition extends AbstractCustomCondition implements IEn
 
 	public static boolean checkFactions(SkillCaster caster, ActiveMob am, AbstractEntity target, String[] factions) {
 		for (int a = 0; a < factions.length; a++) {
-			String f = SkillString.parseMobVariables(factions[a], caster, target, null);
+			String f = Utils.parseMobVariables(factions[a], caster, target, null);
 			if (am.hasFaction() && am.getFaction().equals(f)) {
 				return true;
 			}

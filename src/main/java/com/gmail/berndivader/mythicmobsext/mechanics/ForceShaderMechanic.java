@@ -1,6 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
-
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -9,26 +15,20 @@ import org.bukkit.entity.Player;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 @ExternalAnnotation(name = "forceshader", author = "BerndiVader")
 public class ForceShaderMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
 	EntityType entityType;
 
-	public ForceShaderMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public ForceShaderMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		entityType = EntityType.valueOf(mlc.getString("type", "CREEPER"));
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isPlayer()) {
 			Player p = (Player) target.getBukkitEntity();
 			Location l = p.getLocation();
@@ -38,8 +38,8 @@ public class ForceShaderMechanic extends SkillMechanic implements ITargetedEntit
 			entity.setAI(false);
 			entity.setInvulnerable(false);
 			Volatile.handler.forceSpectate(p, entity, true);
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.ERROR;
 	}
 }

@@ -4,6 +4,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
+import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
@@ -14,9 +16,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 
 public class HealthbarHandler implements Listener {
 
@@ -95,37 +94,44 @@ public class HealthbarHandler implements Listener {
 		switch (mechanic) {
 		case "createhealthbar":
 		case "createhealthbar_ext":
-			skill = new CreateHealthbar(e.getContainer().getConfigLine(), e.getConfig());
+			skill = new CreateHealthbar(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig());
+			//skill = new CreateHealthbar(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			break;
 		case "changehealthbar":
 		case "changehealthbar_ext":
-			skill = new ChangeHealthbar(e.getContainer().getConfigLine(), e.getConfig());
+			skill = new ChangeHealthbar(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig());
+			//skill = new ChangeHealthbar(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			break;
 		case "updatehealthbar":
 		case "updatehealthbar_ext":
-			skill = new UpdateHealthbar(e.getContainer().getConfigLine(), e.getConfig());
+			skill = new UpdateHealthbar(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig());
+			//skill = new UpdateHealthbar(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			break;
 		case "speechbubble":
 		case "speechbubble_ext":
-			skill = new SpeechBubbleMechanic(e.getContainer().getConfigLine(), e.getConfig());
+			skill = new SpeechBubbleMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig());
+			//skill = new SpeechBubbleMechanic(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			break;
 		case "removebubble":
 		case "removebubble_ext":
-			skill = new RemoveSpeechBubbleMechanic(e.getContainer().getConfigLine(), e.getConfig());
+			skill = new RemoveSpeechBubbleMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig());
+			//skill = new RemoveSpeechBubbleMechanic(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			break;
 		case "modifybubble":
 		case "modifybubble_ext":
-			skill = new ModifySpeechBubbleMechanic(e.getContainer().getConfigLine(), e.getConfig());
+			skill = new ModifySpeechBubbleMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig());
+			//skill = new ModifySpeechBubbleMechanic(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			break;
 		case "linebubble":
 		case "linebubble_ext":
-			skill = new LineSpeechBubbleMechanic(e.getContainer().getConfigLine(), e.getConfig());
+			skill = new LineSpeechBubbleMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig());
+			//skill = new LineSpeechBubbleMechanic(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			break;
 		}

@@ -4,6 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.mobs.GenericCaster;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.conditions.IEntityCondition;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillMetadataImpl;
+import io.lumine.mythic.core.skills.SkillString;
+import io.lumine.mythic.core.skills.SkillTriggers;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -14,15 +23,6 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.GenericCaster;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
-import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name = "testitemfor,ownsitem,ownsitemsimple,iteminhand", author = "BerndiVader")
 public class HasItemCondition extends AbstractCustomCondition implements IEntityCondition {
@@ -68,7 +68,7 @@ public class HasItemCondition extends AbstractCustomCondition implements IEntity
 			for (int i1 = 0; i1 < holdinglist.size(); i1++) {
 				boolean bool = false;
 				HoldingItem holding = holdinglist.get(i1).clone();
-				SkillMetadata data = new SkillMetadata(SkillTrigger.API, new GenericCaster(t), t);
+				SkillMetadata data = new SkillMetadataImpl(SkillTriggers.API, new GenericCaster(t), t);
 				holding.parseSlot(data, t);
 				String bag_name = holding.getBagName();
 				if (bag_name != null)
@@ -82,7 +82,7 @@ public class HasItemCondition extends AbstractCustomCondition implements IEntity
 						break;
 					}
 				}
-				c = c.replaceFirst("\\$" + Integer.toString(i1), Boolean.toString(bool));
+				c = c.replaceFirst("\\$" + i1, Boolean.toString(bool));
 			}
 			BooleanExpression be;
 			try {

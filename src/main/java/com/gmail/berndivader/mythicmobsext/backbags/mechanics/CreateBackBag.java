@@ -3,18 +3,20 @@ package com.gmail.berndivader.mythicmobsext.backbags.mechanics;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.INoTargetSkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.AbstractSkill;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagInventory;
-
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 public class CreateBackBag extends SkillMechanic implements INoTargetSkill {
 	int size;
@@ -23,9 +25,9 @@ public class CreateBackBag extends SkillMechanic implements INoTargetSkill {
 	boolean temporary, override, flood;
 	List<Integer> excluded_slots;
 
-	public CreateBackBag(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public CreateBackBag(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		size = mlc.getInteger("size", 9);
 		default_items = BackBagHelper.createDefaultItemStack(mlc.getString("items", null));
@@ -54,10 +56,10 @@ public class CreateBackBag extends SkillMechanic implements INoTargetSkill {
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		new BackBagInventory(data.getCaster().getEntity().getUniqueId(), bag_name.get(data), size, default_items,
 				temporary, override);
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 }

@@ -2,6 +2,11 @@ package com.gmail.berndivader.mythicmobsext.targeters;
 
 import java.util.HashSet;
 
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillExecutor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -10,16 +15,11 @@ import org.bukkit.util.BlockIterator;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 @ExternalAnnotation(name = "blocklocation", author = "BerndiVader")
 public class BlockLocation extends ISelectorLocation {
 
-	public BlockLocation(MythicLineConfig mlc) {
-		super(mlc);
+	public BlockLocation(SkillExecutor manager, MythicLineConfig mlc) {
+		super(manager, mlc);
 	}
 
 	@Override

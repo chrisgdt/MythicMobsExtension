@@ -2,7 +2,12 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.Optional;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.mechanics.AuraMechanic;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,11 +22,6 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.mechanics.AuraMechanic;
 
 @ExternalAnnotation(name = "clicklistener", author = "BerndiVader")
 public class ClickListenerMechanic extends AuraMechanic implements ITargetedEntitySkill {
@@ -38,9 +38,9 @@ public class ClickListenerMechanic extends AuraMechanic implements ITargetedEnti
 		str = "MME_CLICKLISTENER";
 	}
 
-	public ClickListenerMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public ClickListenerMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.auraName = Optional.of(mlc.getString("buffname", str));
 		String s1;
@@ -60,14 +60,14 @@ public class ClickListenerMechanic extends AuraMechanic implements ITargetedEnti
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata arg0, AbstractEntity arg1) {
+	public SkillResult castAtEntity(SkillMetadata arg0, AbstractEntity arg1) {
 		if (!arg1.isPlayer())
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		if (!arg1.getBukkitEntity().hasMetadata(str)) {
 			new ClickTracker(this, arg0, (Player) arg1.getBukkitEntity());
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 
 	class ClickTracker extends ClickListenerMechanic.AuraTracker implements Runnable, IParentSkill, Listener {

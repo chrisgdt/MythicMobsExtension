@@ -2,22 +2,19 @@ package com.gmail.berndivader.mythicmobsext.javascript;
 
 import javax.script.ScriptException;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillString;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
 
 @ExternalAnnotation(name = "jsmechanic", author = "BerndiVader")
 public class JavascriptMechanic extends SkillMechanic
@@ -26,8 +23,8 @@ public class JavascriptMechanic extends SkillMechanic
 	String js = "print('Hello World!');";
 	MythicLineConfig mlc;
 
-	public JavascriptMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public JavascriptMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		this.mlc = mlc;
 		simple = mlc.getBoolean("simple", false);
 		String s1 = mlc.getString(new String[] { "js", "eval", "invok" }, js);
@@ -35,21 +32,21 @@ public class JavascriptMechanic extends SkillMechanic
 	}
 
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation target) {
 		return eval(data, null, BukkitAdapter.adapt(target));
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		return eval(data, target.getBukkitEntity(), null);
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		return eval(data, null, null);
 	}
 
-	private boolean eval(SkillMetadata data, Entity e1, Location l1) {
+	private SkillResult eval(SkillMetadata data, Entity e1, Location l1) {
 		try {
 			if(Nashorn.invocable!=null) {
 				Nashorn.invocable.invokeFunction(js, data, e1 != null ? (Entity) e1 : l1 != null ? (Location) l1 : null,
@@ -61,6 +58,6 @@ public class JavascriptMechanic extends SkillMechanic
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 }

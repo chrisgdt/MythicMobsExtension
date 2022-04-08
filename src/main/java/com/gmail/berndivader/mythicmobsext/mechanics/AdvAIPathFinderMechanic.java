@@ -1,15 +1,21 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillString;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name = "advaipathfinder,custompathfinder", author = "BerndiVader")
 public class AdvAIPathFinderMechanic extends SkillMechanic implements ITargetedEntitySkill {
@@ -17,19 +23,19 @@ public class AdvAIPathFinderMechanic extends SkillMechanic implements ITargetedE
 	Handler vh = Volatile.handler;
 	PlaceholderString g;
 
-	public AdvAIPathFinderMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public AdvAIPathFinderMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		String parse = mlc.getString("goal", "");
 		if (parse.startsWith("\"") && parse.endsWith("\"")) {
 			parse = parse.substring(1, parse.length() - 1);
 		}
-		this.g = new PlaceholderString(SkillString.parseMessageSpecialChars(parse));
+		this.g = new PlaceholderStringImpl(SkillString.parseMessageSpecialChars(parse));
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity t) {
 		LivingEntity lS = null, lT = null;
 		if (t != null && t.isLiving()) {
 			lT = (LivingEntity) t.getBukkitEntity();
@@ -40,8 +46,8 @@ public class AdvAIPathFinderMechanic extends SkillMechanic implements ITargetedE
 		if (lS != null) {
 			String pG = this.g.get(data, t);
 			vh.aiPathfinderGoal(lS, pG, lT);
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 }

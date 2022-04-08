@@ -4,7 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.items.MythicItem;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillString;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -17,35 +30,24 @@ import org.bukkit.inventory.MerchantRecipe;
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.items.MythicItem;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-
 @ExternalAnnotation(name = "trade", author = "Seyarada")
-public class Trade extends SkillMechanic implements ITargetedEntitySkill{
+public class Trade extends SkillMechanic implements ITargetedEntitySkill {
 	private PlaceholderString text;
 	String title;
 	List<String> tradesRaw = new ArrayList<>();
 
-	public Trade(String line, MythicLineConfig MythicLineConfig) {
-		super(line, MythicLineConfig);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
-		title = MythicLineConfig.getString(new String[] { "title", "t"}, "Trades");
+	public Trade(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
+		title = mlc.getString(new String[] { "title", "t"}, "Trades");
 		for (int index = 1; index <= 10; index++) {
-			String x = MythicLineConfig.getString(new String[] {String.valueOf(index)}, "none");
+			String x = mlc.getString(new String[] {String.valueOf(index)}, "none");
 			if (!x.equals("none")) tradesRaw.add(x);
 			}
 	}
-	
+
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity playerEntity) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity playerEntity) {
 		if (playerEntity.isPlayer()) {
 			Player player = (Player) playerEntity.getBukkitEntity();
 			List<MerchantRecipe> merchantRecipes = getRecipes(data);
@@ -62,7 +64,7 @@ public class Trade extends SkillMechanic implements ITargetedEntitySkill{
 			
 			
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 	
 	public List<MerchantRecipe> getRecipes(SkillMetadata data) {
@@ -85,7 +87,7 @@ public class Trade extends SkillMechanic implements ITargetedEntitySkill{
             	
             	Integer amount = 1;
             	if (n.length > 2) {
-        			text = new PlaceholderString(SkillString.unparseMessageSpecialChars(n[2]));
+        			text = new PlaceholderStringImpl(SkillString.unparseMessageSpecialChars(n[2]));
             		if (text.get(data).contains("to")) {
             			amount = MathUtils.randomRangeInt(text.get(data));
             			
@@ -97,20 +99,20 @@ public class Trade extends SkillMechanic implements ITargetedEntitySkill{
             	}
             	
             	if (k.equals("result")) {
-            		text = new PlaceholderString(SkillString.unparseMessageSpecialChars(l));
+            		text = new PlaceholderStringImpl(SkillString.unparseMessageSpecialChars(l));
             		resultString = this.text.get(data);
 
             	}
             	else if (k.equals("price")) {
-            		text = new PlaceholderString(SkillString.unparseMessageSpecialChars(l));
+            		text = new PlaceholderStringImpl(SkillString.unparseMessageSpecialChars(l));
             		price1String = this.text.get(data);
             	}
             	else if (k.equals("price1")) {
-            		text = new PlaceholderString(SkillString.unparseMessageSpecialChars(l));
+            		text = new PlaceholderStringImpl(SkillString.unparseMessageSpecialChars(l));
             		price1String = this.text.get(data);
             	}
             	else if (k.equals("price2")) {
-            		text = new PlaceholderString(SkillString.unparseMessageSpecialChars(l));
+            		text = new PlaceholderStringImpl(SkillString.unparseMessageSpecialChars(l));
             		price2String = this.text.get(data);
             	}
             	else if (k.equals("uses")) uses = Integer.valueOf(l);
@@ -145,7 +147,7 @@ public class Trade extends SkillMechanic implements ITargetedEntitySkill{
 			Material baseMaterial = Material.valueOf(i);
 			item = new ItemStack(baseMaterial, amount);
 		} catch (Exception e) {
-			Optional<MythicItem> t = MythicMobs.inst().getItemManager().getItem(i);
+			Optional<MythicItem> t = Utils.mythicmobs.getItemManager().getItem(i);
             item = BukkitAdapter.adapt(t.get().generateItemStack(amount));
 		}
 		return item;

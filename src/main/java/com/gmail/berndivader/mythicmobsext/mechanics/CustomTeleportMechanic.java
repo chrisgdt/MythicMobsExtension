@@ -5,7 +5,20 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Optional;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.mobs.MobManager;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.bukkit.adapters.BukkitEntity;
+import io.lumine.mythic.bukkit.adapters.BukkitPlayer;
+import io.lumine.mythic.core.config.MythicLineConfigImpl;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.*;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
+import io.lumine.mythic.core.skills.targeters.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -19,23 +32,6 @@ import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitPlayer;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.mobs.MobManager;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-import io.lumine.xikage.mythicmobs.skills.targeters.ConsoleTargeter;
-import io.lumine.xikage.mythicmobs.skills.targeters.CustomTargeter;
-import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
-import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
-import io.lumine.xikage.mythicmobs.skills.targeters.OriginTargeter;
-import io.lumine.xikage.mythicmobs.skills.targeters.TargetLocationTargeter;
-import io.lumine.xikage.mythicmobs.skills.targeters.TriggerTargeter;
-
 @ExternalAnnotation(name = "customteleport", author = "BerndiVader")
 public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 	PlaceholderString stargeter;
@@ -43,9 +39,9 @@ public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEn
 	boolean inFrontOf, isLocations, returnToStart, sortTargets, targetInsight, ignoreOwner, ignorePitch;
 	double delay, noise, maxTargets, frontOffset, sideOffset, yOffset;
 
-	public CustomTeleportMechanic(String line, MythicLineConfig mlc) {
-		super(line, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public CustomTeleportMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 		
 		this.noise = mlc.getDouble(new String[] { "noise", "n", "radius", "r" }, 0D);
 		this.delay = mlc.getDouble(new String[] { "teleportdelay", "tdelay", "td" }, 0D);
@@ -76,21 +72,21 @@ public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEn
 		String parse = s = s.substring(1, s.length() - 1);
 		if (!parse.startsWith("@"))
 			parse = "@" + parse;
-		this.stargeter = new PlaceholderString(parse);
+		this.stargeter = new PlaceholderStringImpl(parse);
 	}
 
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation target) {
 		return this.doMechanic(data, target);
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		return this.doMechanic(data, target);
 	}
 
 	@SuppressWarnings("unchecked")
-	private boolean doMechanic(SkillMetadata data, Object target) {
+	private SkillResult doMechanic(SkillMetadata data, Object target) {
 		AbstractEntity entityTarget;
 		AbstractLocation startLocation;
 		String targeter = this.stargeter.get(data);
@@ -100,11 +96,11 @@ public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEn
 			startLocation = ((AbstractEntity) target).getLocation();
 		} else {
 			Bukkit.getLogger().warning("A location is not a valid source for advanced teleport mechanic!");
-			return false;
+			return SkillResult.ERROR;
 		}
 		HashSet<Object> osources = (HashSet<Object>) getDestination(targeter, data);
 		if (osources == null || !osources.iterator().hasNext())
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		this.isLocations = osources.iterator().next() instanceof AbstractLocation;
 		if (this.maxTargets > 0 && osources.size() > this.maxTargets) {
 			HashSet<Object> lsrc = new HashSet<>();
@@ -165,7 +161,7 @@ public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEn
 					Object target = this.it.next();
 					if (this.isLoc) {
 						if (this.n > 0)
-							target = MobManager.findSafeSpawnLocation((AbstractLocation) target, (int) this.n, 0,
+							target = Utils.findSafeSpawnLocation((AbstractLocation) target, (int) this.n, 0,
 									((ActiveMob) data.getCaster()).getType().getMythicEntity().getHeight(), false);
 						Location ll = BukkitAdapter.adapt((AbstractLocation) target);
 						if (this.bns != null)
@@ -193,7 +189,7 @@ public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEn
 							target = t.getLocation()
 									.add(t.getLocation().getDirection().setY(0).normalize().multiply(2));
 						if (this.n > 0)
-							target = MobManager.findSafeSpawnLocation(((AbstractLocation) target), (int) this.n, 0,
+							target = Utils.findSafeSpawnLocation(((AbstractLocation) target), (int) this.n, 0,
 									(int)BukkitAdapter.adapt(data.getCaster().getEntity()).getHeight(), false);
 						if (this.bns != null)
 							((ActiveMob) data.getCaster()).signalMob(t, this.bns);
@@ -215,11 +211,11 @@ public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEn
 				}
 			}
 		}.runTaskTimer(Main.getPlugin(), 0L, (long) this.delay);
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 	protected static Collection<?> getDestination(String target, SkillMetadata skilldata) {
-		SkillMetadata data = new SkillMetadata(SkillTrigger.API, skilldata.getCaster(), skilldata.getTrigger(),
+		SkillMetadata data = new SkillMetadataImpl(SkillTriggers.API, skilldata.getCaster(), skilldata.getTrigger(),
 				skilldata.getOrigin(), null, null, 1.0f);
 		Optional<SkillTargeter> maybeTargeter;
 		maybeTargeter = Optional.of(Utils.parseSkillTargeter(target));
@@ -227,10 +223,10 @@ public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEn
 			SkillTargeter targeter = maybeTargeter.get();
 			if (targeter instanceof CustomTargeter) {
 				String s1 = target.substring(1);
-				MythicLineConfig mlc = new MythicLineConfig(s1);
+				MythicLineConfig mlc = new MythicLineConfigImpl(s1);
 				String s2 = s1.contains("{") ? s1.substring(0, s1.indexOf("{")) : s1;
 				if ((targeter = CustomTargeters.getCustomTargeter(s2, mlc)) == null)
-					targeter = new TriggerTargeter(mlc);
+					targeter = new TriggerTargeter(targeter.getManager(), mlc);
 			}
 			if (targeter instanceof IEntitySelector) {
 				data.setEntityTargets(((IEntitySelector) targeter).getEntities(data));
@@ -241,7 +237,7 @@ public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEn
 				data.setLocationTargets(((ILocationSelector) targeter).getLocations(data));
 				((ILocationSelector) targeter).filter(data);
 			} else if (targeter instanceof OriginTargeter) {
-				data.setLocationTargets(((OriginTargeter) targeter).getLocation(data.getOrigin()));
+				data.setLocationTargets(((OriginTargeter) targeter).getLocations(data));
 			} else if (targeter instanceof TargetLocationTargeter) {
 				HashSet<AbstractLocation> lTargets = new HashSet<AbstractLocation>();
 				lTargets.add(data.getTrigger().getLocation());

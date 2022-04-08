@@ -2,32 +2,33 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.Iterator;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 @ExternalAnnotation(name = "cure,removepotion", author = "BerndiVader")
 public class RemovePotionEffectMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private String[] type;
 
-	public RemovePotionEffectMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public RemovePotionEffectMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.type = mlc.getString(new String[] { "potion", "p", "type", "t" }, "ALL").toUpperCase().split(",");
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		LivingEntity le = (LivingEntity) target.getBukkitEntity();
 		if (this.type[0].equals("ALL")) {
 			if (target.hasPotionEffect()) {
@@ -43,10 +44,10 @@ public class RemovePotionEffectMechanic extends SkillMechanic implements ITarget
 					}
 				}
 			} catch (Exception ex) {
-				return false;
+				return SkillResult.CONDITION_FAILED;
 			}
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 }

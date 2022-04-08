@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.factions;
 
+import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -12,8 +13,6 @@ import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.MPlayer;
 import com.massivecraft.factions.entity.MPlayerColl;
 import com.massivecraft.massivecore.ps.PS;
-
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 
 public class FactionsSupport implements Listener {
 	static String str_pluginName;

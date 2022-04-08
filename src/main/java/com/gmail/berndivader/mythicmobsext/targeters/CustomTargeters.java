@@ -2,6 +2,10 @@ package com.gmail.berndivader.mythicmobsext.targeters;
 
 import java.lang.reflect.InvocationTargetException;
 
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.targeters.ISkillTargeter;
+import io.lumine.mythic.bukkit.events.MythicTargeterLoadEvent;
+import io.lumine.mythic.core.skills.SkillTargeter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,10 +13,6 @@ import org.bukkit.event.Listener;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.Externals;
 import com.gmail.berndivader.mythicmobsext.externals.Internals;
-
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicTargeterLoadEvent;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 
 public class CustomTargeters implements Listener {
 	public CustomTargeters() {
@@ -24,7 +24,7 @@ public class CustomTargeters implements Listener {
 		SkillTargeter st;
 		if ((st = getCustomTargeter(e.getTargeterName().toLowerCase(), e.getConfig())) != null) {
 			Internals.tl++;
-			e.register(st);
+			e.register((ISkillTargeter) st);
 		}
 	}
 

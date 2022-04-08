@@ -1,8 +1,15 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedLocationSkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Effect;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -12,22 +19,15 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 @ExternalAnnotation(name = "breakblock_ext", author = "BerndiVader")
 public class BreakBlock extends SkillMechanic implements ITargetedLocationSkill {
 	int restore;
 	BlockFace block_face;
 	boolean play_effect;
 
-	public BreakBlock(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public BreakBlock(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		restore = mlc.getInteger("restore", 0);
 		play_effect = mlc.getBoolean("effect", false);
@@ -39,7 +39,7 @@ public class BreakBlock extends SkillMechanic implements ITargetedLocationSkill 
 	}
 
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation al) {
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation al) {
 		Block block = BukkitAdapter.adapt(al).getBlock().getRelative(block_face);
 		if (block.getType() != Material.AIR) {
 			final BlockState block_state = block.getState();
@@ -55,8 +55,8 @@ public class BreakBlock extends SkillMechanic implements ITargetedLocationSkill 
 					}
 				}.runTaskLater(Main.getPlugin(), this.restore);
 			}
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 }

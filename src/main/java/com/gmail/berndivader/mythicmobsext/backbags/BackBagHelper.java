@@ -4,18 +4,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.Scanner;
 
+import io.lumine.mythic.api.items.ItemManager;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
+import io.lumine.mythic.bukkit.events.MythicMobDespawnEvent;
+import io.lumine.mythic.core.items.MythicItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -42,12 +39,6 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDespawnEvent;
-import io.lumine.xikage.mythicmobs.items.ItemManager;
-import io.lumine.xikage.mythicmobs.items.MythicItem;
-
 public class BackBagHelper implements Listener {
 	final static ItemManager itemmananger = Utils.mythicmobs.getItemManager();
 	final static HashMap<UUID, List<BackBagInventory>> bags;
@@ -70,35 +61,42 @@ public class BackBagHelper implements Listener {
 		switch (e.getMechanicName().toLowerCase()) {
 		case "openbackbag":
 		case "openbackbag_ext":
-			e.register(new OpenBackBag(e.getContainer().getConfigLine(), e.getConfig()));
+			e.register(new OpenBackBag(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			//e.register(new OpenBackBag(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "createbackbag":
 		case "createbackbag_ext":
-			e.register(new CreateBackBag(e.getContainer().getConfigLine(), e.getConfig()));
+			e.register(new CreateBackBag(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			//e.register(new CreateBackBag(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "removebackbag":
 		case "removebackbag_ext":
-			e.register(new RemoveBackBag(e.getContainer().getConfigLine(), e.getConfig()));
+			e.register(new RemoveBackBag(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			//e.register(new RemoveBackBag(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "expandbackbag":
 		case "expandbackbag_ext":
-			e.register(new ExpandBackBag(e.getContainer().getConfigLine(), e.getConfig()));
+			e.register(new ExpandBackBag(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			//e.register(new ExpandBackBag(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "movetobackbag":
 		case "savetobackbag":
 		case "movetobackbag_ext":
 		case "savetobackbag_ext":
-			e.register(new MoveToBackBag(e.getContainer().getConfigLine(), e.getConfig()));
+			e.register(new MoveToBackBag(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			//e.register(new MoveToBackBag(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "takefrombackbag":
 		case "loadfrombackbag":
 		case "takefrombackbag_ext":
 		case "loadfrombackbag_ext":
-			e.register(new RestoreFromBackBag(e.getContainer().getConfigLine(), e.getConfig()));
+			e.register(new RestoreFromBackBag(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			//e.register(new RestoreFromBackBag(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "renamebackbag":
 		case "renamebackbag_ext":
-			e.register(new RenameBackBag(e.getContainer().getConfigLine(), e.getConfig()));
+			e.register(new RenameBackBag(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			//e.register(new RenameBackBag(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		}
 	}
@@ -112,7 +110,7 @@ public class BackBagHelper implements Listener {
 			String[] item_parse = line_parse[i1].split(":");
 			String item_name = item_parse[0];
 			int item_amount = item_parse.length > 1 ? Integer.parseInt(item_parse[1]) : 1;
-			Optional<MythicItem>mythicItem=itemmananger.getItem(item_name);
+			Optional<MythicItem> mythicItem=itemmananger.getItem(item_name);
 			if(mythicItem.isPresent()) {
 				ItemStack item = BukkitAdapter.adapt(mythicItem.get().generateItemStack(item_amount));
 				if (item != null) {

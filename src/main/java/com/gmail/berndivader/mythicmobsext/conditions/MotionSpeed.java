@@ -1,14 +1,14 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.IEntityCondition;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 

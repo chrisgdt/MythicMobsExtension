@@ -2,15 +2,16 @@ package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.IParentSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.IParentSkill;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 
 @ExternalAnnotation(name = "modifyprojectile", author = "BerndiVader")
 public class ModifyProjectile extends SkillMechanic implements IParentSkill {
 
-	public ModifyProjectile(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public ModifyProjectile(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		// TODO Auto-generated constructor stub
 	}
 

@@ -7,6 +7,7 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.lumine.mythic.core.drops.Drop;
 import org.bukkit.Server;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
@@ -23,14 +24,10 @@ import com.gmail.berndivader.mythicmobsext.compatibilitylib.CompatibilityUtils;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
-import io.lumine.xikage.mythicmobs.drops.Drop;
-
 public class NMSUtils extends CompatibilityUtils {
 
 	protected static Class<?> class_IChatBaseComponent_ChatSerializer;
 	protected static Class<?> class_EntitySnowman;
-
-	protected static Class<?> class_Drop;
 
 	protected static Class<?> class_PathfinderGoalSelector_PathfinderGoalSelectorItem;
 	protected static Class<?> class_IInventory;
@@ -70,7 +67,6 @@ public class NMSUtils extends CompatibilityUtils {
 		try {
 			class_IChatBaseComponent_ChatSerializer = fixBukkitClass("IChatBaseComponent$ChatSerializer", true, "network.chat");
 			class_EntitySnowman = fixBukkitClass("EntitySnowman", true, "world.entity.animal");
-			class_Drop = fixBukkitClass("io.lumine.xikage.mythicmobs.drops.Drop");
 			class_PathfinderGoalSelector_PathfinderGoalSelectorItem = fixBukkitClass(Utils.serverV < 14 ?
 							"PathfinderGoalSelector$PathfinderGoalSelectorItem" : "PathfinderGoalWrapped",
 					true, "world.entity.ai.goal");
@@ -112,18 +108,15 @@ public class NMSUtils extends CompatibilityUtils {
 			class_EntityCreature_setGoalTargetMethod = class_EntityCreature.getMethod(version < 18 ? "setGoalTarget" : "setTarget",
 					class_EntityLiving, TargetReason.class, Boolean.TYPE);
 			class_EntityPlayer_clearActiveItemMethod = class_EntityPlayer.getMethod(version < 18 ? "clearActiveItem" : "eR");
-			class_EntityLiving_getArmorStrengthMethod = class_EntityLiving.getMethod(version < 18 ? "getArmorStrength" : "ei");
-			class_EntitySnowman_setHasPumpkinMethod = class_EntitySnowman.getMethod(version < 18 ? "setHasPumpkin" : "v", Boolean.TYPE);
-			class_EntityLiving_getArrowCountMethod = class_EntityLiving.getMethod(version < 18 ? "getArrowCount" : "em");
-			class_EntityLiving_setArrowCountMethod = class_EntityLiving.getMethod("setArrowCount", Integer.TYPE, Boolean.TYPE);
-			class_PathfinderGoalSelector_PathfinderGoalSelectorItem_equalsMethod = class_PathfinderGoalSelector_PathfinderGoalSelectorItem
-					.getMethod("equals", Object.class);
+			//class_EntityLiving_getArmorStrengthMethod = class_EntityLiving.getMethod(version < 18 ? "getArmorStrength" : "ei");
+			//class_EntitySnowman_setHasPumpkinMethod = class_EntitySnowman.getMethod(version < 18 ? "setHasPumpkin" : "v", Boolean.TYPE);
+			//class_EntityLiving_getArrowCountMethod = class_EntityLiving.getMethod(version < 18 ? "getArrowCount" : "em");
+			//class_EntityLiving_setArrowCountMethod = class_EntityLiving.getMethod("setArrowCount", Integer.TYPE, Boolean.TYPE);
+			//class_PathfinderGoalSelector_PathfinderGoalSelectorItem_equalsMethod = class_PathfinderGoalSelector_PathfinderGoalSelectorItem
+			//		.getMethod("equals", Object.class);
 
 			class_CraftServer_getEntityMetadataStoreMethod = class_CraftServer.getMethod("getEntityMetadata");
 			class_CraftServer_getPlayerMetadataStoreMethod = class_CraftServer.getMethod("getPlayerMetadata");
-
-			class_Drop_getDropMethod = class_Drop.getMethod("getDrop", String.class, String.class);
-
 
 		} catch (NoSuchFieldException | SecurityException | NoSuchMethodException | ClassNotFoundException e) {
 			e.printStackTrace();
@@ -435,17 +428,11 @@ public class NMSUtils extends CompatibilityUtils {
 	 * @return drop {@link Drop}
 	 */
 	public static Drop getDrop(String item_name) {
-		Drop drop = null;
-		try {
-			drop = (Drop) class_Drop_getDropMethod.invoke(null, "MMEDrop", item_name);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			e.printStackTrace();
-		}
-		return drop;
+		return Utils.mythicmobs.getDropManager().getDrop("MMEDrop", item_name);
 	}
 
 	/**
-	 * @param entity {@link Entity}
+	 * @param server {@link Entity}
 	 * @return Map<String,Map<Plugin,MetadataValue>> {@link MetadataStoreBase}
 	 */
 	@SuppressWarnings("unchecked")
@@ -465,7 +452,7 @@ public class NMSUtils extends CompatibilityUtils {
 	
 
 	/**
-	 * @param player {@link Player}
+	 * @param entity {@link Player}
 	 * @return Map<String,Map<Plugin,MetadataValue>> {@link MetadataStoreBase}
 	 */
 	@SuppressWarnings("unchecked")

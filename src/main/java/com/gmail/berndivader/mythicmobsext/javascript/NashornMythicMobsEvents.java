@@ -6,15 +6,14 @@ import java.nio.file.Paths;
 
 import javax.script.ScriptException;
 
+import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
+import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
+import io.lumine.mythic.bukkit.events.MythicReloadedEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
 
 public class NashornMythicMobsEvents implements Listener {
 
@@ -43,12 +42,14 @@ public class NashornMythicMobsEvents implements Listener {
 		switch (s1) {
 		case "jsmechanic":
 		case "jsmechanic_ext": {
-			e.register(new JavascriptMechanic(e.getContainer().getConfigLine(), e.getConfig()));
+			e.register(new JavascriptMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			//e.register(new JavascriptMechanic(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		}
 		case "math":
 		case "math_ext": {
-			e.register(new EvalMechanic(e.getContainer().getConfigLine(), e.getConfig()));
+			e.register(new EvalMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			//e.register(new EvalMechanic(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		}
 		}

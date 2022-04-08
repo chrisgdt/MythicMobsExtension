@@ -3,6 +3,14 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillString;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
@@ -20,19 +28,12 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
-
 @ExternalAnnotation(name = "modifyitem", author = "BerndiVader")
 public class ModifyItem extends SkillMechanic implements ITargetedEntitySkill {
 	ModdingItem modding_item;
 
-	public ModifyItem(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public ModifyItem(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 
 		WhereEnum where = Utils.enum_lookup(WhereEnum.class, mlc.getString("what", "HAND").toUpperCase());
 		ACTION action = Utils.enum_lookup(ACTION.class, mlc.getString("action", "SET").toUpperCase());
@@ -94,7 +95,7 @@ public class ModifyItem extends SkillMechanic implements ITargetedEntitySkill {
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving()) {
 			LivingEntity entity = (LivingEntity) target.getBukkitEntity();
 			ItemStack item_stack = modding_item.getItemStackByWhere(data, target, entity);
@@ -103,8 +104,8 @@ public class ModifyItem extends SkillMechanic implements ITargetedEntitySkill {
 			if(target.getBukkitEntity() instanceof Player) {
 				((Player)target.getBukkitEntity()).updateInventory();
 			}
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 }

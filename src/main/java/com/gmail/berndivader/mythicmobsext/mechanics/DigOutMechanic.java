@@ -1,6 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.INoTargetSkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -16,20 +22,15 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 @ExternalAnnotation(name = "digout", author = "BerndiVader")
 public class DigOutMechanic extends SkillMechanic implements INoTargetSkill {
 	long speed;
 	int particle_amount;
 	Sound sound;
 
-	public DigOutMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public DigOutMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 		
 		speed = (long) mlc.getInteger("speed", 5);
 		particle_amount = mlc.getInteger("amount", 5);
@@ -42,16 +43,16 @@ public class DigOutMechanic extends SkillMechanic implements INoTargetSkill {
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		if (!data.getCaster().getEntity().isLiving())
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		final LivingEntity entity = (LivingEntity) data.getCaster().getEntity().getBukkitEntity();
 
 		Location particle_location = entity.getLocation().getBlock().getLocation();
 		Location location = particle_location.clone().add(0.5, 0, 0.5);
 		Block block = location.getBlock().getRelative(BlockFace.DOWN);
 		if (block.isLiquid() || block.getType() == Material.AIR)
-			return false;
+			return SkillResult.CONDITION_FAILED;
 
 		final String particle_name = "blockcrack_" + block.getType().getId() + "_" + block.getData();
 
@@ -98,6 +99,6 @@ public class DigOutMechanic extends SkillMechanic implements INoTargetSkill {
 			}
 		}.runTaskTimer(Main.getPlugin(), 1l, speed);
 
-		return true;
+		return SkillResult.SUCCESS;
 	}
 }

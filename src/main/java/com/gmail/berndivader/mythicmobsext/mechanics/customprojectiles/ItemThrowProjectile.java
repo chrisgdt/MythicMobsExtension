@@ -7,7 +7,15 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Optional;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.items.MythicItem;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.utils.BlockUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -27,13 +35,6 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.items.MythicItem;
-import io.lumine.xikage.mythicmobs.util.BlockUtil;
-
 @ExternalAnnotation(name = "throwitem", author = "BerndiVader")
 public class ItemThrowProjectile extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 	Optional<Skill> onTickSkill = Optional.empty(), onHitSkill = Optional.empty(), onEndSkill = Optional.empty(),
@@ -45,9 +46,9 @@ public class ItemThrowProjectile extends SkillMechanic implements ITargetedEntit
 	boolean hitPlayers, hitNonPlayers, invunerable, lifetime, stopGround, gravity, stopBlock;
 	short durability;
 
-	public ItemThrowProjectile(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public ItemThrowProjectile(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		String i = mlc.getString(new String[] { "item", "i" }, "DIRT");
 		Optional<MythicItem> optional = Utils.mythicmobs.getItemManager().getItem(i);
@@ -90,24 +91,24 @@ public class ItemThrowProjectile extends SkillMechanic implements ITargetedEntit
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		try {
 			new ProjectileRunner(data, target);
-			return true;
+			return SkillResult.SUCCESS;
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return false;
+			return SkillResult.ERROR;
 		}
 	}
 
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation target) {
 		try {
 			new ProjectileRunner(data, target);
-			return true;
+			return SkillResult.SUCCESS;
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return false;
+			return SkillResult.ERROR;
 		}
 	}
 

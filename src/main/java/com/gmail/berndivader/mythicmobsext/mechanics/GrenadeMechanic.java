@@ -1,6 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -13,11 +19,6 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 
 @ExternalAnnotation(name = "grenade", author = "BerndiVader")
 public class GrenadeMechanic extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
@@ -34,9 +35,9 @@ public class GrenadeMechanic extends SkillMechanic implements ITargetedEntitySki
 	private boolean undotnt;
 	private boolean ued;
 
-	public GrenadeMechanic(String h, MythicLineConfig mlc) {
-		super(h, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public GrenadeMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.size = mlc.getInteger(new String[] { "size", "s" }, 2);
 		this.amount = mlc.getInteger(new String[] { "amount", "a" }, 1);
@@ -52,14 +53,14 @@ public class GrenadeMechanic extends SkillMechanic implements ITargetedEntitySki
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		return this.castAtLocation(data, target.getLocation());
 	}
 
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation t) {
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation t) {
 		if (!data.getCaster().getEntity().isLiving() || !data.getCaster().getEntity().getWorld().equals(t.getWorld()))
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		Location source = data.getCaster().getEntity().getBukkitEntity().getLocation().clone();
 		Location target = BukkitAdapter.adapt(t);
 		Vector v = this.ued
@@ -68,7 +69,7 @@ public class GrenadeMechanic extends SkillMechanic implements ITargetedEntitySki
 		try {
 			v.checkFinite();
 		} catch (IllegalArgumentException e) {
-			return false;
+			return SkillResult.ERROR;
 		}
 		for (int a = 0; a < this.amount; a++) {
 			Location sl = source.clone();
@@ -86,6 +87,6 @@ public class GrenadeMechanic extends SkillMechanic implements ITargetedEntitySki
 			grenade.setMetadata("ueffect", new FixedMetadataValue(this.plugin, this.ueffect));
 			EntityCacheHandler.add(grenade);
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 }

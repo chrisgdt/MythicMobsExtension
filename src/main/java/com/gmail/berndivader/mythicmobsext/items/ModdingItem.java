@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -18,10 +21,6 @@ import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.utils.RandomDouble;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.google.gson.JsonElement;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 public class ModdingItem implements Cloneable {
 	public enum ACTION {

@@ -1,5 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.INoTargetSkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -11,26 +18,20 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-
 @ExternalAnnotation(name = "storetick,storeservertick", author = "BerndiVader")
 public class StoreTicksMechanic extends SkillMechanic implements INoTargetSkill {
 	boolean bl1;
 	PlaceholderString s1;
 
-	public StoreTicksMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public StoreTicksMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		bl1 = mlc.getBoolean("meta", false);
 		s1 = mlc.getPlaceholderString("tag", "");
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		int i1 = NMSUtils.getCurrentTick(data.getCaster().getEntity().getBukkitEntity().getServer());
 		if (!bl1) {
 			String text = s1.get();
@@ -49,6 +50,6 @@ public class StoreTicksMechanic extends SkillMechanic implements INoTargetSkill 
 			data.getCaster().getEntity().getBukkitEntity().setMetadata(s1.get(data),
 					new FixedMetadataValue(Main.getPlugin(), i1));
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 }

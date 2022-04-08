@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.compatibility.disguise;
 
 import java.util.Optional;
 
+import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
@@ -11,7 +12,6 @@ import org.bukkit.plugin.Plugin;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.LibsDisguises;
 
@@ -48,7 +48,8 @@ public class LibsDisguisesSupport implements Listener {
 		switch (e.getMechanicName().toLowerCase()) {
 		case "parseddisguise":
 		case "parseddisguise_ext": {
-			e.register(new ParsedDisguiseMechanic(e.getContainer().getConfigLine(), e.getConfig()));
+			e.register(new ParsedDisguiseMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			//e.register(new ParsedDisguiseMechanic(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		}
 		}

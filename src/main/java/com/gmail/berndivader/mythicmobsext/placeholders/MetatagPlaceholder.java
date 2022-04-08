@@ -1,9 +1,10 @@
 package com.gmail.berndivader.mythicmobsext.placeholders;
 
-import java.util.function.BiFunction;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import io.lumine.mythic.core.skills.placeholders.PlaceholderMeta;
+import io.lumine.mythic.core.skills.placeholders.types.MetaPlaceholder;
 
-import io.lumine.xikage.mythicmobs.skills.placeholders.PlaceholderMeta;
-import io.lumine.xikage.mythicmobs.skills.placeholders.types.MetaPlaceholder;
+import java.util.function.BiFunction;
 
 public class MetatagPlaceholder implements IPlaceHolder<PlaceholderMeta> {
 	String placeholder_name;
@@ -13,7 +14,7 @@ public class MetatagPlaceholder implements IPlaceHolder<PlaceholderMeta> {
 	}
 
 	void register() {
-		PlaceholderRegistery.manager.register(placeholder_name, new MetaPlaceholder(this.transformer()));
+		Utils.mythicmobs.getPlaceholderManager().register(placeholder_name, new MetaPlaceholder(this.transformer()));
 	}
 
 	@Override

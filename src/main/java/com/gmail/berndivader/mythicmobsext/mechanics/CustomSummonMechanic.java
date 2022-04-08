@@ -1,5 +1,19 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.api.mobs.entities.MythicEntity;
+import io.lumine.mythic.api.mobs.entities.SpawnReason;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.bukkit.adapters.BukkitEntityType;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillString;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -9,22 +23,11 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitEntityType;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.mobs.MobManager;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
-import io.lumine.xikage.mythicmobs.mobs.entities.MythicEntity;
-import io.lumine.xikage.mythicmobs.mobs.entities.SpawnReason;
-import io.lumine.xikage.mythicmobs.skills.*;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
+import java.util.Optional;
 
 @ExternalAnnotation(name = "customsummon", author = "BerndiVader")
 public class CustomSummonMechanic extends SkillMechanic implements ITargetedLocationSkill, ITargetedEntitySkill {
-	MythicMob mm;
+	MythicMob mm = null;
 	MythicEntity me;
 	String tag, amount;
 	int noise, yNoise;
@@ -34,9 +37,9 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 	double addx, addy, addz, inFrontBlocks;
 	String reason;
 
-	public CustomSummonMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public CustomSummonMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.amount = mlc.getString(new String[] { "amount", "a" }, "1");
 		if (this.amount.startsWith("-"))
@@ -58,26 +61,29 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 		this.inFrontBlocks = mlc.getDouble(new String[] { "infrontblocks", "infront", "ifb" }, 0D);
 		this.setowner = mlc.getBoolean(new String[] { "setowner", "so" }, false);
 		this.leashtocaster = mlc.getBoolean(new String[] { "leashtocaster", "leash", "lc" }, false);
-		this.mm = Utils.mobmanager.getMythicMob(strType);
-		if (this.mm == null)
+		Optional<MythicMob> mob = Utils.mobmanager.getMythicMob(strType);
+		if (!mob.isPresent())
 			this.me = BukkitEntityType.getMythicEntity(strType);
+		else {
+			this.mm = mob.get();
+		}
 		this.reason = mlc.getString(new String[] { "customreason", "custom", "cr" }, "SUMMON").toUpperCase();
 	}
 
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation t) {
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation t) {
 		return cast(data, t, null);
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		return cast(data, target.getLocation(), target);
 	}
 
-	private boolean cast(SkillMetadata data, AbstractLocation tl, AbstractEntity te) {
+	private SkillResult cast(SkillMetadata data, AbstractLocation tl, AbstractEntity te) {
 		AbstractLocation target = tl.clone();
 		if (!data.getCaster().getEntity().getWorld().equals(tl.getWorld()))
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		if (this.useEyeDirection) {
 			target = BukkitAdapter.adapt(MathUtils.getLocationInFront(BukkitAdapter.adapt(target), this.inFrontBlocks));
 		}
@@ -85,7 +91,7 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 		int amount = MathUtils.randomRangeInt(this.amount);
 		if (this.mm != null) {
 			for (int i = 1; i <= amount; i++) {
-				AbstractLocation l = noise > 0 ? MobManager.findSafeSpawnLocation(target, (int) this.noise,
+				AbstractLocation l = noise > 0 ? Utils.findSafeSpawnLocation(target, this.noise,
 						(int) this.yNoise, this.mm.getMythicEntity().getHeight(), this.yUpOnly) : target;
 				if (this.yaw != -1337)
 					l.setYaw(Math.abs(this.yaw));
@@ -102,7 +108,7 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 					Utils.applyInvisible((LivingEntity) ams.getEntity().getBukkitEntity(), 0);
 				Utils.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
 				if (this.tag.length() > 0) {
-					ams.getEntity().addScoreboardTag(new PlaceholderString(this.tag).get(data, te));
+					ams.getEntity().addScoreboardTag(new PlaceholderStringImpl(this.tag).get(data, te));
 				}
 				if (this.setowner) {
 					ams.setOwner(data.getCaster().getEntity().getUniqueId());
@@ -126,21 +132,21 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 					ams.getThreatTable().targetHighestThreat();
 				}
 			}
-			return true;
+			return SkillResult.SUCCESS;
 		}
 		if (this.me != null) {
 			for (int i = 1; i <= amount; ++i) {
 				AbstractLocation l = this.noise > 0
-						? MobManager.findSafeSpawnLocation(target, (int) this.noise, (int) this.yNoise,
+						? Utils.findSafeSpawnLocation(target, (int) this.noise, (int) this.yNoise,
 								this.me.getHeight(), this.yUpOnly)
 						: target;
 				if (this.yaw != -1337)
 					l.setYaw(Math.abs(this.yaw));
 				this.me.spawn(l, SpawnReason.valueOf(reason));
 			}
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 
 }

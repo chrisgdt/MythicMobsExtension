@@ -2,6 +2,9 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 
 import java.lang.reflect.InvocationTargetException;
 
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
+import io.lumine.mythic.core.skills.SkillCondition;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,11 +12,6 @@ import org.bukkit.event.Listener;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.Externals;
 import com.gmail.berndivader.mythicmobsext.externals.Internals;
-
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillCondition;
-
 public class CustomConditions implements Listener {
 	Internals internals = Main.getPlugin().internals;
 

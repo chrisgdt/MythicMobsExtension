@@ -3,16 +3,15 @@ package com.gmail.berndivader.mythicmobsext.compatibility.worldguard;
 import java.util.Comparator;
 import java.util.Set;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.IEntityCondition;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
 public class MemberRegion extends AbstractCustomCondition implements IEntityCondition {
 

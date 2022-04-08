@@ -12,16 +12,19 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.*;
-import io.lumine.xikage.mythicmobs.skills.conditions.InvalidCondition;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-import io.lumine.xikage.mythicmobs.skills.targeters.CustomTargeter;
-import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
-import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
-import io.lumine.xikage.mythicmobs.skills.targeters.TriggerTargeter;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.config.MythicLineConfigImpl;
+import io.lumine.mythic.core.skills.*;
+import io.lumine.mythic.core.skills.conditions.InvalidCondition;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
+import io.lumine.mythic.core.skills.targeters.CustomTargeter;
+import io.lumine.mythic.core.skills.targeters.IEntitySelector;
+import io.lumine.mythic.core.skills.targeters.ILocationSelector;
+import io.lumine.mythic.core.skills.targeters.TriggerTargeter;
 
 @ExternalAnnotation(name = "castif", author = "BerndiVader")
 public class CastIfMechanic extends SkillMechanic
@@ -43,9 +46,10 @@ public class CastIfMechanic extends SkillMechanic
 	private Optional<String> meetTargeter;
 	private Optional<String> elseTargeter;
 
-	public CastIfMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public CastIfMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.line = skill; // added to fix MythicMobs issue
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.breakOnMeet = mlc.getBoolean(new String[] { "breakonmeet", "breakmeet" }, false);
 		this.breakOnElse = mlc.getBoolean(new String[] { "breakonelse", "breakelse" }, false);
@@ -54,9 +58,9 @@ public class CastIfMechanic extends SkillMechanic
 		this.parseConditionLines(ms, false);
 		ms = mlc.getString(new String[] { "targetconditions", "tc" });
 		this.parseConditionLines(ms, true);
-		this.meetAction = new PlaceholderString(
+		this.meetAction = new PlaceholderStringImpl(
 				SkillString.parseMessageSpecialChars(mlc.getString(new String[] { "meet", "m" })));
-		this.elseAction = new PlaceholderString(
+		this.elseAction = new PlaceholderStringImpl(
 				SkillString.parseMessageSpecialChars(mlc.getString(new String[] { "else", "e" })));
 		;
 		this.meetTargeter = Optional.ofNullable(mlc.getString(new String[] { "meettargeter", "mt" }));
@@ -86,7 +90,7 @@ public class CastIfMechanic extends SkillMechanic
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		SkillMetadata skillData = data.deepClone();
 		Optional<Skill> mSkill = Optional.empty();
 		Optional<Skill> eSkill = Optional.empty();
@@ -122,19 +126,19 @@ public class CastIfMechanic extends SkillMechanic
 			//if (this.breakOnElse) {
 			//}
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
-	private static void renewTargets(String ts, SkillMetadata data) {
+	private void renewTargets(String ts, SkillMetadata data) {
 		Optional<SkillTargeter> maybeTargeter = Optional.of(Utils.parseSkillTargeter(ts));
 		if (maybeTargeter.isPresent()) {
 			SkillTargeter st = maybeTargeter.get();
 			if (st instanceof CustomTargeter) {
 				String s1 = ts.substring(1);
-				MythicLineConfig mlc = new MythicLineConfig(s1);
+				MythicLineConfigImpl mlc = new MythicLineConfigImpl(s1);
 				String s2 = s1.contains("{") ? s1.substring(0, s1.indexOf("{")) : s1;
-				if ((st = CustomTargeters.getCustomTargeter(s2, mlc)) == null)
-					st = new TriggerTargeter(mlc);
+				if ((st = (SkillTargeter) CustomTargeters.getCustomTargeter(s2, mlc)) == null)
+					st = new TriggerTargeter(this.getManager(), mlc);
 			}
 			if (st instanceof IEntitySelector) {
 				if (data.getEntityTargets() == null)
@@ -151,7 +155,7 @@ public class CastIfMechanic extends SkillMechanic
 	}
 
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation location) {
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation location) {
 		SkillMetadata skillData = data.deepClone();
 		HashSet<AbstractLocation> targets = new HashSet<>();
 		targets.add(location);
@@ -160,7 +164,7 @@ public class CastIfMechanic extends SkillMechanic
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity entity) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity entity) {
 		SkillMetadata skillData = data.deepClone();
 		HashSet<AbstractEntity> targets = new HashSet<>();
 		targets.add(entity);
@@ -208,13 +212,13 @@ public class CastIfMechanic extends SkillMechanic
 	}
 
 	private HashMap<Integer, SkillCondition> getConditions(HashMap<Integer, String> conditionList) {
-		HashMap<Integer, SkillCondition> conditions = new HashMap<Integer, SkillCondition>();
+		HashMap<Integer, SkillCondition> conditions = new HashMap<>();
 		for (int a = 0; a < conditionList.size(); a++) {
 			SkillCondition sc;
 			String s = conditionList.get(a);
 			if (s.startsWith(" "))
 				s = s.substring(1);
-			if ((sc = SkillCondition.getCondition(s)) instanceof InvalidCondition)
+			if ((sc = conditions.get(s)) instanceof InvalidCondition)
 				continue;
 			conditions.put(a, sc);
 		}

@@ -1,10 +1,10 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.papi;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
 import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import me.clip.placeholderapi.PlaceholderAPI;
 
 public class Papi {

@@ -5,6 +5,10 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.ILocationCondition;
+import io.lumine.mythic.bukkit.BukkitAdapter;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -12,11 +16,6 @@ import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
 @ExternalAnnotation(name = "entitiesinradius,eir,leir,livingentitiesinradius,pir,playersinradius", author = "BerndiVader")

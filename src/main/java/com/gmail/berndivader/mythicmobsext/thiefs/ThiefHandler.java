@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
+import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
@@ -23,7 +24,7 @@ public class ThiefHandler {
 				Iterator<Thief> ti = ThiefHandler.this.thiefs.iterator();
 				while (ti.hasNext()) {
 					Thief thief = ti.next();
-					if (!Utils.mobmanager.isActiveMob(thief.getUuid()))
+					if (Utils.mobmanager.getActiveMobs().stream().map(ActiveMob::getUniqueId).noneMatch(m -> m.equals(thief.getUuid())))
 						ti.remove();
 				}
 			}

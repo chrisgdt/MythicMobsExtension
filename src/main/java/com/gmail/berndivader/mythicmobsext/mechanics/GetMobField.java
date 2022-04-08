@@ -3,19 +3,20 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import java.lang.reflect.Field;
 import java.util.Optional;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.INoTargetSkill;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 @ExternalAnnotation(name = "getmobfield", author = "BerndiVader")
 public class GetMobField extends SkillMechanic implements ITargetedEntitySkill, INoTargetSkill {
@@ -23,8 +24,8 @@ public class GetMobField extends SkillMechanic implements ITargetedEntitySkill, 
 	boolean bl1;
 	Field f1;
 
-	public GetMobField(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public GetMobField(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		s2 = mlc.getString("meta", null);
 		bl1 = mlc.getBoolean("stance", false);
 		try {
@@ -36,13 +37,13 @@ public class GetMobField extends SkillMechanic implements ITargetedEntitySkill, 
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		ActiveMob am;
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		Object o = null;
+		ActiveMob am;
 		if (f1 != null && (am = Utils.mobmanager.getMythicMobInstance(target)) != null) {
 			try {
 				if ((o = f1.get(am)) == null)
-					return false;
+					return SkillResult.CONDITION_FAILED;
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
@@ -54,11 +55,11 @@ public class GetMobField extends SkillMechanic implements ITargetedEntitySkill, 
 				am.setStance(o.toString());
 			}
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		return castAtEntity(data, data.getCaster().getEntity());
 	}
 

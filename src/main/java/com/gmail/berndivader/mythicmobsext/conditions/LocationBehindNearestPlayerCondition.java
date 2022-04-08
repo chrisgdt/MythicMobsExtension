@@ -2,6 +2,10 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 
 import java.util.List;
 
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.ILocationCondition;
+import io.lumine.mythic.bukkit.BukkitAdapter;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -9,11 +13,6 @@ import org.bukkit.util.Vector;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
 @ExternalAnnotation(name = "behindnearestplayer", author = "BerndiVader")
 public class LocationBehindNearestPlayerCondition extends AbstractCustomCondition implements ILocationCondition {

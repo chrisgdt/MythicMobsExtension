@@ -3,6 +3,14 @@ package com.gmail.berndivader.mythicmobsext.bossbars.mechanics;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
@@ -14,13 +22,6 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.bossbars.BossBars;
 import com.gmail.berndivader.mythicmobsext.bossbars.SegmentedEnum;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-
 public class CreateBossBar extends SkillMechanic implements ITargetedEntitySkill {
 	PlaceholderString title, expr;
 	BarStyle style;
@@ -28,8 +29,8 @@ public class CreateBossBar extends SkillMechanic implements ITargetedEntitySkill
 	List<BarFlag> flags;
 	int flags_size;
 
-	public CreateBossBar(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public CreateBossBar(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		title = mlc.getPlaceholderString("title", "Bar");
 		style = BarStyle.valueOf(SegmentedEnum.real(mlc.getInteger("segment", 6)).name());
 		expr = mlc.getPlaceholderString("value", "0.05d");
@@ -59,7 +60,7 @@ public class CreateBossBar extends SkillMechanic implements ITargetedEntitySkill
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		if (abstract_entity.isPlayer()) {
 			Player player = (Player) abstract_entity.getBukkitEntity();
 			BossBar bar = Bukkit.createBossBar(title.get(data, abstract_entity), color, style);
@@ -78,10 +79,10 @@ public class CreateBossBar extends SkillMechanic implements ITargetedEntitySkill
 				}
 				BossBars.addBar(abstract_entity.getUniqueId(), bar);
 				bar.addPlayer(player);
-				return true;
+				return SkillResult.SUCCESS;
 			}
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 
 }

@@ -2,7 +2,18 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.Optional;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractItemStack;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.items.ItemManager;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderInt;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.bukkit.adapters.BukkitItemStack;
+import io.lumine.mythic.core.items.MythicItem;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
@@ -10,12 +21,6 @@ import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.items.ItemManager;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderInt;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name = "giveitem", author = "BerndiVader")
 public class CreateItem extends SkillMechanic implements ITargetedEntitySkill, INoTargetSkill {
@@ -31,9 +36,9 @@ public class CreateItem extends SkillMechanic implements ITargetedEntitySkill, I
 	Optional<Boolean> view_only = Optional.empty();
 	PlaceholderInt amount;
 
-	public CreateItem(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public CreateItem(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		holding = new HoldingItem();
 		this.holding.setWhere(mlc.getString("to", "inventory"));
@@ -50,33 +55,33 @@ public class CreateItem extends SkillMechanic implements ITargetedEntitySkill, I
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		castAtEntity(data, data.getCaster().getEntity());
-		return false;
+		return SkillResult.SUCCESS;
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		HoldingItem holding = this.holding.clone();
 		if (holding != null) {
 			if (item_name == null || !abstract_entity.isLiving())
-				return false;
+				return SkillResult.CONDITION_FAILED;
 			holding.parseSlot(data, abstract_entity);
 			if (bag_name != null)
 				holding.setBagName(this.bag_name.get(data, abstract_entity));
-			ItemStack item_stack = itemmanager.getItemStack(this.item_name.get(data, abstract_entity));
-			if (item_stack != null) {
-				item_stack.setAmount(amount.get(data, abstract_entity));
+			Optional<MythicItem> o_item_stack = itemmanager.getItem(this.item_name.get(data, abstract_entity));
+			if (o_item_stack.isPresent()) {
+				ItemStack item_stack = BukkitAdapter.adapt(o_item_stack.get().generateItemStack(amount.get(data, abstract_entity)));
 				item_stack = NMSUtils.makeReal(item_stack);
 				if (this.click_skill != null)
 					NMSUtils.setMeta(item_stack, Utils.meta_CLICKEDSKILL, this.click_skill);
 				if (this.view_only.isPresent())
 					NMSUtils.setMetaBoolean(item_stack, str_viewonly, view_only.get());
 				HoldingItem.giveItem((LivingEntity) abstract_entity.getBukkitEntity(), holding, item_stack, override);
-				return true;
+				return SkillResult.SUCCESS;
 			}
 		}
-		return false;
+		return SkillResult.ERROR;
 	}
 
 }

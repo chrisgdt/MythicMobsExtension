@@ -2,24 +2,21 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.Optional;
 
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.auras.Aura;
+import io.lumine.mythic.utils.Events;
+import io.lumine.mythic.utils.Schedulers;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
-
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.IParentSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.Skill;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.auras.Aura;
-import io.lumine.xikage.mythicmobs.utils.Events;
-import io.lumine.xikage.mythicmobs.utils.Schedulers;
 
 @ExternalAnnotation(name = "ontrade", author = "Seyarada")
 public class OnTrade extends Aura implements ITargetedEntitySkill {
@@ -30,22 +27,22 @@ public class OnTrade extends Aura implements ITargetedEntitySkill {
    protected int oldXP;
    protected int newXP;
 
-   public OnTrade(String skill, MythicLineConfig mlc) {
-      super(skill, mlc);
+   public OnTrade(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+       super(manager, skill, mlc);
       this.onTradeSkillName = mlc.getString(new String[]{"ontradeskill", "ontrade", "os", "s", "skill"});
       this.cancelEvent = mlc.getBoolean(new String[]{"cancelevent", "ce"}, false);
       this.forceAsPower = mlc.getBoolean(new String[]{"forceaspower", "fap"}, true);
-      MythicMobs.inst().getSkillManager().queueSecondPass(() -> {
+       Utils.mythicmobs.getSkillManager().queueSecondPass(() -> {
          if (this.onTradeSkillName != null) {
-            this.onTradeSkill = MythicMobs.inst().getSkillManager().getSkill(this.onTradeSkillName);
+            this.onTradeSkill = Utils.mythicmobs.getSkillManager().getSkill(this.onTradeSkillName);
          }
 
       });
    }
 
-   public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+   public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
       new OnTrade.Tracker(data, target);
-      return true;
+      return SkillResult.SUCCESS;
    }
 
    private class Tracker extends Aura.AuraTracker implements IParentSkill, Runnable {

@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 
+import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
+import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,8 +13,6 @@ import org.bukkit.plugin.Plugin;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import me.blackvein.quests.Quest;
 import me.blackvein.quests.Quester;
 import me.blackvein.quests.Quests;
@@ -87,7 +87,7 @@ public class QuestsSupport implements Listener {
 		case "completequest_ext":
 		case "takequest_ext":
 		case "failquest_ext": {
-			e.register(new QuestsMechanic(e.getMechanicName(), e.getConfig()));
+			e.register(new QuestsMechanic(e.getContainer().getManager(), e.getMechanicName(), e.getConfig()));
 			break;
 		}
 		}

@@ -6,6 +6,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.adapters.AbstractVector;
+import io.lumine.mythic.api.adapters.TaskManager;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.utils.BlockUtil;
+import io.lumine.mythic.utils.numbers.Numbers;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.Location;
@@ -18,27 +28,11 @@ import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.CustomProjectile;
 import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.MythicHitBox;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
-
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.AbstractVector;
-import io.lumine.xikage.mythicmobs.adapters.TaskManager;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.IParentSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillCaster;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.util.BlockUtil;
-import io.lumine.xikage.mythicmobs.utils.numbers.Numbers;
 
 @ExternalAnnotation(name = "blockprojectile", author = "BerndiVader")
 public class BlockProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
@@ -48,8 +42,8 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 	protected float pEntityPitchOffset;
 	protected byte bite;
 
-	public BlockProjectile(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public BlockProjectile(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 
 		this.pEntityName = mlc.getString(new String[] { "pobject", "projectileblock", "pblock" }, "DIRT").toUpperCase();
 		this.pEntitySpin = mlc.getFloat("pspin", 0.0F);
@@ -58,18 +52,18 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 	}
 
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation target) {
 		try {
 			new ProjectileRunner(data, this.pEntityName, target.clone().add(0.0, this.targetYOffset, 0.0));
-			return true;
+			return SkillResult.SUCCESS;
 		} catch (Exception ex) {
 			System.err.println(ex.getLocalizedMessage());
-			return false;
+			return SkillResult.ERROR;
 		}
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		return this.castAtLocation(data, target.getLocation().add(0.0, target.getEyeHeight() / 2.0, 0.0));
 	}
 

@@ -3,7 +3,12 @@ package com.gmail.berndivader.mythicmobsext.backbags.mechanics;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -11,10 +16,6 @@ import org.bukkit.inventory.ItemStack;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagViewer;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 public class OpenBackBag extends SkillMechanic implements INoTargetSkill, ITargetedEntitySkill {
 
@@ -24,9 +25,9 @@ public class OpenBackBag extends SkillMechanic implements INoTargetSkill, ITarge
 	PlaceholderString bag_name;
 	List<Integer> excluded_slots;
 
-	public OpenBackBag(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public OpenBackBag(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		size = mlc.getInteger("size", 9);
 		view_only = mlc.getBoolean("viewonly", true);
@@ -48,26 +49,26 @@ public class OpenBackBag extends SkillMechanic implements INoTargetSkill, ITarge
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		if (data.getCaster().getEntity().isPlayer()) {
 			Player player = (Player) data.getCaster().getEntity().getBukkitEntity();
 			BackBagViewer bag = new BackBagViewer(player, size, default_items, bag_name.get(data), temporary);
 			bag.viewBackBag(player, view_only, this.excluded_slots);
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		if (abstract_entity.isPlayer()) {
 			Entity holder = data.getCaster().getEntity().getBukkitEntity();
 			Player viewer = (Player) abstract_entity.getBukkitEntity();
 			BackBagViewer bag = new BackBagViewer(holder, size, default_items, bag_name.get(data, abstract_entity),
 					temporary);
 			bag.viewBackBag(viewer, view_only, this.excluded_slots);
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 }

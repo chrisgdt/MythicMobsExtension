@@ -5,7 +5,23 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import io.lumine.mythic.api.MythicPlugin;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.items.MythicItem;
+import io.lumine.mythic.core.logging.MythicLogger;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.variables.Variable;
+import io.lumine.mythic.core.skills.variables.VariableMechanic;
+import io.lumine.mythic.core.skills.variables.VariableRegistry;
+import io.lumine.mythic.core.skills.variables.VariableType;
+import io.lumine.mythic.core.utils.jnbt.CompoundTag;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -14,20 +30,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
-
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.items.MythicItem;
-import io.lumine.xikage.mythicmobs.logging.MythicLogger;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.variables.Variable;
-import io.lumine.xikage.mythicmobs.skills.variables.VariableMechanic;
-import io.lumine.xikage.mythicmobs.skills.variables.VariableRegistry;
-import io.lumine.xikage.mythicmobs.skills.variables.VariableType;
-import io.lumine.xikage.mythicmobs.util.jnbt.CompoundTag;
 
 
 @ExternalAnnotation(name = "getitemdata,gid", author = "Seyarada")
@@ -45,9 +47,9 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 	SkillMetadata data;
 	AbstractEntity target;
 	
-	public GetItemData(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public GetItemData(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.where = mlc.getString(new String[] { "where", "w" }, "HAND");
 		this.searchKey = mlc.getString(new String[] { "key", "k" }, "Hello");
@@ -67,7 +69,7 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 			Material baseMaterial = Material.valueOf(baseMLC);
 			mythicItem = new ItemStack(baseMaterial);
 		} catch (Exception e) {
-			Optional<MythicItem> t = MythicMobs.inst().getItemManager().getItem(baseMLC);
+			Optional<MythicItem> t = Utils.mythicmobs.getItemManager().getItem(baseMLC);
             ItemStack item = BukkitAdapter.adapt(t.get().generateItemStack(1));
             mythicItem = item;
 		}
@@ -75,7 +77,7 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata arg0, AbstractEntity arg1) {
+	public SkillResult castAtEntity(SkillMetadata arg0, AbstractEntity arg1) {
 		this.data = arg0; this.target = arg1;
 		ItemStack iS = getItem();
 		switch (this.get) {
@@ -130,7 +132,7 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 		
 		}
 		
-		return false;
+		return SkillResult.ERROR;
 	}
 
 	public ItemStack getItem() {
@@ -177,9 +179,8 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 	
 	public String readNBT(ItemStack iS) {
 		if(iS==null) return "null";
-		CompoundTag a = MythicMobs.inst().getVolatileCodeHandler().getItemHandler().getNBTData(iS);
+		CompoundTag a = Utils.mythicmobs.getVolatileCodeHandler().getItemHandler().getNBTData(iS);
 		if(a.containsKey(this.searchKey)) return a.getString(this.searchKey);
 		return "null";
 	}
-	
 }

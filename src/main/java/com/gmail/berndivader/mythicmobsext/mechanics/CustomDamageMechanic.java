@@ -3,20 +3,22 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name = "customdamage", author = "BerndiVader")
 public class CustomDamageMechanic extends SkillMechanic implements ITargetedEntitySkill {
@@ -38,15 +40,15 @@ public class CustomDamageMechanic extends SkillMechanic implements ITargetedEnti
 	String ca;
 	List<EntityType> pi_ignores;
 
-	public CustomDamageMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public CustomDamageMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.pk = mlc.getBoolean(new String[] { "preventknockback", "pkb", "pk" }, false);
 		String value = mlc.getString(new String[] { "amount", "a" }, "1");
 		if (value.startsWith("-"))
 			value = "1";
-		this.amount = new PlaceholderString(value);
+		this.amount = new PlaceholderStringImpl(value);
 		this.ia = mlc.getBoolean(new String[] { "ignorearmor", "ignorearmour", "ia", "i" }, false);
 		this.pi = mlc.getBoolean(new String[] { "preventimmunity", "pi" }, false);
 		this.iabs = mlc.getBoolean(new String[] { "ignoreabsorbtion", "ignoreabs", "iabs" }, false);
@@ -83,9 +85,9 @@ public class CustomDamageMechanic extends SkillMechanic implements ITargetedEnti
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity t) {
 		if (!t.isValid() || t.isDead() || t.getHealth() <= 0.0 || data.getCaster().isUsingDamageSkill())
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		AbstractEntity c = data.getCaster().getEntity();
 		double dmg = MathUtils.randomRangeDouble(this.amount.get(data, t));
 		if (this.p)
@@ -102,6 +104,6 @@ public class CustomDamageMechanic extends SkillMechanic implements ITargetedEnti
 		}
 		Utils.doDamage(data.getCaster(), t, dmg, this.ia, this.pk, this.pi, pi_ignores, this.iabs, this.debug,
 				this.cause, this.ncp, this.strict);
-		return true;
+		return SkillResult.SUCCESS;
 	}
 }

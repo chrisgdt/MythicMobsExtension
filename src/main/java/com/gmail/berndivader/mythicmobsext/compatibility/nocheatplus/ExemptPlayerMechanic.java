@@ -1,20 +1,22 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 
 import fr.neatmonster.nocheatplus.checks.CheckType;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 
 public class ExemptPlayerMechanic extends SkillMechanic implements INoTargetSkill, ITargetedEntitySkill {
 	CheckType[] types;
 
-	public ExemptPlayerMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public ExemptPlayerMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		types = new CheckType[0];
 		String[] arr1 = mlc.getString(new String[] { "types", "type", "t" }, "ALL").toUpperCase().split(",");
@@ -35,13 +37,13 @@ public class ExemptPlayerMechanic extends SkillMechanic implements INoTargetSkil
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity e) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity e) {
 		NoCheatPlusSupport.exempt((Player) e.getBukkitEntity(), types);
-		return false;
+		return SkillResult.SUCCESS;
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		return castAtEntity(data, data.getCaster().getEntity());
 	}
 

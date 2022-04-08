@@ -1,38 +1,43 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
+import io.lumine.mythic.core.skills.SkillString;
+import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.*;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name = "renameentity", author = "BerndiVader")
 public class RenameEntityMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	PlaceholderString name;
 	boolean v;
 
-	public RenameEntityMechanic(String line, MythicLineConfig mlc) {
-		super(line, mlc);
+	public RenameEntityMechanic(SkillExecutor manager, String line, MythicLineConfig mlc) {
+		super(manager, line, mlc);
 		String tmp = mlc.getString(new String[] { "name", "n" }, "");
 		if (tmp.charAt(0) == '"' && tmp.charAt(tmp.length() - 1) == '"') {
 			tmp = tmp.substring(1, tmp.length() - 1);
 		}
-		name = new PlaceholderString(SkillString.parseMessageSpecialChars(tmp));
+		name = new PlaceholderStringImpl(SkillString.parseMessageSpecialChars(tmp));
 		this.v = mlc.getBoolean(new String[] { "visible", "v" }, false);
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving() && !target.isPlayer() && this.name != null) {
 			String n = this.name.get(data, target);
 			LivingEntity e = (LivingEntity) target.getBukkitEntity();
 			e.setCustomName(n);
 			e.setCustomNameVisible(this.v);
-			return true;
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 }

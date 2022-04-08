@@ -4,6 +4,11 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.UUID;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.Skill;
+import io.lumine.mythic.api.skills.conditions.IEntityCondition;
+import io.lumine.mythic.core.skills.AbstractSkill;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -15,12 +20,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
-import io.lumine.xikage.mythicmobs.skills.Skill;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
 @ExternalAnnotation(name = "skillcooldown,cooldown", author = "BerndiVader")
 public class SkillCooldown extends AbstractCustomCondition implements IEntityCondition {

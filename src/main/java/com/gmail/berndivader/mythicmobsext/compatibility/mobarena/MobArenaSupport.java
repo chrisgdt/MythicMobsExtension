@@ -1,12 +1,11 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.mobarena;
 
+import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.gmail.berndivader.mythicmobsext.Main;
-
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 
 public class MobArenaSupport implements Listener {
 	static String pluginName;

@@ -170,7 +170,8 @@ public class Main extends JavaPlugin {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					Utils.mythicmobs.getRandomSpawningManager().reload();
+					//Utils.mythicmobs.getRandomSpawningManager().reload();
+					// Why not ? :D
 				}
 			}.runTask(this);
 		}

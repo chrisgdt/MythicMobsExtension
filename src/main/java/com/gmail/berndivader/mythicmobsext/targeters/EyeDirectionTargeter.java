@@ -4,15 +4,16 @@ import java.util.HashSet;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.core.skills.SkillExecutor;
 
 @ExternalAnnotation(name = "eyedirection", author = "BerndiVader")
 public class EyeDirectionTargeter extends ISelectorLocation {
 
-	public EyeDirectionTargeter(MythicLineConfig mlc) {
-		super(mlc);
+	public EyeDirectionTargeter(SkillExecutor manager, MythicLineConfig mlc) {
+		super(manager, mlc);
 	}
 
 	@Override

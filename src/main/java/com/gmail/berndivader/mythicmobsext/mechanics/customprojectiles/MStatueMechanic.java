@@ -7,7 +7,16 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Optional;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.adapters.TaskManager;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -25,14 +34,6 @@ import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.TaskManager;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
-
 @ExternalAnnotation(name = "mythicfloating", author = "BerndiVader")
 public class MStatueMechanic extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 	Optional<Skill> onTickSkill = Optional.empty(), onHitSkill = Optional.empty(), onEndSkill = Optional.empty(),
@@ -44,13 +45,15 @@ public class MStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 	double sOffset, fOffset;
 	boolean facedir, hitTarget, hitPlayers, hitNonPlayers, hitTargetOnly, invunerable, lifetime;
 
-	public MStatueMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public MStatueMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		String i = mlc.getString(new String[] { "mob", "m" }, "SkeletonKing");
-		this.material = Utils.mythicmobs.getMobManager().getMythicMob(i);
-		if (this.material == null && Utils.mythicmobs.getMobManager().getMobTypes().size() > 0) {
+		Optional<MythicMob> opt = Utils.mythicmobs.getMobManager().getMythicMob(i);
+		if (opt.isPresent()) {
+			this.material = opt.get();
+		} else if (Utils.mythicmobs.getMobManager().getMobTypes().size() > 0) {
 			this.material = Utils.mythicmobs.getMobManager().getMobTypes().iterator().next();
 		}
 		this.onTickSkillName = mlc.getString(new String[] { "ontickskill", "ontick", "ot", "skill", "s", "meta", "m" });
@@ -88,24 +91,24 @@ public class MStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		try {
 			new ProjectileRunner(data, target);
-			return true;
+			return SkillResult.SUCCESS;
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		}
 	}
 
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation target) {
 		try {
 			new ProjectileRunner(data, target);
-			return true;
+			return SkillResult.SUCCESS;
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		}
 	}
 

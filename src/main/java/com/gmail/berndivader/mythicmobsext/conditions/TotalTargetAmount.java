@@ -2,11 +2,10 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
-
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.conditions.ISkillMetaCondition;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.conditions.ISkillMetaCondition;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
 
 @ExternalAnnotation(name = "totaltarget,totaltargets", author = "BerndiVader")
 public class TotalTargetAmount extends AbstractCustomCondition implements ISkillMetaCondition {

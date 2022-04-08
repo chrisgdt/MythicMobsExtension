@@ -2,6 +2,15 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.Optional;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.logging.MythicLogger;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -14,15 +23,6 @@ import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.logging.MythicLogger;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-
 @ExternalAnnotation(name = "entitygoggle,entitygoggleat,entitylookin", author = "BerndiVader")
 public class EntityGoogleMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	public static String str = "mmGoggle";
@@ -32,8 +32,8 @@ public class EntityGoogleMechanic extends SkillMechanic implements ITargetedEnti
 	private Handler vh = Volatile.handler;
 	final Optional<Location> location;
 
-	public EntityGoogleMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public EntityGoogleMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		b(skill.toLowerCase().startsWith("entitylookin"));
 		this.dur = (long) mlc.getInteger(new String[] { "duration", "dur" }, 120);
 		this.rotate = mlc.getFloat("rotate", 0f);
@@ -57,9 +57,9 @@ public class EntityGoogleMechanic extends SkillMechanic implements ITargetedEnti
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity t) {
 		if (data.getCaster().getEntity().isPlayer())
-			return false;
+			return SkillResult.CONDITION_FAILED;
 		if (data.getCaster().getEntity().getBukkitEntity().hasMetadata(str))
 			data.getCaster().getEntity().getBukkitEntity().removeMetadata(str, Main.getPlugin());
 		final AbstractEntity caster = data.getCaster().getEntity();
@@ -92,7 +92,7 @@ public class EntityGoogleMechanic extends SkillMechanic implements ITargetedEnti
 				l++;
 			}
 		}.runTaskTimerAsynchronously(Main.getPlugin(), 1L, 1L);
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 	private void b(Boolean b) {

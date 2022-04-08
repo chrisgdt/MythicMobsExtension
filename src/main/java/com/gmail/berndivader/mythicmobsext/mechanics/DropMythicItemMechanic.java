@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.core.drops.DropMetadataImpl;
+import io.lumine.mythic.core.skills.*;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -18,20 +21,19 @@ import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.drops.Drop;
-import io.lumine.xikage.mythicmobs.drops.DropMetadata;
-import io.lumine.xikage.mythicmobs.drops.IIntangibleDrop;
-import io.lumine.xikage.mythicmobs.drops.IItemDrop;
-import io.lumine.xikage.mythicmobs.drops.IMessagingDrop;
-import io.lumine.xikage.mythicmobs.drops.IMultiDrop;
-import io.lumine.xikage.mythicmobs.drops.InvalidDrop;
-import io.lumine.xikage.mythicmobs.drops.LootBag;
-import io.lumine.xikage.mythicmobs.drops.droppables.ExperienceDrop;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.drops.Drop;
+import io.lumine.mythic.api.drops.DropMetadata;
+import io.lumine.mythic.api.drops.IIntangibleDrop;
+import io.lumine.mythic.api.drops.IItemDrop;
+import io.lumine.mythic.api.drops.IMessagingDrop;
+import io.lumine.mythic.api.drops.IMultiDrop;
+import io.lumine.mythic.core.drops.InvalidDrop;
+import io.lumine.mythic.core.drops.LootBag;
+import io.lumine.mythic.core.drops.droppables.ExperienceDrop;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
 
 @ExternalAnnotation(name = "dropmythicitem", author = "BerndiVader")
 public class DropMythicItemMechanic extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
@@ -41,9 +43,9 @@ public class DropMythicItemMechanic extends SkillMechanic implements ITargetedEn
 	boolean tag, give, stackable, silent;
 	String amount;
 
-	public DropMythicItemMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public DropMythicItemMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.str_types = mlc.getPlaceholderString(new String[] { "mythicitem", "item", "itemtype", "type", "t", "i" },
 				"");
@@ -55,15 +57,15 @@ public class DropMythicItemMechanic extends SkillMechanic implements ITargetedEn
 	}
 
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
+	public SkillResult castAtLocation(SkillMetadata data, AbstractLocation target) {
 		String[] types = this.str_types.get(data).split(",");
 		LootBag loot = makeLootBag(data, types, data.getTrigger(), tag, tags, this.stackable);
 		giveOrDrop(BukkitAdapter.adapt(target), null, loot, give, tag, stackable, tags, silent);
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		String[] types = this.str_types.get(data, target).split(",");
 		LootBag loot = makeLootBag(data, types, target, tag, tags, this.stackable);
 		if (target.isPlayer()) {
@@ -73,12 +75,12 @@ public class DropMythicItemMechanic extends SkillMechanic implements ITargetedEn
 		} else {
 			giveOrDrop(target.getBukkitEntity().getLocation(), null, loot, give, tag, stackable, tags, silent);
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 	private static LootBag makeLootBag(SkillMetadata data, String[] types, AbstractEntity target, boolean tag,
 			String[] tags, boolean stackable) {
-		LootBag loot = new LootBag(new DropMetadata(data.getCaster(), target));
+		LootBag loot = new LootBag(new DropMetadataImpl(data.getCaster(), target));
 		Map<Class, Drop> intangibleDrops = new HashMap<Class, Drop>();
 		List<Drop> itemDrops = new ArrayList<Drop>();
 
@@ -96,7 +98,7 @@ public class DropMythicItemMechanic extends SkillMechanic implements ITargetedEn
 			if (drop instanceof IItemDrop) {
 				itemDrops.add(drop);
 			} else if (drop instanceof IMultiDrop) {
-				LootBag loot1 = ((IMultiDrop) drop).get(new DropMetadata(data.getCaster(), target));
+				LootBag loot1 = ((IMultiDrop) drop).get(new DropMetadataImpl(data.getCaster(), target));
 				for (Drop d1 : loot1.getDrops()) {
 					if (d1 instanceof IItemDrop) {
 						itemDrops.add(d1);
@@ -140,7 +142,7 @@ public class DropMythicItemMechanic extends SkillMechanic implements ITargetedEn
 		World w = l.getWorld();
 		for (Drop drop : loot.getDrops()) {
 			if (drop instanceof IItemDrop) {
-				ItemStack is = createItemStack(BukkitAdapter.adapt(((IItemDrop) drop).getDrop(loot.getMetadata())), tag,
+				ItemStack is = createItemStack(BukkitAdapter.adapt(((IItemDrop) drop).getDrop(loot.getMetadata(), 1)), tag,
 						stackable, tags);
 				if (give && isPresent && player.getInventory().firstEmpty() > -1) {
 					player.getInventory().addItem(is.clone());
@@ -157,7 +159,7 @@ public class DropMythicItemMechanic extends SkillMechanic implements ITargetedEn
 
 			} else if (drop instanceof IIntangibleDrop) {
 				if (isPresent)
-					((IIntangibleDrop) drop).giveDrop(BukkitAdapter.adapt(player), loot.getMetadata());
+					((IIntangibleDrop) drop).giveDrop(BukkitAdapter.adapt(player), loot.getMetadata(), 1);
 			}
 			if (drop instanceof IMessagingDrop) {
 				msgDrops.merge((IMessagingDrop) drop, drop.getAmount(), (n, o) -> n + o);
@@ -165,8 +167,8 @@ public class DropMythicItemMechanic extends SkillMechanic implements ITargetedEn
 		}
 		if (isPresent && !silent && msgDrops.size() > 0) {
 			for (Map.Entry<IMessagingDrop, Double> entry : msgDrops.entrySet()) {
-				player.sendMessage(((IMessagingDrop) entry.getKey()).getRewardMessage(loot.getMetadata(),
-						(Double) entry.getValue()));
+				player.sendMessage(entry.getKey().getRewardMessage(loot.getMetadata(),
+						entry.getValue()));
 			}
 		}
 	}

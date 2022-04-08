@@ -1,13 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.worldguard;
 
+import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
+import io.lumine.mythic.core.skills.SkillCondition;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
-import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 
 public class WorldGuardFlag implements Listener {
 	static String pluginName = "WorldGuard";

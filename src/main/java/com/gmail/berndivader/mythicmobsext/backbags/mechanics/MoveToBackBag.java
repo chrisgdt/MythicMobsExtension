@@ -2,7 +2,12 @@ package com.gmail.berndivader.mythicmobsext.backbags.mechanics;
 
 import java.util.List;
 
-import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.Inventory;
@@ -15,10 +20,6 @@ import com.gmail.berndivader.mythicmobsext.backbags.BackBagInventory;
 import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
 import com.gmail.berndivader.mythicmobsext.items.WhereEnum;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-
 public class MoveToBackBag extends SkillMechanic implements INoTargetSkill, ITargetedEntitySkill {
 	int backbag_slot;
 	WhereEnum what;
@@ -27,9 +28,9 @@ public class MoveToBackBag extends SkillMechanic implements INoTargetSkill, ITar
 	String meta_name, slot;
 	HoldingItem holding;
 
-	public MoveToBackBag(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public MoveToBackBag(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		what = WhereEnum.getWhere(mlc.getString("what", "head"));
 		slot = mlc.getString("slot", "-1");
@@ -45,12 +46,12 @@ public class MoveToBackBag extends SkillMechanic implements INoTargetSkill, ITar
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public SkillResult cast(SkillMetadata data) {
 		return castAtEntity(data, data.getCaster().getEntity());
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		if (abstract_entity.isLiving() && BackBagHelper.hasBackBag(abstract_entity.getUniqueId())) {
 			HoldingItem holding = this.holding.clone();
 			if (holding != null) {
@@ -59,7 +60,7 @@ public class MoveToBackBag extends SkillMechanic implements INoTargetSkill, ITar
 				BackBagInventory bag = BackBagHelper.getBagInventory(holder.getUniqueId(),
 						bag_name.get(data, abstract_entity));
 				if (bag == null)
-					return false;
+					return SkillResult.ERROR;
 				Inventory inventory = bag.getInventory();
 				List<ItemStack> stack = HoldingItem.getContents(holding, holder);
 				for (int i1 = 0; i1 < stack.size(); i1++) {
@@ -88,7 +89,7 @@ public class MoveToBackBag extends SkillMechanic implements INoTargetSkill, ITar
 				}
 			}
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 	static void setMetaVariable(ItemStack old_item, LivingEntity holder, String meta_name, int backbag_slot) {

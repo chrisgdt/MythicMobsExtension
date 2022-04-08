@@ -3,6 +3,7 @@ package com.gmail.berndivader.mythicmobsext.volatilecode;
 import java.util.List;
 import java.util.function.Predicate;
 
+import io.lumine.mythic.api.skills.SkillResult;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -62,7 +63,7 @@ public interface Handler {
 
 	float getItemCoolDown(Player p, int i1);
 
-	public boolean setItemCooldown(Player p, int j1, int i1);
+	public SkillResult setItemCooldown(Player p, int j1, int i1);
 
 	void setFieldOfViewPacketSend(Player player, float f1);
 

@@ -3,6 +3,14 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.IEntityComparisonCondition;
+import io.lumine.mythic.api.skills.conditions.ILocationCondition;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.SkillString;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -12,15 +20,6 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.MetaTagValue;
 import com.gmail.berndivader.mythicmobsext.utils.MetaTagValue.ValueTypes;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityComparisonCondition;
-import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
 @ExternalAnnotation(name = "hasmeta,hasmetasimple", author = "BerndiVader")
 public class HasMetaTagCondition extends AbstractCustomCondition
@@ -79,7 +78,7 @@ public class HasMetaTagCondition extends AbstractCustomCondition
 		Location l = BukkitAdapter.adapt(location);
 		Block block = l.getBlock();
 		for (Map.Entry<String, MetaTagValue> e : metatags.entrySet()) {
-			String t = SkillString.parseMobVariables(e.getKey(), null, null, null);
+			String t = Utils.parseMobVariables(e.getKey(), null, null, null);
 			String vs = getMetaValString(e.getValue(), null, null);
 			if (block.hasMetadata(t)) {
 				if (e.getValue().getType().equals(ValueTypes.DEFAULT))
@@ -98,7 +97,7 @@ public class HasMetaTagCondition extends AbstractCustomCondition
 		ActiveMob am = Utils.mobmanager.getMythicMobInstance(caster);
 		for (Map.Entry<String, MetaTagValue> e : metatags.entrySet()) {
 			boolean strict = e.getValue().isStrict();
-			String t = SkillString.parseMobVariables(e.getKey(), am, ae, null);
+			String t = Utils.parseMobVariables(e.getKey(), am, ae, null);
 			String vs = getMetaValString(e.getValue(), am, ae);
 			Entity target = this.compareToSelf ? caster.getBukkitEntity() : ae.getBukkitEntity();
 			if (target.hasMetadata(t)) {
@@ -118,7 +117,7 @@ public class HasMetaTagCondition extends AbstractCustomCondition
 		if (v.getType().equals(ValueTypes.BOOLEAN)) {
 			vs = ((Boolean) v.getValue()).toString();
 		} else if (v.getType().equals(ValueTypes.STRING)) {
-			vs = SkillString.parseMobVariables((String) v.getValue(), am, ae, null);
+			vs = Utils.parseMobVariables((String) v.getValue(), am, ae, null);
 		} else if (v.getType().equals(ValueTypes.NUMERIC)) {
 			vs = ((Double) v.getValue()).toString();
 		}

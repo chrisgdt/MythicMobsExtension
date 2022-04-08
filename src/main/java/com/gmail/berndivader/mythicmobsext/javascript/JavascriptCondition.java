@@ -2,20 +2,19 @@ package com.gmail.berndivader.mythicmobsext.javascript;
 
 import javax.script.ScriptException;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.conditions.IEntityCondition;
+import io.lumine.mythic.api.skills.conditions.ILocationCondition;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillString;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
-import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
 @ExternalAnnotation(name = "jscondition", author = "BerndiVader")
 public class JavascriptCondition extends AbstractCustomCondition implements IEntityCondition, ILocationCondition {

@@ -1,17 +1,18 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 
 import com.gmail.berndivader.mythicmobsext.backbags.InventoryViewer;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 @ExternalAnnotation(name = "snoopinventory,openinventory", author = "BerndiVader")
 public class SnoopInventory extends SkillMechanic implements ITargetedEntitySkill {
@@ -19,9 +20,9 @@ public class SnoopInventory extends SkillMechanic implements ITargetedEntitySkil
 	boolean view_only, snoop;
 	InventoryType type;
 
-	public SnoopInventory(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+	public SnoopInventory(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
+		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		snoop = mlc.getLine().toLowerCase().startsWith("snoop");
 		view_only = mlc.getBoolean("viewonly", true);
@@ -34,7 +35,7 @@ public class SnoopInventory extends SkillMechanic implements ITargetedEntitySkil
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		if (snoop) {
 			if (data.getCaster().getEntity().isPlayer() && abstract_entity.isPlayer()) {
 				Player caster = (Player) data.getCaster().getEntity().getBukkitEntity();
@@ -47,7 +48,7 @@ public class SnoopInventory extends SkillMechanic implements ITargetedEntitySkil
 				new InventoryViewer(caster, caster, view_only, type);
 			}
 		}
-		return true;
+		return SkillResult.SUCCESS;
 	}
 
 }

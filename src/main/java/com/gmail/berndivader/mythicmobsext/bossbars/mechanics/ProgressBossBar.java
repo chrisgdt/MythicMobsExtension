@@ -1,31 +1,32 @@
 package com.gmail.berndivader.mythicmobsext.bossbars.mechanics;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.ITargetedEntitySkill;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.api.skills.SkillResult;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.boss.BossBar;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.bossbars.BossBars;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-
 public class ProgressBossBar extends SkillMechanic implements ITargetedEntitySkill {
 	PlaceholderString title, expr;
 	boolean set;
 
-	public ProgressBossBar(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
+	public ProgressBossBar(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+		super(manager, skill, mlc);
 		title = mlc.getPlaceholderString("title", "Bar");
 		set = mlc.getBoolean("set", false);
 		expr = mlc.getPlaceholderString("value", "0.05d");
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
+	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		if (abstract_entity.isPlayer()) {
 			double value = 0d;
 			String parsed_expr = expr.get(data, abstract_entity);
@@ -43,8 +44,9 @@ public class ProgressBossBar extends SkillMechanic implements ITargetedEntitySki
 					bar.setProgress(MathUtils.clamp(set ? value : bar.getProgress() + value * delta, 0d, 1d));
 				}
 			}
+			return SkillResult.SUCCESS;
 		}
-		return false;
+		return SkillResult.CONDITION_FAILED;
 	}
 
 }
