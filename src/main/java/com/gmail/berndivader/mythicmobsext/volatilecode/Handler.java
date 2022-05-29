@@ -35,7 +35,7 @@ public interface Handler {
 
 	void changeHitBox(Entity entity, double a0, double a1, double a2);
 
-	void playerConnectionLookAt(Entity entity, float yaw, float pitch);
+	void playerConnectionLookAt(Player entity, float yaw, float pitch);
 
 	void moveEntityPacket(Entity entity, Location ol, double x, double y, double z);
 

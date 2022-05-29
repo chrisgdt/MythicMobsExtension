@@ -29,6 +29,7 @@ import org.bukkit.plugin.Plugin;
  */
 @SuppressWarnings("deprecation")
 public class DeprecatedUtils {
+    /*
     public static void updateInventory(Player player) {
         // @deprecated This method should not be relied upon as it is a
         // temporary work-around for a larger, more complicated issue.
@@ -103,7 +104,7 @@ public class DeprecatedUtils {
         }
         return getName(entity.getType());
     }
-
+*/
     public static Player getPlayer(String name) {
         // @deprecated Use {@link #getPlayer(UUID)} as player names are no
         // longer guaranteed to be unique
@@ -113,7 +114,7 @@ public class DeprecatedUtils {
     public static Player getPlayerExact(String name) {
         return Bukkit.getPlayerExact(name);
     }
-
+/*
     public static FallingBlock spawnFallingBlock(Location location,
             Material material, byte data) {
         // @deprecated Magic value
@@ -225,4 +226,5 @@ public class DeprecatedUtils {
     public static org.bukkit.UnsafeValues getUnsafe() {
         return Bukkit.getUnsafe();
     }
+ */
 }

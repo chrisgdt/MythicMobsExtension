@@ -36,7 +36,7 @@ public class InventoryUtils extends NMSUtils
     public static int MAX_LORE_LENGTH = 24;
     public static int MAX_PROPERTY_DISPLAY_LENGTH = 50;
     public static UUID SKULL_UUID = UUID.fromString("3f599490-ca3e-49b5-8e75-78181ebf4232");
-
+/*
     public static boolean saveTagsToItem(ConfigurationSection tags, ItemStack item)
     {
         Object handle = getHandle(item);
@@ -122,7 +122,7 @@ public class InventoryUtils extends NMSUtils
 
         return true;
     }
-    
+
     public static boolean saveTagsToNBT(Map<String, Object> tags, Object node, Set<String> tagNames)
     {
         if (node == null) {
@@ -237,6 +237,8 @@ public class InventoryUtils extends NMSUtils
 
         return wrappedValue;
     }
+
+     */
 
     protected static byte[] makeByteArray(List<Object> list) {
         byte[] a = new byte[list.size()];
@@ -412,7 +414,7 @@ public class InventoryUtils extends NMSUtils
         }
         return itemStack;
     }
-
+    /*
     public static ItemStack setSkullURLAndName(ItemStack itemStack, URL url, String ownerName, UUID id) {
         try {
             itemStack = makeReal(itemStack);
@@ -425,7 +427,7 @@ public class InventoryUtils extends NMSUtils
 
         return itemStack;
     }
-
+     */
     public static ItemStack setSkullURL(ItemStack itemStack, URL url, UUID id) {
         // Old versions of Bukkit would NPE trying to save a skull without an owner name
         // So we'll use MHF_Question, why not.
@@ -581,7 +583,7 @@ public class InventoryUtils extends NMSUtils
         }
         return null;
     }
-
+/*
     public static void openSign(Player player, Location signBlock) {
         try {
             Object tileEntity = getTileEntity(signBlock);
@@ -597,7 +599,7 @@ public class InventoryUtils extends NMSUtils
     public static void makeKeep(ItemStack itemStack) {
         setMetaBoolean(itemStack, "keep", true);
     }
-
+ */
     public static boolean isKeep(ItemStack itemStack) {
         return hasMeta(itemStack, "keep");
     }
@@ -701,7 +703,7 @@ public class InventoryUtils extends NMSUtils
     public static boolean isSameInstance(ItemStack one, ItemStack two) {
         return one == two;
     }
-
+/*
     public static int getMapId(ItemStack mapItem) {
         if (isCurrentVersion()) {
             return getMetaInt(mapItem, "map", 0);
@@ -717,7 +719,7 @@ public class InventoryUtils extends NMSUtils
             mapItem.setDurability((short)id);
         }
     }
-
+ */
     public static void convertIntegers(Map<String, Object> m) {
         for (Map.Entry<String, Object> entry : m.entrySet()) {
             Object value = entry.getValue();

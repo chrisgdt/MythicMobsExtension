@@ -8,7 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.lumine.mythic.core.drops.Drop;
+import net.minecraft.world.entity.ai.goal.GoalSelector;
 import org.bukkit.Server;
+import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_18_R2.metadata.EntityMetadataStore;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -74,7 +77,7 @@ public class NMSUtils extends CompatibilityUtils {
 			class_CraftInventory = fixBukkitClass("inventory.CraftInventory", false);
 			class_MetadataStoreBase = fixBukkitClass("org.bukkit.metadata.MetadataStoreBase");
 
-			class_Entity_lastXField = class_Entity.getDeclaredField(version < 17 ? "lastX" : "u"); // 1.17 : xo
+			/*class_Entity_lastXField = class_Entity.getDeclaredField(version < 17 ? "lastX" : "u"); // 1.17 : xo
 			class_Entity_lastXField.setAccessible(true);
 			class_Entity_lastYField = class_Entity.getDeclaredField(version < 17 ? "lastY" : "v"); // 1.17 : yo
 			class_Entity_lastYField.setAccessible(true);
@@ -89,6 +92,8 @@ public class NMSUtils extends CompatibilityUtils {
 				class_Entity_fireProof = class_Entity.getDeclaredField("fireProof");
 				class_Entity_fireProof.setAccessible(true);
 			}
+
+			 */
 			class_MetadataStoreBase_metadataMapField = class_MetadataStoreBase.getDeclaredField("metadataMap");
 			class_MetadataStoreBase_metadataMapField.setAccessible(true);
 
@@ -98,7 +103,7 @@ public class NMSUtils extends CompatibilityUtils {
 			class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PriorityField = class_PathfinderGoalSelector_PathfinderGoalSelectorItem
 					.getDeclaredField("b");
 			class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PriorityField.setAccessible(true);
-
+			/*
 			class_MinecraftServer_currentTickField = class_MinecraftServer.getDeclaredField("currentTick");
 			class_MinecraftServer_currentTickField.setAccessible(true);
 
@@ -114,11 +119,12 @@ public class NMSUtils extends CompatibilityUtils {
 			//class_EntityLiving_setArrowCountMethod = class_EntityLiving.getMethod("setArrowCount", Integer.TYPE, Boolean.TYPE);
 			//class_PathfinderGoalSelector_PathfinderGoalSelectorItem_equalsMethod = class_PathfinderGoalSelector_PathfinderGoalSelectorItem
 			//		.getMethod("equals", Object.class);
+			*/
 
 			class_CraftServer_getEntityMetadataStoreMethod = class_CraftServer.getMethod("getEntityMetadata");
 			class_CraftServer_getPlayerMetadataStoreMethod = class_CraftServer.getMethod("getPlayerMetadata");
 
-		} catch (NoSuchFieldException | SecurityException | NoSuchMethodException | ClassNotFoundException e) {
+		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 		}
 		return bool;

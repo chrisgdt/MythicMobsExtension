@@ -1,8 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.compatibilitylib;
 
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.EnteredStateTracker.Touchable;
+import com.google.common.collect.Multimap;
 import com.google.common.io.BaseEncoding;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.minecraft.nbt.CompoundTag;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Art;
 import org.bukkit.Bukkit;
@@ -23,6 +27,8 @@ import org.bukkit.block.BlockState;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.ComplexEntityPart;
@@ -172,7 +178,7 @@ public class CompatibilityUtils extends NMSUtils {
         }
         return applyEffect;
     }
-
+/*
     public static boolean setDisplayNameRaw(ItemStack itemStack, String displayName) {
         Object handle = getHandle(itemStack);
         if (handle == null) return false;
@@ -184,7 +190,7 @@ public class CompatibilityUtils extends NMSUtils {
         setMeta(displayNode, "Name", displayName);
         return true;
     }
-
+*/
     public static boolean setDisplayName(ItemStack itemStack, String displayName) {
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(displayName);
@@ -198,7 +204,7 @@ public class CompatibilityUtils extends NMSUtils {
         itemStack.setItemMeta(meta);
         return true;
     }
-
+/*
     public static Inventory createInventory(InventoryHolder holder, int size, final String name) {
         size = (int)(Math.ceil((double)size / 9) * 9);
         size = Math.min(size, 54);
@@ -221,20 +227,21 @@ public class CompatibilityUtils extends NMSUtils {
         }
         return inventory;
     }
-
+*/
     public static void setInvulnerable(Entity entity) {
         setInvulnerable(entity, true);
     }
 
     public static void setInvulnerable(Entity entity, boolean flag) {
-        try {
+        entity.setInvulnerable(flag);
+        /*try {
             Object handle = getHandle(entity);
             class_Entity_setInvulnerable.invoke(handle, flag);
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
+        }*/
     }
-
+/*
     public static boolean isInvulnerable(Entity entity) {
         if (class_Entity_isInvulnerable == null) return false;
         try {
@@ -348,8 +355,7 @@ public class CompatibilityUtils extends NMSUtils {
         return newPainting;
     }
 
-    public static ItemFrame createItemFrame(Location location, BlockFace facing, Rotation rotation, ItemStack item)
-    {
+    public static ItemFrame createItemFrame(Location location, BlockFace facing, Rotation rotation, ItemStack item) {
         ItemFrame newItemFrame = null;
         try {
             Object worldHandle = getHandle(location.getWorld());
@@ -372,13 +378,11 @@ public class CompatibilityUtils extends NMSUtils {
         return newItemFrame;
     }
 
-    public static ArmorStand createArmorStand(Location location)
-    {
+    public static ArmorStand createArmorStand(Location location) {
         return (ArmorStand)createEntity(location, EntityType.ARMOR_STAND);
     }
 
-    public static Entity createEntity(Location location, EntityType entityType)
-    {
+    public static Entity createEntity(Location location, EntityType entityType) {
         Entity bukkitEntity = null;
         try {
             Class<? extends Entity> entityClass = entityType.getEntityClass();
@@ -440,8 +444,7 @@ public class CompatibilityUtils extends NMSUtils {
         return null;
     }
 
-    public static Minecart spawnCustomMinecart(Location location, Material material, short data, int offset)
-    {
+    public static Minecart spawnCustomMinecart(Location location, Material material, short data, int offset) {
         Minecart newMinecart = null;
         try {
             Constructor<?> minecartConstructor = class_EntityMinecartRideable.getConstructor(class_World, Double.TYPE, Double.TYPE, Double.TYPE);
@@ -456,16 +459,16 @@ public class CompatibilityUtils extends NMSUtils {
 
                 // Set tile material id, pack into NMS 3-byte format
                 // TODO: Unbreak this maybe one day?
-                /*
-                int materialId = (display.getMaterial().getId() & 0xFFFF) | (display.getData() << 16);
-                watch(newEntity, 20, materialId);
+                //
+                //int materialId = (display.getMaterial().getId() & 0xFFFF) | (display.getData() << 16);
+                //watch(newEntity, 20, materialId);
 
                 // Set the tile offset
-                watch(newEntity, 21, offset);
+                //watch(newEntity, 21, offset);
 
                 // Finalize custom display tile
-                watch(newEntity, 22, (byte)1);
-                */
+                //watch(newEntity, 22, (byte)1);
+
 
                 addEntity.invoke(worldHandle, newEntity, CreatureSpawnEvent.SpawnReason.CUSTOM);
                 Entity bukkitEntity = getBukkitEntity(newEntity);
@@ -518,8 +521,10 @@ public class CompatibilityUtils extends NMSUtils {
             ex.printStackTrace();
         }
     }
-
+*/
     public static void damage(Damageable target, double amount, Entity source) {
+        target.damage(amount, source);
+        /*
         if (target == null || target.isDead()) return;
         while (target instanceof ComplexEntityPart) {
             target = ((ComplexEntityPart)target).getParent();
@@ -546,8 +551,9 @@ public class CompatibilityUtils extends NMSUtils {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+         */
     }
-
+/*
     public static void damage(Damageable target, double amount, Entity source, String damageType) {
         if (target == null || target.isDead()) return;
         if (damageType.equalsIgnoreCase("magic")) {
@@ -634,12 +640,12 @@ public class CompatibilityUtils extends NMSUtils {
 
     private static final Map<World, WeakReference<ThrownPotion>> POTION_PER_WORLD = new WeakHashMap<>();
 
-    /**
+    **
      * Lazily creates potion entities that can be used when damaging players.
      *
      * @param location The location the potion should be placed at.
      * @return A potion entity placed ad the given location.
-     */
+     *
     private static ThrownPotion getOrCreatePotionEntity(Location location) {
         World world = location.getWorld();
 
@@ -663,17 +669,14 @@ public class CompatibilityUtils extends NMSUtils {
 
         return potion;
     }
-
-    public static Location getEyeLocation(Entity entity)
-    {
-        if (entity instanceof LivingEntity)
-        {
+*/
+    public static Location getEyeLocation(Entity entity) {
+        if (entity instanceof LivingEntity) {
             return ((LivingEntity)entity).getEyeLocation();
         }
-
         return entity.getLocation();
     }
-
+/*
     public static ConfigurationSection loadConfiguration(String fileName) throws IOException, InvalidConfigurationException
     {
         YamlConfiguration configuration = new YamlConfiguration();
@@ -720,9 +723,10 @@ public class CompatibilityUtils extends NMSUtils {
             getLogger().log(Level.WARNING, "Unable to set TNT source", ex);
         }
     }
-
+*/
     public static void setEntityMotion(Entity entity, Vector motion) {
-        try {
+        entity.setVelocity(motion);
+        /*try {
             Object handle = getHandle(entity);
             if (class_Entity_motField != null) {
                 Object vec = class_Vec3D_constructor.newInstance(motion.getX(), motion.getY(), motion.getZ());
@@ -734,9 +738,9 @@ public class CompatibilityUtils extends NMSUtils {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
+        }*/
     }
-
+/*
     public static Vector getNormal(Block block, Location intersection)
     {
         double x = intersection.getX() - (block.getX() + 0.5);
@@ -924,25 +928,23 @@ public class CompatibilityUtils extends NMSUtils {
         }
         return 0;
     }
-
+*/
     public static void setYawPitch(Entity entity, float yaw, float pitch) {
-        try {
-            Object handle = getHandle(entity);
-            class_Entity_setYawPitchMethod.invoke(handle, yaw, pitch);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        net.minecraft.world.entity.Entity e = ((CraftEntity) entity).getHandle();
+        e.setYRot(pitch);
+        e.setXRot(yaw);
     }
 
     public static void setLocation(Entity entity, double x, double y, double z, float yaw, float pitch) {
-        try {
+        ((CraftEntity) entity).getHandle().absMoveTo(x, y, z, yaw, pitch);
+        /*try {
             Object handle = getHandle(entity);
             class_Entity_setLocationMethod.invoke(handle, x, y, z, yaw, pitch);
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
+        }*/
     }
-
+/*
     public static void addFlightExemption(Player player, int ticks) {
         if (class_PlayerConnection_floatCountField == null) return;
         try {
@@ -1125,8 +1127,8 @@ public class CompatibilityUtils extends NMSUtils {
         }
         return true;
     }
-
-
+*/
+/*
     // Taken from CraftBukkit code.
     private static String toMinecraftAttribute(Attribute attribute) {
         String bukkit = attribute.name();
@@ -1175,23 +1177,20 @@ public class CompatibilityUtils extends NMSUtils {
         }
         return true;
     }
+ */
 
     public static boolean removeItemAttributes(ItemStack item) {
-        try {
-            Object handle = getHandle(item);
-            if (handle == null) return false;
-            Object tag = getTag(handle);
-            if (tag == null) return false;
-
-            Object attributesNode = getNode(tag, "AttributeModifiers");
-            if (attributesNode == null) {
-                return false;
-            }
-            removeMeta(tag, "AttributeModifiers");
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (!item.hasItemMeta()) {
             return false;
         }
+        ItemMeta meta = item.getItemMeta();
+        if (meta.getAttributeModifiers() == null) {
+            return false;
+        }
+        for (Attribute attribute : meta.getAttributeModifiers().keys()) {
+            meta.removeAttributeModifier(attribute);
+        }
+        item.setItemMeta(meta);
         return true;
     }
 
@@ -1200,7 +1199,41 @@ public class CompatibilityUtils extends NMSUtils {
     }
     
     public static boolean setItemAttribute(ItemStack item, Attribute attribute, double value, String slot, int attributeOperation, UUID attributeUUID) {
-        if (class_ItemMeta_addAttributeModifierMethod != null) {
+        if (!item.hasItemMeta()) {
+            return false;
+        }
+        AttributeModifier.Operation operation;
+        try {
+            operation = AttributeModifier.Operation.values()[attributeOperation];
+        } catch (Throwable ex) {
+            getLogger().warning("[Magic] invalid attribute operation ordinal: " + attributeOperation);
+            return false;
+        }
+        AttributeModifier modifier;
+        if (slot != null && !slot.isEmpty()) {
+            EquipmentSlot equipmentSlot;
+            try {
+                if (slot.equalsIgnoreCase("mainhand")) {
+                    equipmentSlot = EquipmentSlot.HAND;
+                } else if (slot.equalsIgnoreCase("offhand")) {
+                    equipmentSlot = EquipmentSlot.OFF_HAND;
+                } else {
+                    equipmentSlot = EquipmentSlot.valueOf(slot.toUpperCase());
+                }
+            } catch (Throwable ex) {
+                getLogger().warning("[Magic] invalid attribute slot: " + slot);
+                return false;
+            }
+            modifier = new AttributeModifier(attributeUUID, "Equipment Modifier", value, operation, equipmentSlot);
+        } else {
+            modifier = new AttributeModifier(attributeUUID, "Equipment Modifier", value, operation);
+        }
+        ItemMeta meta = item.getItemMeta();
+        meta.addAttributeModifier(attribute, modifier);
+        item.setItemMeta(meta);
+        return true;
+
+        /*if (class_ItemMeta_addAttributeModifierMethod != null) {
             try {
                 AttributeModifier.Operation operation;
                 try {
@@ -1283,9 +1316,9 @@ public class CompatibilityUtils extends NMSUtils {
             ex.printStackTrace();
             return false;
         }
-        return true;
+        return true;*/
     }
-    
+/*
     public static void sendExperienceUpdate(Player player, float experience, int level) {
         try {
             Object packet = class_PacketPlayOutExperience_Constructor.newInstance(experience, player.getTotalExperience(), level);
@@ -1346,7 +1379,7 @@ public class CompatibilityUtils extends NMSUtils {
             swingOffhand(player, entity);
         }
     }
-    
+
     public static void swingOffhand(Player sendToPlayer, Entity entity) {
         try {
             Object packet = class_PacketPlayOutAnimation_Constructor.newInstance(getHandle(entity), 3);
@@ -1361,9 +1394,10 @@ public class CompatibilityUtils extends NMSUtils {
         // TODO: New Player.sendTitle in 1.11
         player.sendTitle(title, subTitle);
     }
-
+*/
     public static boolean sendActionBar(Player player, String message) {
-        if (class_PacketPlayOutChat == null) return false;
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+        /*if (class_PacketPlayOutChat == null) return false;
         try {
             Object chatComponent = class_ChatComponentText_constructor.newInstance(message);
             Object packet;
@@ -1378,10 +1412,10 @@ public class CompatibilityUtils extends NMSUtils {
         } catch (Exception ex) {
             ex.printStackTrace();
             return false;
-        }
+        }*/
         return true;
     }
-
+/*
     public static float getDurability(Material material) {
         if (class_Block_durabilityField == null || class_CraftMagicNumbers_getBlockMethod == null) return 0.0f;
         try {
@@ -1519,15 +1553,19 @@ public class CompatibilityUtils extends NMSUtils {
         }
         return null;
     }
-
+*/
     @SuppressWarnings("unchecked")
     public static Entity getEntity(World world, UUID uuid) {
-        try {
-            Object worldHandle = getHandle(world);
-            Object nmsEntity = class_WorldServer_getEntityMethod.invoke(worldHandle, uuid);
-            if (nmsEntity != null) {
-                return getBukkitEntity(nmsEntity);
-            }
+        Entity entity = Bukkit.getEntity(uuid);
+        if (entity != null && entity.getWorld().equals(world)) {
+            return entity;
+        }
+        //try {
+        //    Object worldHandle = getHandle(world);
+        //    Object nmsEntity = class_WorldServer_getEntityMethod.invoke(worldHandle, uuid);
+        //    if (nmsEntity != null) {
+        //        return getBukkitEntity(nmsEntity);
+        //    }
             /*final Map<UUID, Entity> entityMap = (Map<UUID, Entity>) class_WorldServer_getEntitiesMethod.invoke(worldHandle);
             if (entityMap != null) {
                 Object nmsEntity = entityMap.get(uuid);
@@ -1536,14 +1574,15 @@ public class CompatibilityUtils extends NMSUtils {
                 }
             }
              */
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+       // } catch (Exception ex) {
+        //    ex.printStackTrace();
+        //}
         return null;
     }
 
     public static Entity getEntity(UUID uuid) {
-        if (class_Server_getEntityMethod != null) {
+        return Bukkit.getEntity(uuid);
+        /*if (class_Server_getEntityMethod != null) {
             try {
                 return (Entity)class_Server_getEntityMethod.invoke(Bukkit.getServer(), uuid);
             } catch (Exception ex) {
@@ -1558,9 +1597,9 @@ public class CompatibilityUtils extends NMSUtils {
             }
         }
 
-        return null;
+        return null;*/
     }
-
+/*
     public static boolean canRemoveRecipes() {
         return class_Server_removeRecipeMethod != null;
     }
@@ -1659,14 +1698,14 @@ public class CompatibilityUtils extends NMSUtils {
                 // Converting legacy signs doesn't seem to work
                 // This fixes them, but the direction is wrong, and restoring text causes internal errors
                 // So I guess it's best to just let signs be broken for now.
-                /*
-                if (converted == Material.AIR) {
-                    String typeKey = materialData.getItemType().name();
-                    if (typeKey.equals("LEGACY_WALL_SIGN")) return Material.WALL_SIGN;
-                    if (typeKey.equals("LEGACY_SIGN_POST")) return Material.SIGN_POST;
-                    if (typeKey.equals("LEGACY_SIGN")) return Material.SIGN;
-                }
-                */
+
+                //if (converted == Material.AIR) {
+                //    String typeKey = materialData.getItemType().name();
+                //    if (typeKey.equals("LEGACY_WALL_SIGN")) return Material.WALL_SIGN;
+                //    if (typeKey.equals("LEGACY_SIGN_POST")) return Material.SIGN_POST;
+                //    if (typeKey.equals("LEGACY_SIGN")) return Material.SIGN;
+                //}
+
                 return converted;
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -1811,9 +1850,9 @@ public class CompatibilityUtils extends NMSUtils {
         return checkChunk(location, true);
     }
 
-    /**
+    **
      * Take care if setting generate to false, the chunk will load but not show as loaded
-     */
+     *
     public static boolean checkChunk(Location location, boolean generate) {
         int chunkX = location.getBlockX() >> 4;
         int chunkZ = location.getBlockZ() >> 4;
@@ -1825,9 +1864,9 @@ public class CompatibilityUtils extends NMSUtils {
         return checkChunk(world, chunkX, chunkZ, true);
     }
 
-    /**
+    **
      * Take care if setting generate to false, the chunk will load but not show as loaded
-     */
+     *
     public static boolean checkChunk(World world, int chunkX, int chunkZ, boolean generate) {
         if (!world.isChunkLoaded(chunkX, chunkZ)) {
             loadChunk(world, chunkX, chunkZ, generate);
@@ -1856,7 +1895,7 @@ public class CompatibilityUtils extends NMSUtils {
         }
         return false;
     }
-
+*/
     public static int[] getServerVersion() {
         String versionString = getVersionPrefix();
         int[] version = new int[2];
@@ -1878,7 +1917,7 @@ public class CompatibilityUtils extends NMSUtils {
         }
         return version;
     }
-
+/*
     public static Color getColor(PotionMeta meta) {
         Color color = Color.BLACK;
         if (class_PotionMeta_getColorMethod != null) {
@@ -2403,12 +2442,12 @@ public class CompatibilityUtils extends NMSUtils {
         loadChunk(world, x, z, generate, null);
     }
 
-    /**
+    **
      * This will load chunks asynchronously if possible.
      *
      * But note that it will never be truly asynchronous, it is important not to call this in a tight retry loop,
      * the main server thread needs to free up to actually process the async chunk loads.
-     */
+     *
     public static void loadChunk(World world, int x, int z, boolean generate, Consumer<Chunk> consumer) {
         final LoadingChunk loading = new LoadingChunk(world, x, z);
         Integer requestCount = loadingChunks.get(loading);
@@ -2453,4 +2492,5 @@ public class CompatibilityUtils extends NMSUtils {
             consumer.accept(chunk);
         }
     }
+    */
 }

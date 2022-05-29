@@ -84,8 +84,9 @@ public class CheckTargeter extends AbstractCustomCondition implements IEntityCon
 				String s1 = target.substring(1);
 				MythicLineConfig mlc = new MythicLineConfigImpl(s1);
 				String s2 = s1.contains("{") ? s1.substring(0, s1.indexOf("{")) : s1;
-				if ((targeter = (SkillTargeter) CustomTargeters.getCustomTargeter(s2, mlc)) == null)
-					targeter = new TriggerTargeter(getPlugin().getSkillManager(), mlc);
+				if ((targeter = CustomTargeters.getCustomTargeter(s2, mlc, targeter.getManager())) == null)
+					//targeter = new TriggerTargeter(getPlugin().getSkillManager(), mlc);
+					targeter = new TriggerTargeter(targeter.getManager(), mlc);
 			}
 			if (targeter instanceof IEntitySelector) {
 				data.setEntityTargets(((IEntitySelector) targeter).getEntities(data));

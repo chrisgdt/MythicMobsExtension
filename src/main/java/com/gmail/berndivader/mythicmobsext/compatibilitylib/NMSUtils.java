@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.compatibilitylib;
 
+import net.minecraft.nbt.CompoundTag;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Art;
 import org.bukkit.Bukkit;
@@ -19,6 +20,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -455,6 +457,7 @@ public class NMSUtils {
         cpack = Bukkit.getServer().getClass().getPackage().getName() + ".";
 
         try {
+            /*
             class_Block = fixBukkitClass("Block", true, "world.level.block");
             class_Entity = fixBukkitClass("Entity", true, "world.entity");
             class_EntityLiving = fixBukkitClass("EntityLiving", true, "world.entity");
@@ -472,12 +475,14 @@ public class NMSUtils {
             class_NBTTagInt = fixBukkitClass("NBTTagInt", true, "nbt");
             class_NBTTagLong = fixBukkitClass("NBTTagLong", true, "nbt");
             class_NBTTagShort = fixBukkitClass("NBTTagShort", true, "nbt");
+             */
             class_CraftWorld = fixBukkitClass("CraftWorld", false);
             class_CraftInventoryCustom = fixBukkitClass("inventory.CraftInventoryCustom", false);
             class_CraftItemStack = fixBukkitClass("inventory.CraftItemStack", false);
             class_CraftBlockState = fixBukkitClass("block.CraftBlockState", false);
             class_CraftTask = fixBukkitClass("scheduler.CraftTask", false);
             class_CraftLivingEntity = fixBukkitClass("entity.CraftLivingEntity", false);
+            /*
             class_Packet = fixBukkitClass("Packet", true, "network.protocol");
             class_World = fixBukkitClass("World", true, "world.level");
             class_WorldServer = fixBukkitClass("WorldServer", true, "server.level");
@@ -493,8 +498,10 @@ public class NMSUtils {
             class_DamageSource = fixBukkitClass("DamageSource", true, "world.damagesource");
             class_EntityDamageSource = fixBukkitClass("EntityDamageSource", true, "world.damagesource");
             class_EntityFirework = fixBukkitClass("EntityFireworks", true, "world.entity.projectile");
+             */
             class_CraftSkull = fixBukkitClass("block.CraftSkull", false);
             class_CraftMetaSkull = fixBukkitClass("inventory.CraftMetaSkull", false);
+            /*
             class_NBTCompressedStreamTools = fixBukkitClass("NBTCompressedStreamTools", true, "nbt");
             class_TileEntity = fixBukkitClass("TileEntity", true, "world.level.block.entity");
             class_EntityHorse = fixBukkitClass("EntityHorse", true, "world.entity.animal.horse");
@@ -513,14 +520,15 @@ public class NMSUtils {
             class_EntityPlayer = fixBukkitClass("EntityPlayer", true, "server.level");
             class_PlayerConnection = fixBukkitClass("PlayerConnection", true, "server.network");
             class_Chunk = fixBukkitClass("Chunk", true, "world.level.chunk");
+             */
             class_CraftPlayer = fixBukkitClass("entity.CraftPlayer", false);
             class_CraftChunk = fixBukkitClass("CraftChunk", false);
             class_CraftEntity = fixBukkitClass("entity.CraftEntity", false);
-            class_TileEntitySign = fixBukkitClass("TileEntitySign", true, "world.level.block.entity");
+            //class_TileEntitySign = fixBukkitClass("TileEntitySign", true, "world.level.block.entity");
             class_CraftServer = fixBukkitClass("CraftServer", false);
-            class_MinecraftServer = fixBukkitClass("MinecraftServer", true, "server");
-            class_BlockPosition = fixBukkitClass("BlockPosition", true, "core");
-
+            //class_MinecraftServer = fixBukkitClass("MinecraftServer", true, "server");
+            //class_BlockPosition = fixBukkitClass("BlockPosition", true, "core");
+            /*
             class_EntityProjectile = fixBukkitClass("EntityProjectile", true, "world.entity.projectile");
             class_EntityFireball = fixBukkitClass("EntityFireball", true, "world.entity.projectile");
             class_EntityArrow = fixBukkitClass("EntityArrow", true, "world.entity.projectile");
@@ -543,26 +551,30 @@ public class NMSUtils {
             class_NBTTagCompound_getByteMethod = class_NBTTagCompound.getMethod("getByte", String.class);
             class_NBTTagCompound_getByteArrayMethod = class_NBTTagCompound.getMethod("getByteArray", String.class);
             class_NBTTagCompound_getListMethod = class_NBTTagCompound.getMethod("getList", String.class, Integer.TYPE);
+            */
             class_CraftItemStack_copyMethod = class_CraftItemStack.getMethod("asNMSCopy", org.bukkit.inventory.ItemStack.class);
-            class_CraftItemStack_asBukkitCopyMethod = class_CraftItemStack.getMethod("asBukkitCopy", class_ItemStack);
-            class_CraftItemStack_mirrorMethod = class_CraftItemStack.getMethod("asCraftMirror", class_ItemStack);
+            //class_CraftItemStack_asBukkitCopyMethod = class_CraftItemStack.getMethod("asBukkitCopy", class_ItemStack);
+            //class_CraftItemStack_mirrorMethod = class_CraftItemStack.getMethod("asCraftMirror", class_ItemStack);
+            /*
             class_World_addEntityMethod = class_World.getMethod("addEntity", class_Entity, CreatureSpawnEvent.SpawnReason.class);
             class_Entity_setLocationMethod = class_Entity.getMethod("setLocation", Double.TYPE, Double.TYPE, Double.TYPE, Float.TYPE, Float.TYPE);
             class_Entity_getIdMethod = class_Entity.getMethod("getId");
             class_Entity_getDataWatcherMethod = class_Entity.getMethod("getDataWatcher");
             class_ArmorStand_setInvisible = class_EntityArmorStand.getDeclaredMethod("setInvisible", Boolean.TYPE);
+             */
             class_CraftPlayer_getHandleMethod = class_CraftPlayer.getMethod("getHandle");
             class_CraftChunk_getHandleMethod = class_CraftChunk.getMethod("getHandle");
             class_CraftEntity_getHandleMethod = class_CraftEntity.getMethod("getHandle");
             class_CraftLivingEntity_getHandleMethod = class_CraftLivingEntity.getMethod("getHandle");
             class_CraftWorld_getHandleMethod = class_CraftWorld.getMethod("getHandle");
-            class_EntityPlayer_openSignMethod = class_EntityPlayer.getMethod("openSign", class_TileEntitySign);
+            //class_EntityPlayer_openSignMethod = class_EntityPlayer.getMethod("openSign", class_TileEntitySign);
             // 1.17 : remove because it's setResourcePack(String, String, boolean, IChatBaseComponent)
 //          class_EntityPlayer_setResourcePackMethod = class_EntityPlayer.getMethod("setResourcePack", String.class, String.class);
             class_CraftServer_getServerMethod = class_CraftServer.getMethod("getServer");
-            class_MinecraftServer_getResourcePackMethod = class_MinecraftServer.getMethod("getResourcePack");
+            //class_MinecraftServer_getResourcePackMethod = class_MinecraftServer.getMethod("getResourcePack");
             
             class_CraftInventoryCustom_constructor = class_CraftInventoryCustom.getConstructor(InventoryHolder.class, Integer.TYPE, String.class);
+            /*
             class_EntityFireworkConstructor = class_EntityFirework.getConstructor(class_World, Double.TYPE, Double.TYPE, Double.TYPE, class_ItemStack);
             class_PacketSpawnEntityConstructor = class_PacketPlayOutSpawnEntity.getConstructor(class_Entity, Integer.TYPE);
             class_PacketSpawnLivingEntityConstructor = class_PacketPlayOutSpawnEntityLiving.getConstructor(class_EntityLiving);
@@ -572,9 +584,10 @@ public class NMSUtils {
             class_PacketPlayOutExperience_Constructor = class_PacketPlayOutExperience.getConstructor(Float.TYPE, Integer.TYPE, Integer.TYPE);
             class_PacketPlayOutAnimation_Constructor = class_PacketPlayOutAnimation.getConstructor(class_Entity, Integer.TYPE);
             class_PacketPlayOutBlockBreakAnimation_Constructor = class_PacketPlayOutBlockBreakAnimation.getConstructor(Integer.TYPE, class_BlockPosition, Integer.TYPE);
-
+            */
             class_CraftWorld_environmentField = class_CraftWorld.getDeclaredField("environment");
             class_CraftWorld_environmentField.setAccessible(true);
+            /*
             class_Entity_setInvulnerable = class_Entity.getDeclaredMethod("setInvulnerable", boolean.class);
             class_Entity_isInvulnerable = class_Entity.getDeclaredMethod("isInvulnerable");
 
@@ -640,10 +653,10 @@ public class NMSUtils {
             class_EntityFallingBlock_fallHurtAmountField.setAccessible(true);
             class_EntityFallingBlock_fallHurtMaxField = class_EntityFallingBlock.getDeclaredField(version < 17 ? "fallHurtMax" : "aq"); // 1.17 : fallDamageMax
             class_EntityFallingBlock_fallHurtMaxField.setAccessible(true);
-
+            */
             class_CraftItemStack_getHandleField = class_CraftItemStack.getDeclaredField("handle");
             class_CraftItemStack_getHandleField.setAccessible(true);
-
+            /*
             class_MemorySection_mapField = MemorySection.class.getDeclaredField("map");
             class_MemorySection_mapField.setAccessible(true);
 
@@ -653,10 +666,12 @@ public class NMSUtils {
             class_GameProfile = getClass("com.mojang.authlib.GameProfile");
             class_GameProfile_constructor = class_GameProfile.getConstructor(UUID.class, String.class);
             class_GameProfileProperty = getClass("com.mojang.authlib.properties.Property");
+             */
             class_CraftSkull_profile = class_CraftSkull.getDeclaredField("profile");
             class_CraftSkull_profile.setAccessible(true);
             class_CraftMetaSkull_profile = class_CraftMetaSkull.getDeclaredField("profile");
             class_CraftMetaSkull_profile.setAccessible(true);
+            /*
             class_GameProfile_properties = class_GameProfile.getDeclaredField("properties");
             class_GameProfile_properties.setAccessible(true);
             class_GameProfileProperty_value = class_GameProfileProperty.getDeclaredField("value");
@@ -799,6 +814,7 @@ public class NMSUtils {
                 class_Sittable = null;
                 getLogger().warning("Could not bind to Sittable interface, can't make mobs sit/stand");
             }
+
 
             // 1.13 Support
             Class<?> class_MinecraftKey = null;
@@ -1710,11 +1726,11 @@ public class NMSUtils {
                 class_CraftBlock = null;
                 getLogger().log(Level.WARNING, "Could not bind to auto block state methods");
             }
+             */
         }
         catch (Throwable ex) {
             failed = true;
-            getLogger().log(Level.SEVERE, "An unexpected error occurred initializing Magic");
-            //getLogger().log(Level.SEVERE, "An unexpected error occurred initializing Magic", ex);
+            getLogger().log(Level.SEVERE, "An unexpected error occurred initializing Magic", ex);
         }
 
         return !failed;
@@ -1781,7 +1797,7 @@ public class NMSUtils {
         try {
             handle = class_CraftItemStack_getHandleField.get(stack);
         } catch (Throwable ex) {
-            handle = null;
+            ex.printStackTrace();
         }
         return handle;
     }
@@ -1818,7 +1834,7 @@ public class NMSUtils {
         }
         return handle;
     }
-
+/*
     // Here to support older versions of MagicWorlds
     @Deprecated
     public static boolean isDone(org.bukkit.Chunk chunk) {
@@ -1837,7 +1853,7 @@ public class NMSUtils {
         }
         return ready;
     }
-
+*/
     public static Object getHandle(org.bukkit.Chunk chunk) {
         Object handle = null;
         try {
@@ -1857,7 +1873,7 @@ public class NMSUtils {
         }
         return handle;
     }
-
+/*
     protected static void sendPacket(Server server, Location source, Collection<? extends Player> players, Object packet) throws Exception  {
         players = ((players != null && players.size() > 0) ? players : server.getOnlinePlayers());
 
@@ -1880,7 +1896,7 @@ public class NMSUtils {
         Method sendPacketMethod = connection.getClass().getMethod("sendPacket", class_Packet);
         sendPacketMethod.invoke(connection, packet);
     }
-    
+ */
     public static int getFacing(BlockFace direction)
     {
         int dir;
@@ -1902,7 +1918,7 @@ public class NMSUtils {
         
         return dir;
     }
-
+/*
     public static org.bukkit.entity.Entity getBukkitEntity(Object entity)
     {
         if (entity == null) return null;
@@ -1919,6 +1935,7 @@ public class NMSUtils {
     }
 
     public static Object getTag(Object mcItemStack) {
+
         Object tag = null;
         try {
             tag = class_ItemStack_getTag.invoke(mcItemStack);
@@ -1951,8 +1968,15 @@ public class NMSUtils {
 
         return stack;
     }
-
+*/
     public static ItemStack makeReal(ItemStack stack) {
+        net.minecraft.world.item.ItemStack nmsStack = (net.minecraft.world.item.ItemStack) getHandle(stack);
+        if (nmsStack != null) {
+            return null;
+        }
+        nmsStack.getOrCreateTag();
+        return null;
+        /*
         if (stack == null) return null;
         Object nmsStack = getHandle(stack);
         if (nmsStack == null) {
@@ -1972,21 +1996,28 @@ public class NMSUtils {
             return null;
         }
 
-        return stack;
+        return stack;*/
     }
-
+/*
     public static String getMetaString(ItemStack stack, String tag, String defaultValue) {
         String result = getMetaString(stack, tag);
         return result == null ? defaultValue : result;
     }
-
+*/
     public static boolean hasMeta(ItemStack stack, String tag) {
-        if (NMSUtils.isEmpty(stack)) return false;
-        return getNode(stack, tag) != null;
+        if (stack == null || stack.getType() == Material.AIR) return true;
+        net.minecraft.world.item.ItemStack handle = (net.minecraft.world.item.ItemStack) getHandle(stack);
+        return handle.hasTag() && handle.getTag().contains(tag);
+
+        //if (NMSUtils.isEmpty(stack)) return false;
+        //return getNode(stack, tag) != null;
     }
 
     public static Object getTag(ItemStack itemStack) {
-        Object tag = null;
+        net.minecraft.world.item.ItemStack handle = (net.minecraft.world.item.ItemStack) getHandle(itemStack);
+        return handle.getTag();
+
+        /*Object tag = null;
         try {
             Object mcItemStack = getHandle(itemStack);
             if (mcItemStack == null) return null;
@@ -1994,9 +2025,9 @@ public class NMSUtils {
         } catch (Throwable ex) {
             ex.printStackTrace();
         }
-        return tag;
+        return tag;*/
     }
-
+/*
     public static Object getNode(ItemStack stack, String tag) {
         if (NMSUtils.isEmpty(stack)) return null;
         Object meta = null;
@@ -2202,9 +2233,14 @@ public class NMSUtils {
             ex.printStackTrace();
         }
     }
-
+*/
     public static void setMetaInt(ItemStack stack, String tag, int value) {
-        if (NMSUtils.isEmpty(stack)) return;
+        net.minecraft.world.item.ItemStack handle = (net.minecraft.world.item.ItemStack) getHandle(stack);
+        if (handle.hasTag()) {
+            handle.getTag().putInt(tag, value);
+        }
+
+        /*if (NMSUtils.isEmpty(stack)) return;
         try {
             Object craft = getHandle(stack);
             if (craft == null) return;
@@ -2213,9 +2249,9 @@ public class NMSUtils {
             setMetaInt(tagObject, tag, value);
         } catch (Throwable ex) {
             ex.printStackTrace();
-        }
+        }*/
     }
-
+/*
     public static void removeMeta(Object node, String tag) {
         if (node == null|| !class_NBTTagCompound.isInstance(node)) return;
         try {
@@ -2293,12 +2329,19 @@ public class NMSUtils {
             ex.printStackTrace();
             return false;
         }
-        
+
         return true;
     }
-
+*/
     public static String getMetaString(ItemStack stack, String tag) {
-        if (NMSUtils.isEmpty(stack)) return null;
+        if (stack == null || stack.getType() == Material.AIR) return null;
+        net.minecraft.world.item.ItemStack handle = (net.minecraft.world.item.ItemStack) getHandle(stack);
+        if (!handle.hasTag()) {
+            return null;
+        }
+        return handle.getTag().getString(tag);
+
+        /*if (NMSUtils.isEmpty(stack)) return null;
         String meta = null;
         try {
             Object craft = getHandle(stack);
@@ -2309,11 +2352,16 @@ public class NMSUtils {
         } catch (Throwable ex) {
             ex.printStackTrace();
         }
-        return meta;
+        return meta;*/
     }
 
     public static void setMeta(ItemStack stack, String tag, String value) {
-        if (NMSUtils.isEmpty(stack)) return;
+        net.minecraft.world.item.ItemStack handle = (net.minecraft.world.item.ItemStack) getHandle(stack);
+        if (handle.hasTag()) {
+            handle.getTag().putString(tag, value);
+        }
+
+        /*if (NMSUtils.isEmpty(stack)) return;
         try {
             Object craft = getHandle(stack);
             if (craft == null) return;
@@ -2322,11 +2370,16 @@ public class NMSUtils {
             class_NBTTagCompound_setStringMethod.invoke(tagObject, tag, value);
         } catch (Throwable ex) {
             ex.printStackTrace();
-        }
+        }*/
     }
 
     public static void setMetaBoolean(ItemStack stack, String tag, boolean value) {
-        if (NMSUtils.isEmpty(stack)) return;
+        net.minecraft.world.item.ItemStack handle = (net.minecraft.world.item.ItemStack) getHandle(stack);
+        if (handle.hasTag()) {
+            handle.getTag().putBoolean(tag, value);
+        }
+
+        /*if (NMSUtils.isEmpty(stack)) return;
         try {
             Object craft = getHandle(stack);
             if (craft == null) return;
@@ -2335,10 +2388,18 @@ public class NMSUtils {
             setMetaBoolean(tagObject, tag, value);
         } catch (Throwable ex) {
             ex.printStackTrace();
-        }
+        }*/
     }
 
     public static boolean getMetaBoolean(ItemStack stack, String tag, boolean defaultValue) {
+        if (stack == null || stack.getType() == Material.AIR) return defaultValue;
+        net.minecraft.world.item.ItemStack handle = (net.minecraft.world.item.ItemStack) getHandle(stack);
+        if (!handle.hasTag()) {
+            return defaultValue;
+        }
+        return handle.getTag().getBoolean(tag);
+
+        /*
         if (NMSUtils.isEmpty(stack)) return defaultValue;
         boolean result = defaultValue;
         try {
@@ -2352,8 +2413,9 @@ public class NMSUtils {
             ex.printStackTrace();
         }
         return result;
+         */
     }
-
+    /*
     public static void addGlow(ItemStack stack) {
         if (NMSUtils.isEmpty(stack)) return;
 
@@ -2705,7 +2767,6 @@ public class NMSUtils {
             ex.printStackTrace();
         }
     }
-    
     public static void playCustomSound(Player player, Location location, String sound, float volume, float pitch)
     {
         if (class_PacketPlayOutCustomSoundEffect_Constructor == null || sound == null) return;
@@ -2768,10 +2829,13 @@ public class NMSUtils {
 
         return true;
     }
-
+     */
     public static boolean isEmpty(ItemStack itemStack) {
         if (itemStack == null || itemStack.getType() == Material.AIR) return true;
-        if (class_ItemStack_isEmptyMethod == null) return false;
+        net.minecraft.world.item.ItemStack handle = (net.minecraft.world.item.ItemStack) getHandle(itemStack);
+        return handle.isEmpty();
+
+        /*if (class_ItemStack_isEmptyMethod == null) return false;
         try {
             Object handle = getHandle(itemStack);
             if (handle == null) return false;
@@ -2779,13 +2843,13 @@ public class NMSUtils {
         } catch (Throwable ex) {
             ex.printStackTrace();
         }
-        return false;
+        return false;*/
     }
 
     public static String getVersionPrefix() {
         return versionPrefix;
     }
-
+/*
     public static byte getBlockData(FallingBlock falling) {
         // @deprecated Magic value
         byte data = 0;
@@ -2839,7 +2903,7 @@ public class NMSUtils {
         }
         return null;
     }
-
+*/
     public static boolean hasStatistics() {
         return hasStatistics;
     }

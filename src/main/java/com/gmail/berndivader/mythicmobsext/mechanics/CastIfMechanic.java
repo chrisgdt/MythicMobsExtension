@@ -137,7 +137,7 @@ public class CastIfMechanic extends SkillMechanic
 				String s1 = ts.substring(1);
 				MythicLineConfigImpl mlc = new MythicLineConfigImpl(s1);
 				String s2 = s1.contains("{") ? s1.substring(0, s1.indexOf("{")) : s1;
-				if ((st = (SkillTargeter) CustomTargeters.getCustomTargeter(s2, mlc)) == null)
+				if ((st = (SkillTargeter) CustomTargeters.getCustomTargeter(s2, mlc, getManager())) == null)
 					st = new TriggerTargeter(this.getManager(), mlc);
 			}
 			if (st instanceof IEntitySelector) {
