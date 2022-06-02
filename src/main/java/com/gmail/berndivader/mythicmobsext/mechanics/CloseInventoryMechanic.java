@@ -18,6 +18,7 @@ public class CloseInventoryMechanic extends SkillMechanic implements ITargetedEn
 
 	public CloseInventoryMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 	}
 

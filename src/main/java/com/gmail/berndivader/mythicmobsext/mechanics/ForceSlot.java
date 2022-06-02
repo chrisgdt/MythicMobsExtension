@@ -18,6 +18,7 @@ public class ForceSlot extends SkillMechanic implements ITargetedEntitySkill {
 
 	public ForceSlot(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.slot = mlc.getInteger("slot", 0);

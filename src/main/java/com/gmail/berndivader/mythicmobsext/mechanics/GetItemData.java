@@ -49,6 +49,7 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 	
 	public GetItemData(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.where = mlc.getString(new String[] { "where", "w" }, "HAND");

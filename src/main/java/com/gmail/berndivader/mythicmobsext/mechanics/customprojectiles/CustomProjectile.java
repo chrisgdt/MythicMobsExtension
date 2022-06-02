@@ -74,6 +74,7 @@ public class CustomProjectile extends SkillMechanic implements ITargetedEntitySk
 
 	public CustomProjectile(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.mythicmobs = Utils.mythicmobs;

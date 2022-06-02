@@ -47,6 +47,7 @@ public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntit
 
 	public ChatListenerMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.auraName = Optional.of(mlc.getString("chatname", "chatlistener"));

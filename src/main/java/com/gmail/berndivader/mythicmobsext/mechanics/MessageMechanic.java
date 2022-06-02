@@ -19,6 +19,7 @@ public class MessageMechanic extends SkillMechanic implements ITargetedEntitySki
 
 	public MessageMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.target_creative = true;
 		String tmp = mlc.getString(new String[] { "msg", "m" }, null);
 		if (tmp != null && (tmp.startsWith("\"") && tmp.endsWith("\""))) {

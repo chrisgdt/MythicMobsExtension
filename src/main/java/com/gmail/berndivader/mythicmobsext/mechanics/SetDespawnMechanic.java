@@ -18,6 +18,7 @@ public class SetDespawnMechanic extends SkillMechanic implements ITargetedEntity
 
 	public SetDespawnMechanic(SkillExecutor manager, String line, MythicLineConfig mlc) {
 		super(manager, line, mlc);
+		this.line = line;
 		set = mlc.getBoolean("set", true);
 	}
 

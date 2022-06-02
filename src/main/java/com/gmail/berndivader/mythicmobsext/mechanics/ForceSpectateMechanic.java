@@ -24,6 +24,7 @@ public class ForceSpectateMechanic extends SkillMechanic implements ITargetedEnt
 
 	public ForceSpectateMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.d = (long) mlc.getInteger(new String[] { "duration", "dur" }, 120);
 		this.shaderOnly = mlc.getBoolean("shaderonly", false);
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;

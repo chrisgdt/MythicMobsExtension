@@ -21,6 +21,7 @@ public class ChangeResourcePackMechanic extends SkillMechanic implements ITarget
 
 	public ChangeResourcePackMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		url = mlc.getString("url", "");
 		hash = mlc.getString("hash", "mme");
 	}

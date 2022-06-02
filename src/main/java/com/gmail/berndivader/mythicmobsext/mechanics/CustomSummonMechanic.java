@@ -39,6 +39,7 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 
 	public CustomSummonMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.amount = mlc.getString(new String[] { "amount", "a" }, "1");

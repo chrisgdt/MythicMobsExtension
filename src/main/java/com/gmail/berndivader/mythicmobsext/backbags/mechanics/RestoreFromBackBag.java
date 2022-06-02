@@ -29,6 +29,7 @@ public class RestoreFromBackBag extends SkillMechanic implements INoTargetSkill,
 
 	public RestoreFromBackBag(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		from_slot = mlc.getPlaceholderString("fromslot", "-1");

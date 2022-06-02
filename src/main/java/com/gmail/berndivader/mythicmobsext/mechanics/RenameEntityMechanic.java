@@ -21,6 +21,7 @@ public class RenameEntityMechanic extends SkillMechanic implements ITargetedEnti
 
 	public RenameEntityMechanic(SkillExecutor manager, String line, MythicLineConfig mlc) {
 		super(manager, line, mlc);
+		this.line = line;
 		String tmp = mlc.getString(new String[] { "name", "n" }, "");
 		if (tmp.charAt(0) == '"' && tmp.charAt(tmp.length() - 1) == '"') {
 			tmp = tmp.substring(1, tmp.length() - 1);

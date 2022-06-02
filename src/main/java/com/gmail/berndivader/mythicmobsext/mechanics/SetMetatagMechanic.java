@@ -26,6 +26,7 @@ public class SetMetatagMechanic extends SkillMechanic implements ITargetedLocati
 
 	public SetMetatagMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.useCaster = mlc.getBoolean(new String[] { "usecaster", "uc" }, false);

@@ -26,6 +26,7 @@ public class SetMobHealthMechanic extends SkillMechanic implements INoTargetSkil
 
 	public SetMobHealthMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.r = new PlaceholderStringImpl(
 				mlc.getString(new String[] { "amount", "a", "health", "h" }, "20").toLowerCase());
 		this.b = mlc.getBoolean(new String[] { "ignoremodifier", "im" }, true);

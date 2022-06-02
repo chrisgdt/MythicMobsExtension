@@ -30,6 +30,7 @@ public class DamageArmorMechanic extends SkillMechanic implements ITargetedEntit
 
 	public DamageArmorMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.armortype = new HashSet<>();

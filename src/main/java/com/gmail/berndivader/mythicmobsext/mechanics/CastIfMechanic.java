@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -18,13 +19,16 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.*;
 import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
 import io.lumine.mythic.core.config.MythicLineConfigImpl;
+import io.lumine.mythic.core.logging.MythicLogger;
 import io.lumine.mythic.core.skills.*;
+import io.lumine.mythic.core.skills.conditions.CustomCondition;
 import io.lumine.mythic.core.skills.conditions.InvalidCondition;
 import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 import io.lumine.mythic.core.skills.targeters.CustomTargeter;
 import io.lumine.mythic.core.skills.targeters.IEntitySelector;
 import io.lumine.mythic.core.skills.targeters.ILocationSelector;
 import io.lumine.mythic.core.skills.targeters.TriggerTargeter;
+import org.bukkit.Bukkit;
 
 @ExternalAnnotation(name = "castif", author = "BerndiVader")
 public class CastIfMechanic extends SkillMechanic
@@ -48,6 +52,7 @@ public class CastIfMechanic extends SkillMechanic
 
 	public CastIfMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+
 		this.line = skill; // added to fix MythicMobs issue
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
@@ -62,7 +67,7 @@ public class CastIfMechanic extends SkillMechanic
 				SkillString.parseMessageSpecialChars(mlc.getString(new String[] { "meet", "m" })));
 		this.elseAction = new PlaceholderStringImpl(
 				SkillString.parseMessageSpecialChars(mlc.getString(new String[] { "else", "e" })));
-		;
+
 		this.meetTargeter = Optional.ofNullable(mlc.getString(new String[] { "meettargeter", "mt" }));
 		this.elseTargeter = Optional.ofNullable(mlc.getString(new String[] { "elsetargeter", "et" }));
 		if (!this.RTskill) {
@@ -212,18 +217,64 @@ public class CastIfMechanic extends SkillMechanic
 	}
 
 	private HashMap<Integer, SkillCondition> getConditions(HashMap<Integer, String> conditionList) {
+		// lookatme && lineofsight true
+		// lookatme && lineofsight true
+		// lookatme
 		HashMap<Integer, SkillCondition> conditions = new HashMap<>();
 		for (int a = 0; a < conditionList.size(); a++) {
 			SkillCondition sc;
 			String s = conditionList.get(a);
 			if (s.startsWith(" "))
 				s = s.substring(1);
-			if ((sc = conditions.get(s)) instanceof InvalidCondition)
+			if ((sc = getCondition(s)) instanceof InvalidCondition)
 				continue;
 			conditions.put(a, sc);
 		}
 		return conditions;
 	}
+	// from MythicMob v4.12.0, couldn't find it anywhere in v5, sorry for the copy :(
+	public SkillCondition getCondition(String condition) {
+		condition = MythicLineConfigImpl.unparseBlock(condition);
+		String name;
+		if (condition.contains("}")) {
+			String sp1 = condition.substring(0, condition.indexOf("}"));
+			name = condition.substring(condition.indexOf("}"));
+			String ns = sp1.replace(" ", "") + name;
+			condition = ns;
+			MythicLogger.debug(MythicLogger.DebugLevel.CONDITION, ": Normalized Condition string to: " + ns, new Object[0]);
+		}
+
+		String[] s = condition.split(" ");
+		name = null;
+		MythicLineConfig mlc = new MythicLineConfigImpl(s[0]);
+		if (s[0].contains("{")) {
+			name = s[0].substring(0, s[0].indexOf("{"));
+		} else {
+			name = s[0];
+		}
+
+		MythicLogger.debug(MythicLogger.DebugLevel.CONDITION, "? Matching MythicCondition type to " + name, new Object[0]);
+		Map<String, Class<? extends SkillCondition>> CONDITIONS = getPlugin().getSkillManager().getConditions();
+		if (CONDITIONS.containsKey(name.toUpperCase())) {
+			Class clazz = (Class)CONDITIONS.get(name.toUpperCase());
+
+			try {
+				return (SkillCondition)clazz.getConstructor(String.class, MythicLineConfig.class).newInstance(condition, mlc);
+			} catch (Exception var8) {
+				MythicLogger.error("Failed to construct condition {0}", condition);
+				var8.printStackTrace();
+			}
+		}
+
+		try {
+			return new CustomCondition(name, condition, mlc);
+		} catch (Exception var7) {
+			MythicLogger.error("Failed to load condition '" + name + "'");
+			var7.printStackTrace();
+			return new InvalidCondition(condition);
+		}
+	}
+
 
 	private void parseConditionLines(String ms, boolean istarget) {
 		if (ms != null && (ms.startsWith("\"") && ms.endsWith("\""))) {

@@ -31,6 +31,7 @@ public class AimBowMechanic extends SkillMechanic implements ITargetedEntitySkil
 
 	public AimBowMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 	}
 

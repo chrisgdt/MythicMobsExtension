@@ -21,6 +21,7 @@ public class EnderDragonDeathEffect extends SkillMechanic implements ITargetedEn
 
 	public EnderDragonDeathEffect(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 	}
 
 	@Override

@@ -16,6 +16,7 @@ public class ExtinguishMechanic extends SkillMechanic implements ITargetedEntity
 
 	public ExtinguishMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 	}
 
 	@Override

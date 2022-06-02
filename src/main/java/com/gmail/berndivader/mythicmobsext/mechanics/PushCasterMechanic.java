@@ -29,6 +29,7 @@ public class PushCasterMechanic extends SkillMechanic implements ITargetedEntity
 
 	public PushCasterMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.s = mlc.getFloat("speed", 1.0f);

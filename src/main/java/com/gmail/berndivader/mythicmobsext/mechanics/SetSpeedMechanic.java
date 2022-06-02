@@ -21,6 +21,7 @@ public class SetSpeedMechanic extends SkillMechanic implements ITargetedEntitySk
 
 	public SetSpeedMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		s1 = mlc.getString(new String[] { "amount", "a", "range", "r" }, "0.2D").toLowerCase();
 		bl1 = mlc.getBoolean("debug", false);
 	}

@@ -29,6 +29,7 @@ public class OnTrade extends Aura implements ITargetedEntitySkill {
 
    public OnTrade(SkillExecutor manager, String skill, MythicLineConfig mlc) {
        super(manager, skill, mlc);
+       this.line = skill;
       this.onTradeSkillName = mlc.getString(new String[]{"ontradeskill", "ontrade", "os", "s", "skill"});
       this.cancelEvent = mlc.getBoolean(new String[]{"cancelevent", "ce"}, false);
       this.forceAsPower = mlc.getBoolean(new String[]{"forceaspower", "fap"}, true);

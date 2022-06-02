@@ -20,6 +20,7 @@ public class SetThreatTableTargetMechanic extends SkillMechanic implements ITarg
 
 	public SetThreatTableTargetMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.amount = mlc.getDouble(new String[] { "amount", "a" }, 65536);

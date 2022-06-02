@@ -30,6 +30,7 @@ public class ModifyLoreLine extends SkillMechanic implements ITargetedEntitySkil
 
 	public ModifyLoreLine(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 
 		String slot = mlc.getString(new String[] { "slot", "s"}, "-1");
 		String what = mlc.getString(new String[] { "what", "w"}, "HAND").toUpperCase();

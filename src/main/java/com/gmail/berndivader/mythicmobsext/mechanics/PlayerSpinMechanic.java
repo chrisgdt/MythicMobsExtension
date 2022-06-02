@@ -25,6 +25,7 @@ public class PlayerSpinMechanic extends SkillMechanic implements ITargetedEntity
 
 	public PlayerSpinMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.d = (long) mlc.getInteger(new String[] { "duration", "dur" }, 120);
 		this.s = mlc.getFloat(new String[] { "speed", "s" }, 30.0F);
 	}

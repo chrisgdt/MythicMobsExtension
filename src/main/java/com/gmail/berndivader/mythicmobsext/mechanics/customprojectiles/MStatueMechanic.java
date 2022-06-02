@@ -47,6 +47,7 @@ public class MStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 
 	public MStatueMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		String i = mlc.getString(new String[] { "mob", "m" }, "SkeletonKing");

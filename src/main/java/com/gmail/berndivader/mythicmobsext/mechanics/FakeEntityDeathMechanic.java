@@ -17,6 +17,7 @@ public class FakeEntityDeathMechanic extends SkillMechanic implements ITargetedE
 
 	public FakeEntityDeathMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.d = (long) mlc.getInteger(new String[] { "duration", "dur" }, 60);
 	}
 

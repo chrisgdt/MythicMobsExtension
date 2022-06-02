@@ -30,6 +30,7 @@ public class DisarmPlayerMechanic extends SkillMechanic implements ITargetedEnti
 
 	public DisarmPlayerMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.dt = mlc.getLong(new String[] { "duration", "dur" }, 180);
 
 		whats = new ArrayList<>();

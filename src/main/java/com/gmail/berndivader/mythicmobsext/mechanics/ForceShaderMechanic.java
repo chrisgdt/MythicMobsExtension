@@ -22,6 +22,7 @@ public class ForceShaderMechanic extends SkillMechanic implements ITargetedEntit
 
 	public ForceShaderMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		entityType = EntityType.valueOf(mlc.getString("type", "CREEPER"));

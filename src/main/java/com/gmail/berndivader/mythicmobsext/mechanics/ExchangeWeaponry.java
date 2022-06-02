@@ -23,6 +23,7 @@ public class ExchangeWeaponry extends SkillMechanic implements ITargetedEntitySk
 	
 	public ExchangeWeaponry(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.destination = mlc.getString(new String[] { "destination", "d" }, "OFFHAND");

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.lumine.mythic.core.drops.Drop;
+import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import org.bukkit.Server;
 import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
@@ -130,11 +131,6 @@ public class NMSUtils extends CompatibilityUtils {
 		return bool;
 	}
 
-	/**
-	 * 
-	 * @param object {@link PathfinderGoalSelector}
-	 * @return priority {@link Integer}
-	 */
 	public static int getPathfinderGoalSelectorItemPriority(Object object) {
 		int priority = -1;
 		try {
@@ -146,11 +142,6 @@ public class NMSUtils extends CompatibilityUtils {
 		return priority;
 	}
 
-	/**
-	 * 
-	 * @param object {@link PathfinderGoalSelector}
-	 * @return object {@link PathfinderGoal}
-	 */
 	public static Object getPathfinderGoalFromPathFinderSelectorItem(Object object) {
 		Object pathfindergoal = null;
 		try {
@@ -197,6 +188,8 @@ public class NMSUtils extends CompatibilityUtils {
 	 * @return int - ticks
 	 */
 	public static int getCurrentTick(Server server) {
+		return ((DedicatedServer) getHandle(server)).getTickCount();
+		/*
 		int i1 = 0;
 		Object o1;
 		try {
@@ -207,6 +200,7 @@ public class NMSUtils extends CompatibilityUtils {
 			ex.printStackTrace();
 		}
 		return i1;
+		 */
 	}
 
 	/**

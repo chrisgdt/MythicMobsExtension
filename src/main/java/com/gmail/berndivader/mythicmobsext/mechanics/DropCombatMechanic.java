@@ -15,6 +15,7 @@ public class DropCombatMechanic extends SkillMechanic implements ITargetedEntity
 
 	public DropCombatMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 	}
 
 	@Override

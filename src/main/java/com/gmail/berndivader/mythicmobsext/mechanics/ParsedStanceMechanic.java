@@ -22,6 +22,7 @@ public class ParsedStanceMechanic extends SkillMechanic
 
 	public ParsedStanceMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		String s = mlc.getString(new String[] { "stance", "s" });
 		if (s.startsWith("\"") && s.endsWith("\""))
 			s = s.substring(1, s.length() - 1);

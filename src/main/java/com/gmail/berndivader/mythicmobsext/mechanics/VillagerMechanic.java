@@ -20,6 +20,7 @@ public class VillagerMechanic extends SkillMechanic implements ITargetedEntitySk
 
 	public VillagerMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		profession  = mlc.getString(new String[] { "profession", "p"}, null);
 		level  = mlc.getInteger(new String[] { "level", "l"}, -1);
 		type  = mlc.getString(new String[] { "type", "t"}, null);

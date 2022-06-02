@@ -38,6 +38,7 @@ public class CreateItem extends SkillMechanic implements ITargetedEntitySkill, I
 
 	public CreateItem(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		holding = new HoldingItem();

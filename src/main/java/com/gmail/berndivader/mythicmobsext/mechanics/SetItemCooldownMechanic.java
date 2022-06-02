@@ -19,6 +19,7 @@ public class SetItemCooldownMechanic extends SkillMechanic implements ITargetedE
 
 	public SetItemCooldownMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		j(mlc.getInteger(new String[] { "ticks", "t" }, 0));
 		i(mlc.getInteger(new String[] { "slot", "s" }, -1));
 	}

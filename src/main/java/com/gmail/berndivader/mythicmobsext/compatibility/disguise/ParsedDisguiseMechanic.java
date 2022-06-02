@@ -18,6 +18,7 @@ public class ParsedDisguiseMechanic extends SkillMechanic implements ITargetedEn
 
 	public ParsedDisguiseMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.disguise = mlc.getPlaceholderString(new String[] { "disguise", "d" }, "Notch");
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 	}

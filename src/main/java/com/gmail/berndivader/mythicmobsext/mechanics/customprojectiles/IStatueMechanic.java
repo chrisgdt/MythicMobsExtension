@@ -50,6 +50,7 @@ public class IStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 
 	public IStatueMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		String i = mlc.getString(new String[] { "item", "i" }, "DIRT");

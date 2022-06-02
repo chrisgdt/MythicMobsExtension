@@ -20,6 +20,7 @@ public class AddTravelPoint extends SkillMechanic implements ITargetedEntitySkil
 
 	public AddTravelPoint(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 
 		this.remove_points = mlc.getBoolean("removeagain", true);
 	}

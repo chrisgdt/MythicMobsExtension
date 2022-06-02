@@ -16,6 +16,7 @@ public class ResetShaderMechanic extends SkillMechanic implements ITargetedEntit
 
 	public ResetShaderMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 	}
 
 	@Override

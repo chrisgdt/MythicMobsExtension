@@ -23,6 +23,7 @@ public class ResetTargetMechanic extends SkillMechanic implements ITargetedEntit
 
 	public ResetTargetMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 
 		set = line.charAt(0) == 's';
 		event = mlc.getBoolean("event", false);

@@ -22,6 +22,7 @@ public class DupeWeaponryMechanic extends SkillMechanic implements ITargetedEnti
 
 	public DupeWeaponryMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		removeFromTarget = mlc.getBoolean(new String[] { "removefromtarget", "rft" }, false);

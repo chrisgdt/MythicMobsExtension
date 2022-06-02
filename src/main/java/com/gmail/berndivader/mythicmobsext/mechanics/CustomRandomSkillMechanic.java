@@ -23,6 +23,7 @@ public class CustomRandomSkillMechanic extends SkillMechanic implements IMetaSki
 
 	public CustomRandomSkillMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.target_creative = true;
 		skillmanager = Utils.mythicmobs.getSkillManager();
 		this.entrylist = new LinkedList<>();

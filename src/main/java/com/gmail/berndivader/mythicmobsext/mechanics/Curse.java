@@ -35,6 +35,7 @@ public class Curse extends AuraMechanic implements ITargetedEntitySkill {
 
 	public Curse(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.auraName = Optional.of(str);

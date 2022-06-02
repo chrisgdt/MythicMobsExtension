@@ -20,6 +20,7 @@ public class ProgressBossBar extends SkillMechanic implements ITargetedEntitySki
 
 	public ProgressBossBar(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		title = mlc.getPlaceholderString("title", "Bar");
 		set = mlc.getBoolean("set", false);
 		expr = mlc.getPlaceholderString("value", "0.05d");

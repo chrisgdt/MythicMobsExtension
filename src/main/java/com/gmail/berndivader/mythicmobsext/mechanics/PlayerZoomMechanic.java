@@ -18,6 +18,7 @@ public class PlayerZoomMechanic extends SkillMechanic implements ITargetedEntity
 
 	public PlayerZoomMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		f(mlc.getFloat(new String[] { "value", "v", "amount", "a" }, 0.0F));
 	}
 

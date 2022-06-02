@@ -42,6 +42,7 @@ public class GetEntityMetadataMap extends SkillMechanic implements ITargetedEnti
 
 	public GetEntityMetadataMap(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		use_players = mlc.getLine().toLowerCase().startsWith("getplayermeta");

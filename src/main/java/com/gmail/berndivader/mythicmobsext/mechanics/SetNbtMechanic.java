@@ -19,6 +19,7 @@ public class SetNbtMechanic extends SkillMechanic implements ITargetedEntitySkil
 
 	public SetNbtMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		String tmp = mlc.getString("nbt");

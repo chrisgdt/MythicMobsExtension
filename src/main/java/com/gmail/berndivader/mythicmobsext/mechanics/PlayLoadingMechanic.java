@@ -17,6 +17,7 @@ public class PlayLoadingMechanic extends SkillMechanic implements ITargetedEntit
 
 	public PlayLoadingMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 	}
 
 	@Override

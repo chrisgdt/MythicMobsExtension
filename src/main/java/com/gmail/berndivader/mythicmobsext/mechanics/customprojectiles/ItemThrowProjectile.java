@@ -48,6 +48,7 @@ public class ItemThrowProjectile extends SkillMechanic implements ITargetedEntit
 
 	public ItemThrowProjectile(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		String i = mlc.getString(new String[] { "item", "i" }, "DIRT");

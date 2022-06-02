@@ -18,6 +18,7 @@ public class CustomSound extends SkillMechanic implements ITargetedEntitySkill {
 
 	public CustomSound(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 
 		type = mlc.getString("type", "block.chest.open");
 		volume = mlc.getFloat("volume", 1f);

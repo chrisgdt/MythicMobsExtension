@@ -20,6 +20,7 @@ public class ModifyArrowsMechanic extends SkillMechanic implements ITargetedEnti
 
 	public ModifyArrowsMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.m = mlc.getString(new String[] { "mode", "m" }, "c").toUpperCase().charAt(0);
 		this.a = mlc.getInteger(new String[] { "amount", "a" }, 1);
 	}

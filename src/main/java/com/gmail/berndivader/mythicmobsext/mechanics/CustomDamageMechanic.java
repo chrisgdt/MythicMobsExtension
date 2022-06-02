@@ -42,6 +42,7 @@ public class CustomDamageMechanic extends SkillMechanic implements ITargetedEnti
 
 	public CustomDamageMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.pk = mlc.getBoolean(new String[] { "preventknockback", "pkb", "pk" }, false);

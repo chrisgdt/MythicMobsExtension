@@ -24,6 +24,7 @@ public class JumpCasterMechanic extends SkillMechanic implements ITargetedEntity
 
 	public JumpCasterMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.speed = MathUtils.clamp(mlc.getFloat("speed", 1.3f), 1.01f, 3.0f);

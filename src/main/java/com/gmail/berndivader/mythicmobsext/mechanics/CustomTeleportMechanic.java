@@ -41,6 +41,7 @@ public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEn
 
 	public CustomTeleportMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 		
 		this.noise = mlc.getDouble(new String[] { "noise", "n", "radius", "r" }, 0D);

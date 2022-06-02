@@ -25,6 +25,7 @@ public class NoDamageTicksMechanic extends SkillMechanic implements ITargetedEnt
 
 	public NoDamageTicksMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		j1 = mlc.getInteger("damagedelay", 1);
 		j2 = mlc.getInteger("duration", 1);
 	}

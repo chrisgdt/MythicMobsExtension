@@ -25,6 +25,7 @@ public class StoreTicksMechanic extends SkillMechanic implements INoTargetSkill 
 
 	public StoreTicksMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		bl1 = mlc.getBoolean("meta", false);
 		s1 = mlc.getPlaceholderString("tag", "");
 	}

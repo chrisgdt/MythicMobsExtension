@@ -18,6 +18,7 @@ public class ForceBowMechanic extends SkillMechanic implements ITargetedEntitySk
 
 	public ForceBowMechanic(SkillExecutor manager, String line, MythicLineConfig mlc) {
 		super(manager, line, mlc);
+		this.line = line;
 		this.debug = mlc.getBoolean("debug", false);
 	}
 

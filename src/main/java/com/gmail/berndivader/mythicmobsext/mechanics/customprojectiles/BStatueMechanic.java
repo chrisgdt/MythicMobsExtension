@@ -47,6 +47,7 @@ public class BStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 
 	public BStatueMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		String i = mlc.getString(new String[] { "material", "m" }, "DIRT").toUpperCase();

@@ -23,6 +23,7 @@ public class CustomVelocityMechanic extends SkillMechanic implements ITargetedEn
 
 	public CustomVelocityMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.debug = mlc.getBoolean("debug", false);

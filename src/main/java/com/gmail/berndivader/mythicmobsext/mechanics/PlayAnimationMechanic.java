@@ -20,6 +20,7 @@ public class PlayAnimationMechanic extends SkillMechanic implements ITargetedEnt
 
 	public PlayAnimationMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		String[] parse = mlc.getString(new String[] { "id", "ids" }, "0").split(",");

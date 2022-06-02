@@ -16,6 +16,7 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 public class PlayCreditsMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	public PlayCreditsMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 	}
 
 	@Override

@@ -50,6 +50,7 @@ public class StunextMechanic extends SkillMechanic implements ITargetedEntitySki
 
 	public StunextMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.duration = mlc.getInteger(new String[] { "duration", "dur" }, 120);

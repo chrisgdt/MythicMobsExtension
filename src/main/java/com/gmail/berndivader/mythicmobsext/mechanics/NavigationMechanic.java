@@ -19,6 +19,7 @@ public class NavigationMechanic extends SkillMechanic implements ITargetedEntity
 
 	public NavigationMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.type = mlc.getString("type", "walk").toUpperCase();

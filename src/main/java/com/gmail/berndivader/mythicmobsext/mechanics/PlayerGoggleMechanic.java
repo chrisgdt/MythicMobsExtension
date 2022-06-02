@@ -26,6 +26,7 @@ public class PlayerGoggleMechanic extends SkillMechanic implements ITargetedEnti
 
 	public PlayerGoggleMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.dur = (long) mlc.getInteger(new String[] { "duration", "dur" }, 120);
 	}
 

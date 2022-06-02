@@ -22,6 +22,7 @@ public class QuestsMechanic extends SkillMechanic implements ITargetedEntitySkil
 
 	public QuestsMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		s1 = mlc.getString("quest", "").toLowerCase();

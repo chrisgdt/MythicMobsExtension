@@ -16,6 +16,7 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 public class ResistSunMechanic extends SkillMechanic implements INoTargetSkill {
 	public ResistSunMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 	}
 

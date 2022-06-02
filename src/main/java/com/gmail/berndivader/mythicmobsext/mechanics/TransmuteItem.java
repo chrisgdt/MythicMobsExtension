@@ -30,6 +30,7 @@ public class TransmuteItem extends SkillMechanic implements ITargetedEntitySkill
 	
 	public TransmuteItem(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		amount = PlaceholderInt.of(mlc.getString(new String[] {"amount", "a"}, "-1"));
 		
 		String baseMLC = mlc.getString(new String[] {"item", "i"}, "STONE");

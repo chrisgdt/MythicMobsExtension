@@ -31,6 +31,7 @@ public class DropInventoryMechanic extends SkillMechanic implements ITargetedEnt
 
 	public DropInventoryMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		String tmp = mlc.getString(new String[] { "item" }, null);

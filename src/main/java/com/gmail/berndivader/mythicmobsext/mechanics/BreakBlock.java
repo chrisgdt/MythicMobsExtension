@@ -27,6 +27,7 @@ public class BreakBlock extends SkillMechanic implements ITargetedLocationSkill 
 
 	public BreakBlock(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		restore = mlc.getInteger("restore", 0);

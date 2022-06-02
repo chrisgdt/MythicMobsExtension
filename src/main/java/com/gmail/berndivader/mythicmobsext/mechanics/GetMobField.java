@@ -26,6 +26,7 @@ public class GetMobField extends SkillMechanic implements ITargetedEntitySkill, 
 
 	public GetMobField(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		s2 = mlc.getString("meta", null);
 		bl1 = mlc.getBoolean("stance", false);
 		try {

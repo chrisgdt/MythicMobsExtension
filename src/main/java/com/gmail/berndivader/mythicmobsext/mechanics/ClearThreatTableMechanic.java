@@ -14,6 +14,7 @@ public class ClearThreatTableMechanic extends SkillMechanic implements INoTarget
 
 	public ClearThreatTableMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 	}
 
 	@Override

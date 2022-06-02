@@ -21,6 +21,7 @@ public class Disorientation extends SkillMechanic implements ITargetedEntitySkil
 
 	public Disorientation(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		state |= mlc.getBoolean("look", true) ? 0b1 : 0b0;
 		state |= mlc.getBoolean("position", true) ? 0b10 : 0b00;
 	}

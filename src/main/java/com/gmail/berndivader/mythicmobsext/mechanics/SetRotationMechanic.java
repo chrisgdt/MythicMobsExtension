@@ -24,6 +24,7 @@ public class SetRotationMechanic extends SkillMechanic implements ITargetedEntit
 
 	public SetRotationMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.yawOff = mlc.getFloat(new String[] { "yawoffset", "yaw", "yo", "y" }, 5.0F);
 		this.pitchOff = mlc.getFloat(new String[] { "pitchoffset", "pitch", "po", "p" }, 0F);
 		this.d = mlc.getLong(new String[] { "duration", "dur" }, 1);

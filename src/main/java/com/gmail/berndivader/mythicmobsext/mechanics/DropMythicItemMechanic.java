@@ -45,6 +45,7 @@ public class DropMythicItemMechanic extends SkillMechanic implements ITargetedEn
 
 	public DropMythicItemMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.str_types = mlc.getPlaceholderString(new String[] { "mythicitem", "item", "itemtype", "type", "t", "i" },

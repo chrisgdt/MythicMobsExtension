@@ -37,6 +37,7 @@ public class GrenadeMechanic extends SkillMechanic implements ITargetedEntitySki
 
 	public GrenadeMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.size = mlc.getInteger(new String[] { "size", "s" }, 2);

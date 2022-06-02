@@ -30,6 +30,7 @@ public class DigOutMechanic extends SkillMechanic implements INoTargetSkill {
 
 	public DigOutMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 		
 		speed = (long) mlc.getInteger("speed", 5);

@@ -31,6 +31,7 @@ public class CreateBossBar extends SkillMechanic implements ITargetedEntitySkill
 
 	public CreateBossBar(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		title = mlc.getPlaceholderString("title", "Bar");
 		style = BarStyle.valueOf(SegmentedEnum.real(mlc.getInteger("segment", 6)).name());
 		expr = mlc.getPlaceholderString("value", "0.05d");

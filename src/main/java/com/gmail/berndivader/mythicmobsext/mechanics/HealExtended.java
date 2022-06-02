@@ -32,6 +32,7 @@ public class HealExtended extends SkillMechanic implements ITargetedEntitySkill,
 	
 	public HealExtended(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		
 		amountPlaceholder= PlaceholderString.of(mlc.getString("amount","0"));
 		power=mlc.getBoolean("power",false);

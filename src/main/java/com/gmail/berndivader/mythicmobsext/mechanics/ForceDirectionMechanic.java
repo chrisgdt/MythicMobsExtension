@@ -29,6 +29,7 @@ public class ForceDirectionMechanic extends SkillMechanic implements ITargetedEn
 
 	public ForceDirectionMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		faceing = BlockFace.valueOf(mlc.getString("faceing", "north").toUpperCase());

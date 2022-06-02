@@ -34,6 +34,7 @@ public class EntityGoogleMechanic extends SkillMechanic implements ITargetedEnti
 
 	public EntityGoogleMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		b(skill.toLowerCase().startsWith("entitylookin"));
 		this.dur = (long) mlc.getInteger(new String[] { "duration", "dur" }, 120);
 		this.rotate = mlc.getFloat("rotate", 0f);

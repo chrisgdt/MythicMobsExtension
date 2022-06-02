@@ -62,6 +62,7 @@ public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill
 	
 	public ParticleImage(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		file = mlc.getString(new String[] {"file", "f"}, null);
 		scaleAmount = PlaceholderString.of(mlc.getString(new String[] {"scale", "s"}, "4"));
 		backgroundColor = mlc.getString(new String[] {"bgcolor", "color", "c"}, "white");

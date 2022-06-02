@@ -49,6 +49,7 @@ public class EnchantWeaponryMechanic extends SkillMechanic implements ITargetedE
 
 	public EnchantWeaponryMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		action = ACTION.SET;

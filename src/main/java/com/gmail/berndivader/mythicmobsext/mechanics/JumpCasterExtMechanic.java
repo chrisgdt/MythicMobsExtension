@@ -22,6 +22,7 @@ public class JumpCasterExtMechanic extends SkillMechanic implements ITargetedEnt
 
 	public JumpCasterExtMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		height = mlc.getDouble("height", 2d);

@@ -34,6 +34,7 @@ public class ModifyItem extends SkillMechanic implements ITargetedEntitySkill {
 
 	public ModifyItem(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 
 		WhereEnum where = Utils.enum_lookup(WhereEnum.class, mlc.getString("what", "HAND").toUpperCase());
 		ACTION action = Utils.enum_lookup(ACTION.class, mlc.getString("action", "SET").toUpperCase());

@@ -21,6 +21,7 @@ public class ChangeGamemodeMechanic extends SkillMechanic implements ITargetedEn
 
 	public ChangeGamemodeMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		try {

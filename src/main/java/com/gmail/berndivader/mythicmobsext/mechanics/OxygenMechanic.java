@@ -18,6 +18,7 @@ public class OxygenMechanic extends SkillMechanic implements ITargetedEntitySkil
 
 	public OxygenMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.amount = mlc.getInteger(new String[] { "amount", "a" }, 1);

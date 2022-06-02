@@ -16,6 +16,7 @@ public class ClearTravelPoints extends SkillMechanic implements INoTargetSkill {
 
 	public ClearTravelPoints(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 
 		this.remove_points = mlc.getBoolean("removeagain", true);
 	}

@@ -25,6 +25,7 @@ public class AdvAIPathFinderMechanic extends SkillMechanic implements ITargetedE
 
 	public AdvAIPathFinderMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		String parse = mlc.getString("goal", "");

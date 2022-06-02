@@ -23,6 +23,7 @@ public class DisplayAdvancementMechanic extends SkillMechanic implements ITarget
 
 	public DisplayAdvancementMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		material = Material.STONE;
 		try {
 			material = Material.valueOf(mlc.getString(new String[] { "icon", "material" }, "stone").toUpperCase());

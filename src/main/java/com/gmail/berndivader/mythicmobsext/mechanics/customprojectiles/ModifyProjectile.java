@@ -12,6 +12,7 @@ public class ModifyProjectile extends SkillMechanic implements IParentSkill {
 
 	public ModifyProjectile(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		// TODO Auto-generated constructor stub
 	}
 

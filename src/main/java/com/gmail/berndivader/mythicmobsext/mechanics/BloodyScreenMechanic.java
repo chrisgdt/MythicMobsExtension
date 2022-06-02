@@ -23,6 +23,7 @@ public class BloodyScreenMechanic extends SkillMechanic implements ITargetedEnti
 
 	public BloodyScreenMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		bl1 = mlc.getBoolean("play", true);
 		timer = mlc.getInteger("timer", -1);
 		max_alpha = false;

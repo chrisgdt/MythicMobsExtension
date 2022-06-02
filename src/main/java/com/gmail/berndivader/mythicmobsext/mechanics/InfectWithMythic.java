@@ -28,6 +28,7 @@ public class InfectWithMythic extends SkillMechanic implements ITargetedEntitySk
 
 	public InfectWithMythic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 
 		Optional<MythicMob> opt = Utils.mobmanager.getMythicMob(mlc.getString("mobtype", ""));
 		if (opt.isPresent()) {

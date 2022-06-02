@@ -40,6 +40,7 @@ public class ClickListenerMechanic extends AuraMechanic implements ITargetedEnti
 
 	public ClickListenerMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.auraName = Optional.of(mlc.getString("buffname", str));

@@ -22,6 +22,7 @@ public class SnoopInventory extends SkillMechanic implements ITargetedEntitySkil
 
 	public SnoopInventory(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		snoop = mlc.getLine().toLowerCase().startsWith("snoop");

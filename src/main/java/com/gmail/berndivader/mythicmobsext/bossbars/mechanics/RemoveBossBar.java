@@ -18,6 +18,7 @@ public class RemoveBossBar extends SkillMechanic implements ITargetedEntitySkill
 
 	public RemoveBossBar(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		title = mlc.getPlaceholderString("title", "Bar");
 	}
 

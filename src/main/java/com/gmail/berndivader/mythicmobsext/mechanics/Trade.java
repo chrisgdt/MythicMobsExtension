@@ -38,6 +38,7 @@ public class Trade extends SkillMechanic implements ITargetedEntitySkill {
 
 	public Trade(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 		title = mlc.getString(new String[] { "title", "t"}, "Trades");
 		for (int index = 1; index <= 10; index++) {

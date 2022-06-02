@@ -27,6 +27,7 @@ public class SetMobLevelMechanic extends SkillMechanic implements ITargetedEntit
 
 	public SetMobLevelMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 		this.a = new PlaceholderStringImpl(mlc.getString(new String[] { "amount", "a" }, "1").toLowerCase());
 		r(mlc.getInteger("min", -1), mlc.getInteger("max", -1));

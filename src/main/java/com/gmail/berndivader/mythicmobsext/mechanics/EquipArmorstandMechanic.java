@@ -31,6 +31,7 @@ public class EquipArmorstandMechanic extends SkillMechanic implements INoTargetS
 	
 	public EquipArmorstandMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		parse = mlc.getString(new String[] { "item", "i" }).split(":");

@@ -22,6 +22,7 @@ public class PlayerWeatherMechanic extends SkillMechanic implements ITargetedEnt
 
 	public PlayerWeatherMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		try {
 			this.type = WeatherType.valueOf(mlc.getString(new String[] { "weather", "w" }, "CLEAR").toUpperCase());
 		} catch (Exception e) {

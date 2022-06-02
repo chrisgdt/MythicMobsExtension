@@ -23,6 +23,7 @@ public class SetFactionMechanic extends SkillMechanic implements ITargetedEntity
 
 	public SetFactionMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		String f = mlc.getString(new String[] { "faction", "f" }, null);
 		if (f != null) {
 			this.faction = new PlaceholderStringImpl(SkillString.unparseMessageSpecialChars(f));
