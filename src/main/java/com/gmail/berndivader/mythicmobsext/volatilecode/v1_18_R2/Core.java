@@ -1,7 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -45,15 +44,12 @@ import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.storage.LevelData;
-import net.minecraft.world.level.storage.WorldData;
 import net.minecraft.world.phys.AABB;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_18_R2.entity.*;
-import org.bukkit.craftbukkit.v1_18_R2.util.CraftMagicNumbers;
 import org.bukkit.craftbukkit.v1_18_R2.entity.*;
 import org.bukkit.craftbukkit.v1_18_R2.util.CraftMagicNumbers;
 import org.bukkit.entity.ArmorStand;
@@ -900,8 +896,8 @@ public class Core implements Handler, Listener {
 	}
 
 	@Override
-	public boolean getNBTValueOf(Entity e1, String s1, boolean b1) {
-		return getNBTValue(e1, s1);
+	public boolean getNBTValueOf(Entity e1, String s1, boolean def) {
+		return getNBTValue(e1, s1, def);
 	}
 
 	@Override
@@ -928,7 +924,7 @@ public class Core implements Handler, Listener {
 		return false;
 	}
 
-	private boolean getNBTValue(Entity e1, String s) {
+	private boolean getNBTValue(Entity e1, String s, boolean def) {
 		net.minecraft.world.entity.Entity me = ((CraftEntity) e1).getHandle();
 		CompoundTag nbt1 = null, nbt2 = null;
 		boolean bl1 = false;
@@ -937,7 +933,7 @@ public class Core implements Handler, Listener {
 				nbt2 = TagParser.parseTag(s);
 			} catch (CommandSyntaxException ex) {
 				System.err.println(ex.getLocalizedMessage());
-				return false;
+				return def;
 			}
 			Tag nb1 = null, nb2 = null;
 			for (String s2 : nbt1.getAllKeys()) {
@@ -947,8 +943,9 @@ public class Core implements Handler, Listener {
 					break;
 				}
 			}
-			if (nb1 != null && nb2 != null)
+			if (nb1 != null && nb2 != null) {
 				bl1 = nbtA(nb2, nb1, bl1 = true);
+			}
 		}
 		return bl1;
 	}
@@ -1019,15 +1016,14 @@ public class Core implements Handler, Listener {
 		if (e.valid) {
 			try {
 				ItemStack is;
-				nbt = new CompoundTag();
-				e.save(nbt);
+				nbt = e.saveWithoutId(new CompoundTag());
 				if (e instanceof net.minecraft.world.entity.player.Player
 						&& !(is = ((net.minecraft.world.entity.player.Player) e).getInventory().player.getMainHandItem()).isEmpty()) {
 					nbt.put("SelectedItem", is.save(new CompoundTag()));
 				}
 			} catch (Throwable t) {
 				Main.logger.warning("Error while getting NBT for entity " + e.getBukkitEntity().getType()
-						+ " " + e.getCustomName());
+						+ " " + e.getCustomName() + " : " + t.getMessage() + " caused by " + t.getCause().getMessage());
 			}
 		}
 		return nbt;
