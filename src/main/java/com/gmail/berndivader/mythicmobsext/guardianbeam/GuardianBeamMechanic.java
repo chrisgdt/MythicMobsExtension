@@ -29,6 +29,7 @@ public class GuardianBeamMechanic extends SkillMechanic implements ITargetedEnti
 
 	public GuardianBeamMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 
 		duration = mlc.getInteger("duration", 1);
 		forwardOffset = mlc.getDouble("forward", 1);

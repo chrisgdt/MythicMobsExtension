@@ -17,6 +17,7 @@ public class DropStolenItemsMechanic extends SkillMechanic implements INoTargetS
 
 	public DropStolenItemsMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 	}
 

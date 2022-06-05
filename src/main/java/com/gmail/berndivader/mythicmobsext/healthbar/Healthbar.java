@@ -3,10 +3,10 @@ package com.gmail.berndivader.mythicmobsext.healthbar;
 import java.util.UUID;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import me.filoghost.holographicdisplays.api.beta.HolographicDisplaysAPI;
-import me.filoghost.holographicdisplays.api.beta.hologram.Hologram;
-import me.filoghost.holographicdisplays.api.beta.hologram.VisibilitySettings;
-import me.filoghost.holographicdisplays.api.beta.hologram.line.TextHologramLine;
+import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
+import me.filoghost.holographicdisplays.api.hologram.Hologram;
+import me.filoghost.holographicdisplays.api.hologram.VisibilitySettings;
+import me.filoghost.holographicdisplays.api.hologram.line.TextHologramLine;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;

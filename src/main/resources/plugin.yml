@@ -1,4 +1,4 @@
-name: MythicMobsExtension
+name: ${project.name}
 main: com.gmail.berndivader.mythicmobsext.Main
 version: ${project.version}
 api-version: 1.13

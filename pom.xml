@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.gmail.berndivader</groupId>
     <artifactId>MythicMobsExtension</artifactId>
-    <version>1.745-SNAPSHOT</version>
-    <modelVersion>4.0.0</modelVersion>
-    <packaging>jar</packaging>
+    <version>1.746-SNAPSHOT</version>
+    <name>MythicMobsExtension</name>
 
     <repositories>
         <repository>
@@ -179,11 +179,17 @@
             <version>3.8.6</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
+
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <defaultGoal>clean install</defaultGoal>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <finalName>${project.artifactId}-${project.version}</finalName>
         <plugins>
             <plugin>

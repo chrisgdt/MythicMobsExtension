@@ -31,6 +31,7 @@ public class StealMechanic extends SkillMechanic implements ITargetedEntitySkill
 
 	public StealMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.items = new ArrayList<>(
