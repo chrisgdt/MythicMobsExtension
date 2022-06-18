@@ -7,7 +7,7 @@ import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
-import io.lumine.mythic.core.config.ConfigManager;
+import io.lumine.mythic.core.config.ConfigExecutor;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.skills.SkillMechanic;
@@ -40,11 +40,11 @@ public class SetMobHealthMechanic extends SkillMechanic implements INoTargetSkil
 			double h = 20, mod = 0;
 			h = MathUtils.randomRangeDouble(this.r.get(data, t));
 			if (!b && am != null) {
-				mod = ConfigManager.defaultLevelModifierHealth.startsWith("+")
-						? Double.valueOf(ConfigManager.defaultLevelModifierHealth.substring(1))
-						: (ConfigManager.defaultLevelModifierHealth.startsWith("*")
-						? h * Double.valueOf(ConfigManager.defaultLevelModifierHealth.substring(1))
-						: h * Double.valueOf(ConfigManager.defaultLevelModifierHealth));
+				mod = ConfigExecutor.defaultLevelModifierHealth.startsWith("+")
+						? Double.valueOf(ConfigExecutor.defaultLevelModifierHealth.substring(1))
+						: (ConfigExecutor.defaultLevelModifierHealth.startsWith("*")
+						? h * Double.valueOf(ConfigExecutor.defaultLevelModifierHealth.substring(1))
+						: h * Double.valueOf(ConfigExecutor.defaultLevelModifierHealth));
 			}
 
 			if (am != null && am.getLevel() > 1 && mod > 0.0)

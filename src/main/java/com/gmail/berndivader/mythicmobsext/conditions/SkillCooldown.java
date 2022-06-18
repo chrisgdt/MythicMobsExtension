@@ -8,7 +8,7 @@ import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.Skill;
 import io.lumine.mythic.api.skills.conditions.IEntityCondition;
-import io.lumine.mythic.core.skills.AbstractSkill;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderDouble;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -25,7 +25,7 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 public class SkillCooldown extends AbstractCustomCondition implements IEntityCondition {
 	String name, id;
 	HashMap<UUID, Long> cd;
-	float f1;
+	PlaceholderDouble f1;
 	Scoreboard sb;
 	Objective o1;
 
@@ -44,27 +44,32 @@ public class SkillCooldown extends AbstractCustomCondition implements IEntityCon
 				cd = (HashMap<UUID, Long>) f.get(sk);
 				f = sk.getClass().getSuperclass().getDeclaredField("cooldown");
 				f.setAccessible(true);
-				f1 = (float) f.get(sk);
+				f1 = (PlaceholderDouble) f.get(sk);
 			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
 			sb = Bukkit.getScoreboardManager().getMainScoreboard();
 			o1 = sb.getObjective(name + id);
 			if (o1 == null)
-				o1 = sb.registerNewObjective(name + id, "dummy");
+				o1 = sb.registerNewObjective(name + id, "dummy", name + id);
 		}
 	}
 
 	@Override
 	public boolean check(AbstractEntity entity) {
-		if (f1 > 0f && cd != null) {
+		if (f1.get(entity) > 0f && cd != null) {
 			Entity e = entity.getBukkitEntity();
-			Long l1, l2;
-			if ((l2 = l1 = cd.get(e.getUniqueId())) != null) {
-				if ((l1 -= AbstractSkill.cooldownTimer) >= 0) {
-					tag(e, l1 / 20);
+			Long last = cd.get(e.getUniqueId());
+			if (last != null) {
+				long time = System.currentTimeMillis();
+				if (last >= time) {
+					tag(e, (last - time) / 1000);
 				}
-				return l2 >= AbstractSkill.cooldownTimer;
+				return last > 0;
+				//if ((l1 -= AbstractSkill.cooldownTimer) >= 0) {
+				//	tag(e, l1 / 20);
+				//}
+				//return l2 >= AbstractSkill.cooldownTimer;
 			} else {
 				return false;
 			}

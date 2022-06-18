@@ -29,7 +29,7 @@ import io.lumine.mythic.core.mobs.MobExecutor;
 import io.lumine.mythic.core.skills.*;
 import io.lumine.mythic.core.spawning.spawners.SpawnerManager;
 import io.lumine.mythic.core.utils.Patterns;
-import io.lumine.mythic.utils.numbers.Numbers;
+import io.lumine.mythic.bukkit.utils.numbers.Numbers;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;

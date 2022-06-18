@@ -28,7 +28,6 @@ import io.lumine.mythic.core.skills.targeters.CustomTargeter;
 import io.lumine.mythic.core.skills.targeters.IEntitySelector;
 import io.lumine.mythic.core.skills.targeters.ILocationSelector;
 import io.lumine.mythic.core.skills.targeters.TriggerTargeter;
-import org.bukkit.Bukkit;
 
 @ExternalAnnotation(name = "castif", author = "BerndiVader")
 public class CastIfMechanic extends SkillMechanic
@@ -217,9 +216,6 @@ public class CastIfMechanic extends SkillMechanic
 	}
 
 	private HashMap<Integer, SkillCondition> getConditions(HashMap<Integer, String> conditionList) {
-		// lookatme && lineofsight true
-		// lookatme && lineofsight true
-		// lookatme
 		HashMap<Integer, SkillCondition> conditions = new HashMap<>();
 		for (int a = 0; a < conditionList.size(); a++) {
 			SkillCondition sc;

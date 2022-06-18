@@ -17,7 +17,7 @@ import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.utils.BlockUtil;
-import io.lumine.mythic.utils.numbers.Numbers;
+import io.lumine.mythic.bukkit.utils.numbers.Numbers;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

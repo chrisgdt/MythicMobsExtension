@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
@@ -10,9 +11,12 @@ import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
-import io.lumine.mythic.core.items.MythicItem;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.skills.variables.VariableMechanic;
+import io.lumine.mythic.core.utils.jnbt.CompoundTag;
+import io.lumine.mythic.core.utils.jnbt.CompoundTagBuilder;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
@@ -69,12 +73,47 @@ public class ModifyItemNBT extends VariableMechanic implements ITargetedEntitySk
 		}
 		return SkillResult.SUCCESS;
 	}
-	
-	
+
 	public ItemStack setItemNBT(ItemStack iS) {
-	    Map<String, Object> tags = new HashMap<String, Object>();
+	    Map<String, Object> tags = new HashMap<>();
 	    tags.put(NBTkey, NBTvalue.get(skill, abstract_entity));
-	    iS = MythicItem.addItemNBT(iS, "Base", tags);
+	    //iS = MythicItem.addItemNBT(iS, "Base", tags);
+		iS = addItemNBT(iS, tags);
 		return iS;
 	}
+
+	public static ItemStack addItemNBT(ItemStack itemStack, Map<String, Object> pairs) {
+		if (itemStack != null && itemStack.getType() != Material.AIR) {
+			CompoundTag compoundTag = MythicBukkit.inst().getVolatileCodeHandler().getItemHandler().getNBTData(itemStack);
+			CompoundTagBuilder builder;
+			Iterator<?> var6;
+			Map.Entry<?,?> entry;
+			Object val;
+			builder = compoundTag.createBuilder();
+			var6 = pairs.entrySet().iterator();
+
+			while(var6.hasNext()) {
+				entry = (Map.Entry<?,?>) var6.next();
+				val = entry.getValue();
+				if (val instanceof Integer) {
+					builder.putInt((String)entry.getKey(), (Integer)val);
+				} else if (val instanceof Double) {
+					builder.putDouble((String)entry.getKey(), (Double)val);
+				} else if (val instanceof Float) {
+					builder.putFloat((String)entry.getKey(), (Float)val);
+				} else if (val instanceof Boolean) {
+					builder.putBoolean((String)entry.getKey(), (Boolean)val);
+				} else if (val instanceof Byte) {
+					builder.putByte((String)entry.getKey(), (Byte)val);
+				} else {
+					builder.putString((String)entry.getKey(), val.toString());
+				}
+			}
+			compoundTag = builder.build();
+			return MythicBukkit.inst().getVolatileCodeHandler().getItemHandler().setNBTData(itemStack, compoundTag);
+		} else {
+			return null;
+		}
+	}
+
 }
