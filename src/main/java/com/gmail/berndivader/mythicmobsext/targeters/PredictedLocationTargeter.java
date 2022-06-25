@@ -43,8 +43,8 @@ public class PredictedLocationTargeter extends ISelectorLocation {
 				ee = data.getTrigger().getBukkitEntity();
 			break;
 		case "owner":
-			ActiveMob am;
-			if ((am = (ActiveMob) data.getCaster()) != null && am.getOwner().isPresent()) {
+			ActiveMob am = (ActiveMob) data.getCaster();
+			if (am != null && am.getOwner() != null && am.getOwner().isPresent()) {
 				ee = NMSUtils.getEntity(data.getCaster().getEntity().getBukkitEntity().getWorld(), am.getOwner().get());
 			}
 			break;
@@ -52,7 +52,7 @@ public class PredictedLocationTargeter extends ISelectorLocation {
 			ee = data.getCaster().getEntity().getBukkitEntity();
 			break;
 		}
-		if (ee != null && ee instanceof LivingEntity && data.getCaster().getEntity().isLiving()) {
+		if (ee instanceof LivingEntity && data.getCaster().getEntity().isLiving()) {
 			Vec3D target_position = Volatile.handler.getPredictedMotion(
 					(LivingEntity) data.getCaster().getEntity().getBukkitEntity(), (LivingEntity) ee, delta);
 			targets.add(BukkitAdapter.adapt(ee.getLocation().clone().add(target_position.getX(), target_position.getY(),

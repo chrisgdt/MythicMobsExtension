@@ -48,8 +48,8 @@ public class TargetMotionTargeter extends ISelectorLocation {
 				ee = data.getTrigger().getBukkitEntity();
 			break;
 		case "owner":
-			ActiveMob am;
-			if ((am = (ActiveMob) data.getCaster()) != null && am.getOwner().isPresent()) {
+			ActiveMob am = (ActiveMob) data.getCaster();
+			if (am != null && am.getOwner() != null && am.getOwner().isPresent()) {
 				ee = NMSUtils.getEntity(data.getCaster().getEntity().getBukkitEntity().getWorld(), am.getOwner().get());
 			}
 			break;

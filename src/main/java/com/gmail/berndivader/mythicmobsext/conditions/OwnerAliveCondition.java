@@ -21,7 +21,7 @@ public class OwnerAliveCondition extends AbstractCustomCondition implements IEnt
 	public boolean check(AbstractEntity e) {
 		if (Utils.mobmanager.isActiveMob(e)) {
 			ActiveMob am = Utils.mobmanager.getMythicMobInstance(e);
-			if (am.getOwner().isPresent()) {
+			if (am.getOwner() != null && am.getOwner().isPresent()) { // No idea why the owner is sometimes null (this shouldn't happen)
 				Entity o = NMSUtils.getEntity(e.getBukkitEntity().getWorld(), am.getOwner().get());
 				return o != null && !o.isDead();
 			}

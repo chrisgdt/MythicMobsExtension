@@ -41,7 +41,7 @@ public class TriggerDirectionTargeter extends ISelectorLocation {
 			}
 		case 'w':
 			ActiveMob am = Utils.mobmanager.getMythicMobInstance(data.getCaster().getEntity());
-			if (am != null && am.getOwner().isPresent()) {
+			if (am != null && am.getOwner() != null && am.getOwner().isPresent()) {
 				Entity o = NMSUtils.getEntity(am.getEntity().getBukkitEntity().getWorld(), am.getOwner().get());
 				if (o instanceof LivingEntity)
 					l = BukkitAdapter.adapt(((LivingEntity) o).getEyeLocation());

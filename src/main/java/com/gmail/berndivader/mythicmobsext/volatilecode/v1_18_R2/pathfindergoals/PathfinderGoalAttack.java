@@ -29,7 +29,7 @@ public class PathfinderGoalAttack extends MeleeAttackGoal {
 
 		if (am.isPresent()) {
 			ActiveMob active_mob = am.get();
-			if (active_mob.getOwner().isPresent()) {
+			if (active_mob.getOwner() != null && active_mob.getOwner().isPresent()) {
 				if (active_mob.getOwner().get() == entityLiving.getUUID())
 					return;
 			}

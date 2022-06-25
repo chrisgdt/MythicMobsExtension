@@ -141,7 +141,6 @@ public class Core implements Handler, Listener {
 					for (Packet<?> packet : packets) {
 						cp.getHandle().connection.send(packet);
 					}
-
 				}
 			}
 		}.runTaskAsynchronously(Main.getPlugin());
@@ -1208,7 +1207,7 @@ public class Core implements Handler, Listener {
 	}
 
 	@Override
-	public void playAnimationPacket(LivingEntity e, Integer[] ints) {
+	public void playAnimationPacket(LivingEntity e, int[] ints) {
 		net.minecraft.world.entity.LivingEntity living = ((CraftLivingEntity) e).getHandle();
 		ClientboundAnimatePacket[] packets = new ClientboundAnimatePacket[ints.length];
 		for (int j = 0; j < ints.length; j++) {
@@ -1219,9 +1218,7 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void playAnimationPacket(LivingEntity e, int id) {
-		sendPlayerPacketsAsync(Utils.getPlayersInRange(e.getLocation(), Utils.renderLength),
-				new ClientboundAnimatePacket[] {
-						new ClientboundAnimatePacket(((CraftLivingEntity) e).getHandle(), id) });
+		playAnimationPacket(e, new int[]{ id });
 	}
 
 	@Override

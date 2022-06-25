@@ -37,8 +37,8 @@ public class CustomConditions implements Listener {
 	private boolean registerCondition(Class<? extends SkillCondition> cl1, MythicConditionLoadEvent e) {
 		SkillCondition cond = null;
 		try {
-			cond = cl1.getConstructor(String.class, MythicLineConfig.class).newInstance(e.getConfig().getLine(),
-					e.getConfig());
+			cond = cl1.getConstructor(String.class, MythicLineConfig.class)
+					.newInstance(e.getConfig().getLine(), e.getConfig());
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e1) {
 			e1.printStackTrace();

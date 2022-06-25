@@ -36,14 +36,14 @@ public class Nashorn {
 			ScriptEngineManager manager=new ScriptEngineManager(ClassLoader.getSystemClassLoader());
 			if((engine=manager.getEngineByName(Config.javascriptengine))==null) {
                             engine=manager.getEngineByName("nashorn");
-                        }
+			}
 			if(engine!=null) {
-                            Main.logger.info("Using scriptengine "+engine.getFactory().getEngineName());
-                            engine.eval(scripts);
-                            invocable=(Invocable)engine;
+				Main.logger.info("Using scriptengine "+engine.getFactory().getEngineName());
+				engine.eval(scripts);
+                invocable=(Invocable)engine;
 			} else {
-                            Main.logger.warning("No scriptengine found!");
-                        }
+				Main.logger.warning("No scriptengine found!");
+            }
 		} catch (IOException | ScriptException e1) {
 			e1.printStackTrace();
 		}

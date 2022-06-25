@@ -3,7 +3,6 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.mythic.api.config.MythicLineConfig;
-import io.lumine.mythic.api.skills.conditions.ISkillCondition;
 import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
 import io.lumine.mythic.core.skills.SkillCondition;
 import io.lumine.mythic.core.skills.conditions.ConditionAction;

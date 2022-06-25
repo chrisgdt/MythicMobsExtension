@@ -34,6 +34,7 @@ public class EvalMechanic extends SkillMechanic implements INoTargetSkill, ITarg
 
 	public EvalMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		String temp = mlc.getString(new String[] { "evaluate", "eval", "e" }, "");
 		if ((temp.startsWith("\""))) {
 			temp = SkillString.unparseMessageSpecialChars(temp.substring(1, temp.length() - 1));

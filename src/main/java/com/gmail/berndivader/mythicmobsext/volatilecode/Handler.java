@@ -93,7 +93,7 @@ public interface Handler {
 
 	void playAnimationPacket(LivingEntity e, int id);
 
-	void playAnimationPacket(LivingEntity e, Integer[] ints);
+	void playAnimationPacket(LivingEntity e, int[] ints);
 
 	void setWorldborder(Player p, int density, boolean play);
 

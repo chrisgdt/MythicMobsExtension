@@ -14,9 +14,9 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
-@ExternalAnnotation(name = "playanimation", author = "BerndiVader")
+@ExternalAnnotation(name = "playanimationmme", author = "BerndiVader")
 public class PlayAnimationMechanic extends SkillMechanic implements ITargetedEntitySkill {
-	Integer[] ids;
+	int[] ids;
 
 	public PlayAnimationMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
@@ -24,7 +24,7 @@ public class PlayAnimationMechanic extends SkillMechanic implements ITargetedEnt
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		String[] parse = mlc.getString(new String[] { "id", "ids" }, "0").split(",");
-		ids = new Integer[parse.length];
+		ids = new int[parse.length];
 		for (int i1 = 0; i1 < parse.length; i1++) {
 			try {
 				int j1 = Integer.parseInt(parse[i1]);

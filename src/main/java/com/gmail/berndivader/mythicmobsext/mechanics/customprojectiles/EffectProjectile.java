@@ -197,7 +197,7 @@ public class EffectProjectile extends CustomProjectile implements ITargetedEntit
 						}
 						if (EffectProjectile.this.mobmanager.isActiveMob(e)) {
 							eam = EffectProjectile.this.mobmanager.getMythicMobInstance(e);
-							if (eam.getOwner().isPresent()
+							if (eam.getOwner() != null && eam.getOwner().isPresent()
 									&& eam.getOwner().get().equals(this.am.getEntity().getUniqueId())) {
 								return true;
 							}

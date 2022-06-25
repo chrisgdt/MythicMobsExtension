@@ -40,11 +40,11 @@ public class LookingAtMeCondition extends AbstractCustomCondition implements IEn
 			Vector delta = Vtarget.subtract(Vcaster);
 			double angle = delta.angle(Vdirection);
 			if (this.debug) {
-				Main.logger.info("fov-ratio:" + Double.toString(angle));
-				Main.logger.info("yVecOff:::" + Double.toString(Vcaster.getY()));
+				Main.logger.info("fov-ratio:" + angle);
+				Main.logger.info("yVecOff:::" + Vcaster.getY());
+				Main.logger.info("Is condition ok ? " + this.FOV.equals(angle));
 			}
-			if (this.FOV.equals(angle))
-				return true;
+			return this.FOV.equals(angle);
 		}
 		return false;
 	}

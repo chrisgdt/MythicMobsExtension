@@ -25,6 +25,7 @@ public class JavascriptMechanic extends SkillMechanic
 
 	public JavascriptMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
 		super(manager, skill, mlc);
+		this.line = skill;
 		this.mlc = mlc;
 		simple = mlc.getBoolean("simple", false);
 		String s1 = mlc.getString(new String[] { "js", "eval", "invok" }, js);
@@ -49,7 +50,7 @@ public class JavascriptMechanic extends SkillMechanic
 	private SkillResult eval(SkillMetadata data, Entity e1, Location l1) {
 		try {
 			if(Nashorn.invocable!=null) {
-				Nashorn.invocable.invokeFunction(js, data, e1 != null ? (Entity) e1 : l1 != null ? (Location) l1 : null,
+				Nashorn.invocable.invokeFunction(js, data, e1 != null ? e1 : l1,
 						mlc);
 			}else {
 				Main.logger.warning("No javascriptengine found!");

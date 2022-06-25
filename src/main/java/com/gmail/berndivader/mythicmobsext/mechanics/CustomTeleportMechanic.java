@@ -118,11 +118,13 @@ public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEn
 			}
 		}
 		if (!this.isLocations) {
-			if (this.ignoreOwner && data.getCaster() instanceof ActiveMob
-					&& ((ActiveMob) data.getCaster()).getOwner().isPresent()) {
-				World w = data.getCaster().getEntity().getBukkitEntity().getWorld();
-				osources.remove(
-						BukkitAdapter.adapt(NMSUtils.getEntity(w, ((ActiveMob) data.getCaster()).getOwner().get())));
+			if (this.ignoreOwner && data.getCaster() instanceof ActiveMob) {
+				ActiveMob am = (ActiveMob) data.getCaster();
+				if (am.getOwner() != null && am.getOwner().isPresent()) {
+					World w = data.getCaster().getEntity().getBukkitEntity().getWorld();
+					osources.remove(BukkitAdapter
+							.adapt(NMSUtils.getEntity(w, ((ActiveMob) data.getCaster()).getOwner().get())));
+				}
 			}
 		}
 

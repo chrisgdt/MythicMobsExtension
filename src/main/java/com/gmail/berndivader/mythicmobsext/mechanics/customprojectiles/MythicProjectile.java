@@ -222,7 +222,7 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 						}
 						if (MythicProjectile.this.mobmanager.isActiveMob(e)) {
 							eam = MythicProjectile.this.mobmanager.getMythicMobInstance(e);
-							return eam.getOwner().isPresent()
+							return eam.getOwner() != null && eam.getOwner().isPresent()
 									&& eam.getOwner().get().equals(this.am.getEntity().getUniqueId());
 						}
 					} else {

@@ -13,12 +13,9 @@ import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 
-import com.gmail.berndivader.mythicmobsext.conditions.ThreatTable;
-import io.lumine.mythic.api.MythicPlugin;
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.adapters.AbstractLocation;
 import io.lumine.mythic.api.config.MythicLineConfig;
-import io.lumine.mythic.api.mobs.MobManager;
 import io.lumine.mythic.api.skills.SkillCaster;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
@@ -27,7 +24,6 @@ import io.lumine.mythic.core.config.MythicLineConfigImpl;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import io.lumine.mythic.core.mobs.MobExecutor;
 import io.lumine.mythic.core.skills.*;
-import io.lumine.mythic.core.spawning.spawners.SpawnerManager;
 import io.lumine.mythic.core.utils.Patterns;
 import io.lumine.mythic.bukkit.utils.numbers.Numbers;
 import org.bukkit.Bukkit;
@@ -161,12 +157,12 @@ public class Utils implements Listener {
 		}
 		players = new HashMap<>();
 		try {
-			threattable_field = ThreatTable.class.getDeclaredField("threatTable");
+			threattable_field = ActiveMob.ThreatTable.class.getDeclaredField("threatTable");
 			threattable_field.setAccessible(true);
 			action_var_field = SkillCondition.class.getDeclaredField("actionVar");
 			action_var_field.setAccessible(true);
 		} catch (NoSuchFieldException | SecurityException e) {
-			// Auto-generated catch block
+			e.printStackTrace();
 		}
 		papi_ispresent = Main.pluginmanager.getPlugin(Papi.str_PLUGINNAME) != null;
 	}
@@ -572,11 +568,9 @@ public class Utils implements Listener {
 	}
 
 	public static List<Player> getPlayersInRange(Location l, double distance) {
-		List<Player> players = new ArrayList<Player>();
-		List<Player> list1 = l.getWorld().getPlayers();
+		List<Player> players = new ArrayList<>();
 		double x1 = l.getBlockX(), y1 = l.getBlockY(), z1 = l.getBlockZ();
-		for (int i1 = 0; i1 < list1.size(); i1++) {
-			Player p = list1.get(i1);
+		for (Player p : l.getWorld().getPlayers()) {
 			Location l1 = p.getLocation();
 			if (MathUtils.distance3D(x1, y1, z1, l1.getBlockX(), l1.getBlockY(), l1.getBlockZ()) <= distance)
 				players.add(p);
