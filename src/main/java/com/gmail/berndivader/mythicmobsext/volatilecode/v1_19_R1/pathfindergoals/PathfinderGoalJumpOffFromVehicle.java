@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals;
 
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;

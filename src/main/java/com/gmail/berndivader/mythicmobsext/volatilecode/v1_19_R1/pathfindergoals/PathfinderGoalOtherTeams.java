@@ -1,7 +1,9 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -72,9 +74,7 @@ public class PathfinderGoalOtherTeams<T extends LivingEntity> extends NearestAtt
 
 	private void teams(LivingEntity entityliving) {
 		this.team1 = this.mob.getLevel().getScoreboard().getPlayerTeam(this.mob.getUUID().toString());
-		this.team2 = entityliving instanceof ServerPlayer
-				? this.mob.getLevel().getScoreboard().getPlayerTeam(entityliving.getName().getContents())
-				: this.mob.getLevel().getScoreboard().getPlayerTeam(entityliving.getUUID().toString());
+		this.team2 = this.mob.getLevel().getScoreboard().getPlayerTeam(entityliving.getScoreboardName());
 	}
 
 }

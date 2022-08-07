@@ -3,7 +3,7 @@
 
     <groupId>com.gmail.berndivader</groupId>
     <artifactId>MythicMobsExtension</artifactId>
-    <version>1.748-SNAPSHOT</version>
+    <version>1.749-SNAPSHOT</version>
     <name>MythicMobsExtension</name>
 
     <repositories>
@@ -248,7 +248,7 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- Library versions -->
-        <minecraft.version>1.18.2</minecraft.version>
+        <minecraft.version>1.19.2</minecraft.version>
         <minecraft.serverVersion>${minecraft.version}-R0.1-SNAPSHOT</minecraft.serverVersion>
 
         <!-- Default values if dev.properties file does not exist -->
