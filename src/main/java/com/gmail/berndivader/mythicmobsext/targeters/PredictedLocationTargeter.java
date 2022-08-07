@@ -44,7 +44,7 @@ public class PredictedLocationTargeter extends ISelectorLocation {
 			break;
 		case "owner":
 			ActiveMob am = (ActiveMob) data.getCaster();
-			if (am != null && am.getOwner() != null && am.getOwner().isPresent()) {
+			if (am != null && am.getOwner().isPresent()) {
 				ee = NMSUtils.getEntity(data.getCaster().getEntity().getBukkitEntity().getWorld(), am.getOwner().get());
 			}
 			break;

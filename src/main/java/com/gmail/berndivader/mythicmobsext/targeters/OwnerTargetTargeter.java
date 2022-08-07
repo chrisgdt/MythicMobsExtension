@@ -28,7 +28,7 @@ public class OwnerTargetTargeter extends ISelectorEntity {
 		HashSet<AbstractEntity> targets = new HashSet<>();
 		if (Utils.mobmanager.isActiveMob(data.getCaster().getEntity())) {
 			ActiveMob am = Utils.mobmanager.getMythicMobInstance(data.getCaster().getEntity());
-			if (am.getOwner() != null && am.getOwner().isPresent()) {
+			if (am.getOwner().isPresent()) {
 				Entity owner = NMSUtils.getEntity(am.getEntity().getBukkitEntity().getWorld(), am.getOwner().get());
 				if (owner != null) {
 					AbstractEntity pt;

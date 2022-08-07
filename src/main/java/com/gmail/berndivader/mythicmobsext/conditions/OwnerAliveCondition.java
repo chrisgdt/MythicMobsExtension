@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
+import com.gmail.berndivader.mythicmobsext.Main;
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.conditions.IEntityCondition;
@@ -21,8 +22,15 @@ public class OwnerAliveCondition extends AbstractCustomCondition implements IEnt
 	public boolean check(AbstractEntity e) {
 		if (Utils.mobmanager.isActiveMob(e)) {
 			ActiveMob am = Utils.mobmanager.getMythicMobInstance(e);
-			if (am.getOwner() != null && am.getOwner().isPresent()) { // No idea why the owner is sometimes null (this shouldn't happen)
+			if (debug) {
+				Main.logger.warning("Debug OwnerAliveCondition1 : owner present : " + am.getOwner().isPresent()
+						+ (am.getOwner().isPresent() ? "; owner UUID : " + am.getOwner().get() + "; (mob UUID : " + am.getUniqueId() + ")" : ""));
+			}
+			if (am.getOwner().isPresent()) {
 				Entity o = NMSUtils.getEntity(e.getBukkitEntity().getWorld(), am.getOwner().get());
+				if (debug) {
+					Main.logger.warning("Debug OwnerAliveCondition2 : " + o + (o != null ? " ; isDead : " + o.isDead() : ""));
+				}
 				return o != null && !o.isDead();
 			}
 		}
