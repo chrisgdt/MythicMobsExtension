@@ -20,6 +20,8 @@ import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
 import com.gmail.berndivader.mythicmobsext.items.WhereEnum;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
+import java.io.File;
+
 public class RestoreFromBackBag extends SkillMechanic implements INoTargetSkill, ITargetedEntitySkill {
 	int to_slot;
 	WhereEnum what;
@@ -27,8 +29,8 @@ public class RestoreFromBackBag extends SkillMechanic implements INoTargetSkill,
 	PlaceholderString meta_name, from_slot, bag_name;
 	HoldingItem holding;
 
-	public RestoreFromBackBag(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public RestoreFromBackBag(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

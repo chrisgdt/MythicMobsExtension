@@ -15,14 +15,16 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "bloodyscreen,bloodyscreen_ext", author = "BerndiVader")
 public class BloodyScreenMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	static String str = "mme_bloodyscreen";
 	boolean bl1, max_alpha;
 	int timer;
 
-	public BloodyScreenMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public BloodyScreenMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		bl1 = mlc.getBoolean("play", true);
 		timer = mlc.getInteger("timer", -1);

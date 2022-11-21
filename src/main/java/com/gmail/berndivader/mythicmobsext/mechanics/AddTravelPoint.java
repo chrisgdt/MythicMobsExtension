@@ -14,12 +14,14 @@ import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.skills.SkillMechanic;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "addtravelpoint", author = "BerndiVader")
 public class AddTravelPoint extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 	boolean remove_points;
 
-	public AddTravelPoint(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public AddTravelPoint(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 
 		this.remove_points = mlc.getBoolean("removeagain", true);

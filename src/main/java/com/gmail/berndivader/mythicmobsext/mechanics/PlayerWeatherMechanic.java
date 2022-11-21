@@ -14,14 +14,16 @@ import org.bukkit.entity.Player;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "playerweather", author = "BerndiVader")
 public class PlayerWeatherMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	int duration, time;
 	WeatherType type;
 	boolean relative;
 
-	public PlayerWeatherMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public PlayerWeatherMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		try {
 			this.type = WeatherType.valueOf(mlc.getString(new String[] { "weather", "w" }, "CLEAR").toUpperCase());

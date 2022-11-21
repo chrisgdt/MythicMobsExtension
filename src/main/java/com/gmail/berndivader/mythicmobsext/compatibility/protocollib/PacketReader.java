@@ -27,8 +27,8 @@ public class PacketReader implements PacketListener {
 		this.incoming = ListeningWhitelist.EMPTY_WHITELIST;
 
 		this.outgoing = ListeningWhitelist.newBuilder().priority(ListenerPriority.LOWEST)
-				.types(new PacketType[] { PacketType.Play.Server.UPDATE_HEALTH,
-						PacketType.Play.Server.ENTITY_METADATA, })
+				.types(PacketType.Play.Server.UPDATE_HEALTH,
+						PacketType.Play.Server.ENTITY_METADATA)
 				.gamePhase(GamePhase.BOTH).options(new ListenerOptions[0]).build();
 	}
 

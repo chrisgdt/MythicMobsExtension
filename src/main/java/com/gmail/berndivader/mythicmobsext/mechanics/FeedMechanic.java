@@ -12,12 +12,14 @@ import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "mmefeed", author = "BerndiVader")
 public class FeedMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private int amount;
 
-	public FeedMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public FeedMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

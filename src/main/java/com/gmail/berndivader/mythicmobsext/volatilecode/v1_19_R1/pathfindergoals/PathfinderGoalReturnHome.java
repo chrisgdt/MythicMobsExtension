@@ -116,7 +116,6 @@ public class PathfinderGoalReturnHome extends Goal {
 				to = event.getTo();
 				d.moveTo(to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch());
 				g.getNodeEvaluator();
-				return;
 			}
 		}
 	}

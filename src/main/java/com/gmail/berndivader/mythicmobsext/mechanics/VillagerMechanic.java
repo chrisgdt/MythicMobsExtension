@@ -12,14 +12,16 @@ import org.bukkit.entity.Villager;
 
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "villager", author = "Seyarada")
 public class VillagerMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private String profession;
 	private int level;
 	private String type;
 
-	public VillagerMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public VillagerMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		profession  = mlc.getString(new String[] { "profession", "p"}, null);
 		level  = mlc.getInteger(new String[] { "level", "l"}, -1);

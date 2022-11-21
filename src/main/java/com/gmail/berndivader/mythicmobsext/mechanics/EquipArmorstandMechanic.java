@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.Optional;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
@@ -29,8 +30,8 @@ public class EquipArmorstandMechanic extends SkillMechanic implements INoTargetS
 	int slot;
 	int pos;
 	
-	public EquipArmorstandMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public EquipArmorstandMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
@@ -58,7 +59,7 @@ public class EquipArmorstandMechanic extends SkillMechanic implements INoTargetS
 			
 			switch (slot) {
 				case 0: {
-					as.getEquipment().setItemInHand(is);
+					as.getEquipment().setItemInMainHand(is);
 					break;
 					}
 				case 1: {

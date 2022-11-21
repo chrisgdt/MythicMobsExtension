@@ -16,14 +16,16 @@ import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "jumpex,jump_ex", author = "BerndiVader")
 public class JumpCasterMechanic extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 
 	float speed, force, G;
 	boolean debug, default_g;
 
-	public JumpCasterMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public JumpCasterMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
@@ -56,7 +58,7 @@ public class JumpCasterMechanic extends SkillMechanic implements ITargetedEntity
 	}
 
 	SkillResult calc(LivingEntity caster, Vec3D target_position) {
-		Vec2D direction2d = MathUtils.calculateDirectionVec2D(target_position, (float) speed / 3, G);
+		Vec2D direction2d = MathUtils.calculateDirectionVec2D(target_position, speed / 3, G);
 		Vector direction = MathUtils.getDirection((float) direction2d.getX(), (float) direction2d.getY());
 		if (Float.isFinite((float) direction.getX()) && Float.isFinite((float) direction.getZ())) {
 			caster.setVelocity(direction.multiply(speed));

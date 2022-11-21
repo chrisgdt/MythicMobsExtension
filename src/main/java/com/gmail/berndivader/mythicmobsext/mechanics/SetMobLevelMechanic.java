@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.Optional;
 
 import com.gmail.berndivader.mythicmobsext.Main;
@@ -25,8 +26,8 @@ import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 public class SetMobLevelMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private PlaceholderString a;
 
-	public SetMobLevelMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public SetMobLevelMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 		this.a = new PlaceholderStringImpl(mlc.getString(new String[] { "amount", "a" }, "1").toLowerCase());

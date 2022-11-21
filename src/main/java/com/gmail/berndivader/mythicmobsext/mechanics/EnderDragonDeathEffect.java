@@ -16,11 +16,13 @@ import org.bukkit.entity.EnderDragon;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "endereffect", author = "BerndiVader")
 public class EnderDragonDeathEffect extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 
-	public EnderDragonDeathEffect(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public EnderDragonDeathEffect(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 	}
 

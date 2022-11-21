@@ -10,6 +10,7 @@ import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -106,7 +107,7 @@ public class HoldingItem implements Cloneable {
 	public void setMaterial(String m) {
 		if (m == null)
 			m = "ANY";
-		if (m.toUpperCase().equals("ANY")) {
+		if (m.equalsIgnoreCase("ANY")) {
 			this.material = null;
 			this.material_any = true;
 			return;
@@ -129,13 +130,13 @@ public class HoldingItem implements Cloneable {
 	public void setEnchantment(String enchant) {
 		if (enchant == null)
 			enchant = "ANY";
-		if (enchant.toUpperCase().equals("ANY")) {
+		if (enchant.equalsIgnoreCase("ANY")) {
 			this.enchantment = null;
 			return;
 		}
 		Enchantment enchantment;
 		try {
-			enchantment = Enchantment.getByName(enchant.toUpperCase());
+			enchantment = Enchantment.getByKey(NamespacedKey.fromString(enchant.toUpperCase()));
 		} catch (Exception ex) {
 			return;
 		}
@@ -147,7 +148,7 @@ public class HoldingItem implements Cloneable {
 	}
 
 	public void setLore(String l) {
-		this.lore = (l == null || l.isEmpty() || l.toUpperCase().equals("ANY")) ? "ANY" : l;
+		this.lore = (l == null || l.isEmpty() || l.equalsIgnoreCase("ANY")) ? "ANY" : l;
 	}
 
 	public String getLore() {
@@ -155,7 +156,7 @@ public class HoldingItem implements Cloneable {
 	}
 
 	public void setName(String l) {
-		this.name = (l == null || l.isEmpty() || l.toUpperCase().equals("ANY")) ? "ANY" : l;
+		this.name = (l == null || l.isEmpty() || l.equalsIgnoreCase("ANY")) ? "ANY" : l;
 	}
 
 	public String getName() {
@@ -212,28 +213,28 @@ public class HoldingItem implements Cloneable {
 		String[] p = parse.split(parse.contains(",") ? "," : ";");
 		for (String parse1 : p) {
 			if (parse1.startsWith("material=")) {
-				parse1 = parse1.substring(9, parse1.length());
+				parse1 = parse1.substring(9);
 				holding.setMaterial(parse1);
 			} else if (parse1.startsWith("lore=")) {
-				parse1 = parse1.substring(5, parse1.length());
+				parse1 = parse1.substring(5);
 				holding.setLore(parse1);
 			} else if (parse1.startsWith("name=")) {
-				parse1 = parse1.substring(5, parse1.length());
+				parse1 = parse1.substring(5);
 				holding.setName(parse1);
 			} else if (parse1.startsWith("amount=")) {
-				parse1 = parse1.substring(7, parse1.length());
+				parse1 = parse1.substring(7);
 				holding.setAmount(parse1);
 			} else if (parse1.startsWith("where=")) {
-				parse1 = parse1.substring(6, parse1.length());
+				parse1 = parse1.substring(6);
 				holding.setWhere(parse1);
 			} else if (parse1.startsWith("slot=")) {
-				parse1 = parse1.substring(5, parse1.length());
+				parse1 = parse1.substring(5);
 				holding.setSlot(parse1);
 			} else if (parse1.startsWith("bagname=")) {
-				parse1 = parse1.substring(8, parse1.length());
+				parse1 = parse1.substring(8);
 				holding.setBagName(parse1);
 			} else if (parse1.startsWith("enchant=")) {
-				parse1 = parse1.substring(8, parse1.length());
+				parse1 = parse1.substring(8);
 				holding.setEnchantment(parse1);
 			}
 		}
@@ -262,7 +263,7 @@ public class HoldingItem implements Cloneable {
 			}
 		} else if (holding.getWhere().equals(WhereEnum.BACKBAG)) {
 			if (BackBagHelper.hasBackBag(entity.getUniqueId())) {
-				if (holding.getBagName().toUpperCase().equals("ANY")) {
+				if (holding.getBagName().equalsIgnoreCase("ANY")) {
 					contents.addAll(BackBagHelper.getItemsFromInventories(entity.getUniqueId()));
 				} else {
 					Inventory inventroy = BackBagHelper.getInventory(entity.getUniqueId(), holding.getBagName());
@@ -278,7 +279,7 @@ public class HoldingItem implements Cloneable {
 		} else {
 			if (is_player && holding.getWhere().equals(WhereEnum.INVENTORY)) {
 				contents.addAll(Arrays.asList(((Player) entity).getInventory().getStorageContents()));
-				contents.remove(((Player) entity).getEquipment().getItemInMainHand());
+				contents.remove(entity.getEquipment().getItemInMainHand());
 			} else if (holding.getWhere().equals(WhereEnum.HAND)) {
 				contents.add(entity.getEquipment().getItemInMainHand());
 			} else if (holding.getWhere().equals(WhereEnum.OFFHAND)) {

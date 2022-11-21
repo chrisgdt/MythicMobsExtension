@@ -18,14 +18,16 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.MetaTagValue;
 import com.gmail.berndivader.mythicmobsext.utils.MetaTagValue.ValueTypes;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "setmeta", author = "BerndiVader")
 public class SetMetatagMechanic extends SkillMechanic implements ITargetedLocationSkill, ITargetedEntitySkill {
 	protected PlaceholderString tag;
 	protected MetaTagValue mtv;
 	protected boolean useCaster;
 
-	public SetMetatagMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public SetMetatagMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import io.lumine.mythic.bukkit.adapters.BukkitTaskManager;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -46,6 +47,7 @@ public class Main extends JavaPlugin {
 	private static Main plugin;
 	private static MythicPlayers mythicplayers;
 
+	public static BukkitTaskManager taskManager;
 	public static PluginManager pluginmanager;
 	public static HealthbarHandler healthbarhandler;
 	public static CachedOwnerHandler cachedOwnerHandler;
@@ -64,6 +66,7 @@ public class Main extends JavaPlugin {
 		plugin = this;
 		random = new Random();
 		pluginmanager = plugin.getServer().getPluginManager();
+		taskManager = new BukkitTaskManager(this);
 		logger = plugin.getLogger();
 
 		if (Config.update) {

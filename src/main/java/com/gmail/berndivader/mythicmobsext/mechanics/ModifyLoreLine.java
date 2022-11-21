@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.List;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
@@ -28,8 +29,8 @@ public class ModifyLoreLine extends SkillMechanic implements ITargetedEntitySkil
 	PlaceholderString loreTextUnprocessed;
 	String loreAction;
 
-	public ModifyLoreLine(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ModifyLoreLine(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 
 		String slot = mlc.getString(new String[] { "slot", "s"}, "-1");

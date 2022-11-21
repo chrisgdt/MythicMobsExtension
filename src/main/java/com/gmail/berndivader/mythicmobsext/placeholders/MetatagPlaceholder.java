@@ -1,8 +1,8 @@
 package com.gmail.berndivader.mythicmobsext.placeholders;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import io.lumine.mythic.core.skills.placeholders.Placeholder;
 import io.lumine.mythic.core.skills.placeholders.PlaceholderMeta;
-import io.lumine.mythic.core.skills.placeholders.types.MetaPlaceholder;
 
 import java.util.function.BiFunction;
 
@@ -14,7 +14,7 @@ public class MetatagPlaceholder implements IPlaceHolder<PlaceholderMeta> {
 	}
 
 	void register() {
-		Utils.mythicmobs.getPlaceholderManager().register(placeholder_name, new MetaPlaceholder(this.transformer()));
+		Utils.mythicmobs.getPlaceholderManager().register(placeholder_name, Placeholder.meta(this.transformer()));
 	}
 
 	@Override

@@ -17,14 +17,16 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "advaipathfinder,custompathfinder", author = "BerndiVader")
 public class AdvAIPathFinderMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
 	Handler vh = Volatile.handler;
 	PlaceholderString g;
 
-	public AdvAIPathFinderMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public AdvAIPathFinderMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

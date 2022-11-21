@@ -13,11 +13,13 @@ import org.bukkit.entity.Player;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "closeinventory", author = "BerndiVader")
 public class CloseInventoryMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
-	public CloseInventoryMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public CloseInventoryMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 	}

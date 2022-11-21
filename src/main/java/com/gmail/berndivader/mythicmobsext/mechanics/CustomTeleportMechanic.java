@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -8,7 +9,6 @@ import java.util.Optional;
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.adapters.AbstractLocation;
 import io.lumine.mythic.api.config.MythicLineConfig;
-import io.lumine.mythic.api.mobs.MobManager;
 import io.lumine.mythic.api.skills.*;
 import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
 import io.lumine.mythic.bukkit.BukkitAdapter;
@@ -39,8 +39,8 @@ public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEn
 	boolean inFrontOf, isLocations, returnToStart, sortTargets, targetInsight, ignoreOwner, ignorePitch;
 	double delay, noise, maxTargets, frontOffset, sideOffset, yOffset;
 
-	public CustomTeleportMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public CustomTeleportMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 		

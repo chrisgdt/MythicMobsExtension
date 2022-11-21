@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.Optional;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
@@ -32,11 +33,11 @@ public class EntityGoogleMechanic extends SkillMechanic implements ITargetedEnti
 	private Handler vh = Volatile.handler;
 	final Optional<Location> location;
 
-	public EntityGoogleMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public EntityGoogleMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		b(skill.toLowerCase().startsWith("entitylookin"));
-		this.dur = (long) mlc.getInteger(new String[] { "duration", "dur" }, 120);
+		this.dur = mlc.getInteger(new String[] { "duration", "dur" }, 120);
 		this.rotate = mlc.getFloat("rotate", 0f);
 		String s1 = mlc.getString("location", null);
 		Location l = null;

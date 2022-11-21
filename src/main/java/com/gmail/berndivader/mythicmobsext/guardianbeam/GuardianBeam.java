@@ -20,7 +20,7 @@ public class GuardianBeam implements Listener {
 		switch (mechanic) {
 		case "guardianbeam":
 		case "guardianbeam_ext": {
-			e.register(new GuardianBeamMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			e.register(new GuardianBeamMechanic(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig()));
 			//e.register(new GuardianBeamMechanic(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 		}
 		}

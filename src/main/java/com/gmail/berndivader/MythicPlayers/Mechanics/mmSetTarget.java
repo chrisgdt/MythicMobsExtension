@@ -14,14 +14,16 @@ import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
+import java.io.File;
+
 public class mmSetTarget extends SkillMechanic implements INoTargetSkill {
 
 	protected String[] filter;
 	protected boolean targetself;
 	int length;
 
-	public mmSetTarget(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public mmSetTarget(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.filter = mlc.getString(new String[] { "filter", "f" }, "").split(",");

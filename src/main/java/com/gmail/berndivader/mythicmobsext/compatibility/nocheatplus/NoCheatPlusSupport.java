@@ -51,12 +51,12 @@ public class NoCheatPlusSupport implements Listener {
 		switch (s1) {
 		case "exemptplayer":
 		case "exemptplayer_ext": {
-			e.register(new ExemptPlayerMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			e.register(new ExemptPlayerMechanic(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig()));
 			break;
 		}
 		case "unexemptplayer":
 		case "unexemptplayer_ext": {
-			e.register(new UnExemptPlayerMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			e.register(new UnExemptPlayerMechanic(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig()));
 			break;
 		}
 		}

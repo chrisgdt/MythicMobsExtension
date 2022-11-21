@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.cachedowners;
 
+import java.io.File;
 import java.util.UUID;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
@@ -19,8 +20,8 @@ import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 
 public class RestoreCachedOwnerMechanic extends SkillMechanic implements INoTargetSkill {
 
-	public RestoreCachedOwnerMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public RestoreCachedOwnerMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 	}
 
 	@Override
@@ -34,7 +35,7 @@ public class RestoreCachedOwnerMechanic extends SkillMechanic implements INoTarg
 				if (target != null && target.isPlayer()
 						&& data.getCaster().getEntity().getBukkitEntity() instanceof Wolf) {
 					((Wolf) data.getCaster().getEntity().getBukkitEntity())
-							.setOwner((AnimalTamer) ((Player) target.getBukkitEntity()));
+							.setOwner((AnimalTamer) target.getBukkitEntity());
 					((Wolf) data.getCaster().getEntity().getBukkitEntity()).setTamed(true);
 				}
 				return SkillResult.SUCCESS;

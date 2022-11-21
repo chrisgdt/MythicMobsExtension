@@ -15,13 +15,15 @@ import me.blackvein.quests.Quest;
 import me.blackvein.quests.Quester;
 import me.blackvein.quests.Quests;
 
+import java.io.File;
+
 public class QuestsMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	Quests quests = QuestsSupport.inst().quests();
 	String s1, s2;
 	int i1;
 
-	public QuestsMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public QuestsMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

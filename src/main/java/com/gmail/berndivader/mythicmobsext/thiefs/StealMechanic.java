@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.thiefs;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,8 +30,8 @@ public class StealMechanic extends SkillMechanic implements ITargetedEntitySkill
 	private String signal_ok;
 	private int[] iarr;
 
-	public StealMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public StealMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

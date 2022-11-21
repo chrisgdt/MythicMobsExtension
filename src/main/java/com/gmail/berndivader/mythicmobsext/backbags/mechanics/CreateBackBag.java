@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.backbags.mechanics;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,6 @@ import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
-import io.lumine.mythic.core.skills.AbstractSkill;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.inventory.ItemStack;
@@ -25,8 +25,8 @@ public class CreateBackBag extends SkillMechanic implements INoTargetSkill {
 	boolean temporary, override, flood;
 	List<Integer> excluded_slots;
 
-	public CreateBackBag(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public CreateBackBag(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		size = mlc.getInteger("size", 9);

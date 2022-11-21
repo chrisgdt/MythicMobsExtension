@@ -43,9 +43,9 @@ public class EntitiesInRegionCondition extends AbstractCustomCondition implement
 
 		amount = new RangedDouble(mlc.getString("amount", ">0"));
 		region_names = Arrays.asList(
-				mlc.getString(new String[] { "regions", "region", "r" }, new String()).toUpperCase().split(","));
+				mlc.getString(new String[] { "regions", "region", "r" }, "").toUpperCase().split(","));
 		region_names_exclude = Arrays
-				.asList(("__global__," + mlc.getString("exclude", new String())).toUpperCase().split(","));
+				.asList(("__global__," + mlc.getString("exclude", "")).toUpperCase().split(","));
 		types = mlc.getString("types", "ANY").toUpperCase().split(",");
 		all_types = types[0].equals("ANY");
 		all_regions = region_names.contains("ANY");

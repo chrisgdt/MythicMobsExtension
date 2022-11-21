@@ -43,16 +43,12 @@ public class HasMetaTagCondition extends AbstractCustomCondition
 				for (String p : parse) {
 					if (p.startsWith("tag=")) {
 						t = p.substring(4);
-						continue;
 					} else if (p.startsWith("value=")) {
 						v = p.substring(6);
-						continue;
 					} else if (p.startsWith("type=")) {
 						vt = p.substring(5);
-						continue;
 					} else if (p.startsWith("strict=")) {
 						strict = Boolean.parseBoolean(p.substring(7).toUpperCase());
-						continue;
 					}
 				}
 				if (t != null) {
@@ -119,7 +115,7 @@ public class HasMetaTagCondition extends AbstractCustomCondition
 		} else if (v.getType().equals(ValueTypes.STRING)) {
 			vs = Utils.parseMobVariables((String) v.getValue(), am, ae, null);
 		} else if (v.getType().equals(ValueTypes.NUMERIC)) {
-			vs = ((Double) v.getValue()).toString();
+			vs = v.getValue().toString();
 		}
 		return vs;
 	}

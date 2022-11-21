@@ -14,14 +14,16 @@ import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "dupeweaponry", author = "BerndiVader")
 public class DupeWeaponryMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	boolean removeFromTarget;
 	boolean ignoreAir;
 	byte what;
 
-	public DupeWeaponryMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public DupeWeaponryMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

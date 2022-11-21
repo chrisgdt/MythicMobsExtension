@@ -19,14 +19,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "breakblock_ext", author = "BerndiVader")
 public class BreakBlock extends SkillMechanic implements ITargetedLocationSkill {
 	int restore;
 	BlockFace block_face;
 	boolean play_effect;
 
-	public BreakBlock(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public BreakBlock(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

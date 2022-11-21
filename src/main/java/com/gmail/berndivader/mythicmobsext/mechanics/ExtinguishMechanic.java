@@ -11,11 +11,13 @@ import org.bukkit.entity.Entity;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "extinguish", author = "BerndiVader")
 public class ExtinguishMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
-	public ExtinguishMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ExtinguishMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 	}
 

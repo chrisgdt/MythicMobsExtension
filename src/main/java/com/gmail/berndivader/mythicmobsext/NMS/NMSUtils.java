@@ -9,10 +9,7 @@ import java.util.Map;
 
 import io.lumine.mythic.core.drops.Drop;
 import net.minecraft.server.dedicated.DedicatedServer;
-import net.minecraft.world.entity.ai.goal.GoalSelector;
 import org.bukkit.Server;
-import org.bukkit.craftbukkit.v1_19_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_19_R1.metadata.EntityMetadataStore;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;

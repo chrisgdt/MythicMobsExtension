@@ -18,6 +18,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
+import java.io.File;
 import java.util.Optional;
 
 @ExternalAnnotation(name = "infect", author = "BerndiVader")
@@ -26,8 +27,8 @@ public class InfectWithMythic extends SkillMechanic implements ITargetedEntitySk
 	private MythicMob mob_type;
 	private int level;
 
-	public InfectWithMythic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public InfectWithMythic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 
 		Optional<MythicMob> opt = Utils.mobmanager.getMythicMob(mlc.getString("mobtype", ""));

@@ -13,12 +13,14 @@ import io.lumine.mythic.core.skills.SkillMechanic;
 import io.lumine.mythic.core.skills.SkillString;
 import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "custommessage,mmemessage,sendmessage", author = "BerndiVader")
 public class MessageMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	PlaceholderString msg;
 
-	public MessageMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public MessageMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.target_creative = true;
 		String tmp = mlc.getString(new String[] { "msg", "m" }, null);

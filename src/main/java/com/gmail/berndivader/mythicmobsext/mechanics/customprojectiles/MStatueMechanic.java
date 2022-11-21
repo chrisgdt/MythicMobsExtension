@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,7 +10,6 @@ import java.util.Optional;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.adapters.AbstractLocation;
-import io.lumine.mythic.api.adapters.TaskManager;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.mobs.MythicMob;
 import io.lumine.mythic.api.skills.*;
@@ -45,8 +45,8 @@ public class MStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 	double sOffset, fOffset;
 	boolean facedir, hitTarget, hitPlayers, hitNonPlayers, hitTargetOnly, invunerable, lifetime;
 
-	public MStatueMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public MStatueMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
@@ -173,7 +173,7 @@ public class MStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 			this.entity.setGravity(false);
 			this.entity.setTicksLived(Integer.MAX_VALUE);
 			vh.teleportEntityPacket(this.entity);
-			vh.changeHitBox((Entity) this.entity, 0, 0, 0);
+			vh.changeHitBox(this.entity, 0, 0, 0);
 			if (MStatueMechanic.this.onStartSkill.isPresent()
 					&& MStatueMechanic.this.onStartSkill.get().isUsable(data)) {
 				SkillMetadata sData = data.deepClone();
@@ -182,7 +182,7 @@ public class MStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 				MStatueMechanic.this.onStartSkill.get().execute(sData);
 			}
 			this.oldLocation = this.currentLocation.clone();
-			this.taskId = TaskManager.get().scheduleTask(this, 0, 1);
+			this.taskId = Main.taskManager.scheduleTask(this, 0, 1);
 		}
 
 		@Override
@@ -288,7 +288,7 @@ public class MStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 				MStatueMechanic.this.onEndSkill.get().execute(sData.setOrigin(BukkitAdapter.adapt(this.currentLocation))
 						.setLocationTarget(BukkitAdapter.adapt(this.currentLocation)));
 			}
-			TaskManager.get().cancelTask(this.taskId);
+			Main.taskManager.cancelTask(this.taskId);
 			this.entity.remove();
 			this.cancelled = true;
 		}

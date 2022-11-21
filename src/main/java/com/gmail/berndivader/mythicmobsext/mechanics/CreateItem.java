@@ -1,16 +1,15 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.Optional;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
-import io.lumine.mythic.api.adapters.AbstractItemStack;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.items.ItemManager;
 import io.lumine.mythic.api.skills.*;
 import io.lumine.mythic.api.skills.placeholders.PlaceholderInt;
 import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
 import io.lumine.mythic.bukkit.BukkitAdapter;
-import io.lumine.mythic.bukkit.adapters.BukkitItemStack;
 import io.lumine.mythic.core.items.MythicItem;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.skills.SkillMechanic;
@@ -36,8 +35,8 @@ public class CreateItem extends SkillMechanic implements ITargetedEntitySkill, I
 	Optional<Boolean> view_only = Optional.empty();
 	PlaceholderInt amount;
 
-	public CreateItem(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public CreateItem(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

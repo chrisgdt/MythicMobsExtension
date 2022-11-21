@@ -33,13 +33,13 @@ public class Thiefs implements Listener {
 		switch (s1) {
 		case "dropstolenitems":
 		case "dropstolenitems_et":
-			sm = new DropStolenItemsMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig());
+			sm = new DropStolenItemsMechanic(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig());
 			//sm = new DropStolenItemsMechanic(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig());
 			e.register(sm);
 			break;
 		case "steal":
 		case "steal_ext":
-			sm = new StealMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig());
+			sm = new StealMechanic(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig());
 			//sm = new StealMechanic(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig());
 			e.register(sm);
 			break;

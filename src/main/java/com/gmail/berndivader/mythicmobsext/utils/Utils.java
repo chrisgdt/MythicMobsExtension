@@ -612,7 +612,7 @@ public class Utils implements Listener {
 
 	public static float getBowTension(Player p) {
 		int i1 = NMSUtils.getCurrentTick(Bukkit.getServer()), i2 = -1;
-		if (((HumanEntity) p).isHandRaised() && p.hasMetadata(meta_BOWTICKSTART)) {
+		if (p.isHandRaised() && p.hasMetadata(meta_BOWTICKSTART)) {
 			i2 = p.getMetadata(meta_BOWTICKSTART).get(0).asInt();
 		}
 		if (i2 == -1)

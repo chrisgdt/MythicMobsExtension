@@ -11,14 +11,16 @@ import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.skills.SkillMechanic;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "fakedeath", author = "BerndiVader")
 public class FakeEntityDeathMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private long d;
 
-	public FakeEntityDeathMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public FakeEntityDeathMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
-		this.d = (long) mlc.getInteger(new String[] { "duration", "dur" }, 60);
+		this.d = mlc.getInteger(new String[] { "duration", "dur" }, 60);
 	}
 
 	@Override

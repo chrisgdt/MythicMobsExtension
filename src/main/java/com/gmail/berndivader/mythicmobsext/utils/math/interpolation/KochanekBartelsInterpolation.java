@@ -46,7 +46,7 @@ public class KochanekBartelsInterpolation implements Interpolation {
 	private double scaling;
 
 	public KochanekBartelsInterpolation() {
-		setNodes(Collections.<Node>emptyList());
+		setNodes(Collections.emptyList());
 	}
 
 	@Override

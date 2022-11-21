@@ -13,13 +13,15 @@ import org.bukkit.entity.LivingEntity;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "modifyarrows", author = "BerndiVader")
 public class ModifyArrowsMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private int a;
 	private char m;
 
-	public ModifyArrowsMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ModifyArrowsMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.m = mlc.getString(new String[] { "mode", "m" }, "c").toUpperCase().charAt(0);
 		this.a = mlc.getInteger(new String[] { "amount", "a" }, 1);

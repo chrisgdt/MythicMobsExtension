@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -49,8 +50,8 @@ public class CastIfMechanic extends SkillMechanic
 	private Optional<String> meetTargeter;
 	private Optional<String> elseTargeter;
 
-	public CastIfMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public CastIfMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 
 		this.line = skill; // added to fix MythicMobs issue
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
@@ -141,7 +142,7 @@ public class CastIfMechanic extends SkillMechanic
 				String s1 = ts.substring(1);
 				MythicLineConfigImpl mlc = new MythicLineConfigImpl(s1);
 				String s2 = s1.contains("{") ? s1.substring(0, s1.indexOf("{")) : s1;
-				if ((st = (SkillTargeter) CustomTargeters.getCustomTargeter(s2, mlc, getManager())) == null)
+				if ((st = CustomTargeters.getCustomTargeter(s2, mlc, getManager())) == null)
 					st = new TriggerTargeter(this.getManager(), mlc);
 			}
 			if (st instanceof IEntitySelector) {
@@ -237,7 +238,7 @@ public class CastIfMechanic extends SkillMechanic
 			name = condition.substring(condition.indexOf("}"));
 			String ns = sp1.replace(" ", "") + name;
 			condition = ns;
-			MythicLogger.debug(MythicLogger.DebugLevel.CONDITION, ": Normalized Condition string to: " + ns, new Object[0]);
+			MythicLogger.debug(MythicLogger.DebugLevel.CONDITION, ": Normalized Condition string to: " + ns);
 		}
 
 		String[] s = condition.split(" ");
@@ -249,10 +250,10 @@ public class CastIfMechanic extends SkillMechanic
 			name = s[0];
 		}
 
-		MythicLogger.debug(MythicLogger.DebugLevel.CONDITION, "? Matching MythicCondition type to " + name, new Object[0]);
+		MythicLogger.debug(MythicLogger.DebugLevel.CONDITION, "? Matching MythicCondition type to " + name);
 		Map<String, Class<? extends SkillCondition>> CONDITIONS = getPlugin().getSkillManager().getConditions();
 		if (CONDITIONS.containsKey(name.toUpperCase())) {
-			Class clazz = (Class)CONDITIONS.get(name.toUpperCase());
+			Class clazz = CONDITIONS.get(name.toUpperCase());
 
 			try {
 				return (SkillCondition)clazz.getConstructor(String.class, MythicLineConfig.class).newInstance(condition, mlc);

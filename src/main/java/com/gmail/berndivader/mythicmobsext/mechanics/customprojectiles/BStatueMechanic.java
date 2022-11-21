@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,7 +10,6 @@ import java.util.Optional;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.adapters.AbstractLocation;
-import io.lumine.mythic.api.adapters.TaskManager;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.*;
 import io.lumine.mythic.bukkit.BukkitAdapter;
@@ -45,8 +45,8 @@ public class BStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 	double sOffset, fOffset;
 	boolean hitTarget = true, hitPlayers = false, hitNonPlayers = false, hitTargetOnly = false, invunerable, lifetime;
 
-	public BStatueMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public BStatueMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
@@ -161,7 +161,7 @@ public class BStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 			this.targets = new HashSet<LivingEntity>();
 			this.immune = new HashMap<LivingEntity, Long>();
 			this.block = this.currentLocation.getWorld().spawnFallingBlock(this.currentLocation,
-					BStatueMechanic.this.material, (byte) 0);
+					BStatueMechanic.this.material.createBlockData());
 			EntityCacheHandler.add(this.block);
 			this.block.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.block.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
@@ -171,7 +171,7 @@ public class BStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 			this.block.setHurtEntities(false);
 			this.block.setDropItem(false);
 			vh.teleportEntityPacket(this.block);
-			vh.changeHitBox((Entity) this.block, 0, 0, 0);
+			vh.changeHitBox(this.block, 0, 0, 0);
 			if (BStatueMechanic.this.onStartSkill.isPresent()
 					&& BStatueMechanic.this.onStartSkill.get().isUsable(data)) {
 				SkillMetadata sData = data.deepClone();
@@ -179,7 +179,7 @@ public class BStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 				sData.setOrigin(BukkitAdapter.adapt(this.currentLocation.clone()));
 				BStatueMechanic.this.onStartSkill.get().execute(sData);
 			}
-			this.taskId = TaskManager.get().scheduleTask(this, 0, 1);
+			this.taskId = Main.taskManager.scheduleTask(this, 0, 1);
 		}
 
 		@Override
@@ -278,7 +278,7 @@ public class BStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 				BStatueMechanic.this.onEndSkill.get().execute(sData.setOrigin(BukkitAdapter.adapt(this.currentLocation))
 						.setLocationTarget(BukkitAdapter.adapt(this.currentLocation)));
 			}
-			TaskManager.get().cancelTask(this.taskId);
+			Main.taskManager.cancelTask(this.taskId);
 			this.block.remove();
 			this.cancelled = true;
 		}

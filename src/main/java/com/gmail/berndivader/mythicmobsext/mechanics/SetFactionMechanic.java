@@ -17,12 +17,14 @@ import org.bukkit.metadata.FixedMetadataValue;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "setfaction", author = "BerndiVader")
 public class SetFactionMechanic extends SkillMechanic implements ITargetedEntitySkill, INoTargetSkill {
 	protected PlaceholderString faction;
 
-	public SetFactionMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public SetFactionMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		String f = mlc.getString(new String[] { "faction", "f" }, null);
 		if (f != null) {

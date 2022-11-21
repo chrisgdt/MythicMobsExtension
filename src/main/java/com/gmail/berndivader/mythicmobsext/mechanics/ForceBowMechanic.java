@@ -12,12 +12,14 @@ import org.bukkit.entity.LivingEntity;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "forcebow", author = "BerndiVader")
 public class ForceBowMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	boolean debug;
 
-	public ForceBowMechanic(SkillExecutor manager, String line, MythicLineConfig mlc) {
-		super(manager, line, mlc);
+	public ForceBowMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = line;
 		this.debug = mlc.getBoolean("debug", false);
 	}

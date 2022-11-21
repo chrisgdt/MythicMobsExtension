@@ -69,7 +69,7 @@ public abstract class ISelectorLocation extends ILocationSelector {
 	}
 
 	public HashSet<AbstractLocation> applyOffsets(HashSet<AbstractLocation> targets) {
-		targets.stream().forEach(abstract_location -> {
+		targets.forEach(abstract_location -> {
 			if(this.use_relative) {
 				Location location = BukkitAdapter.adapt(abstract_location);
 				float yaw = location.getYaw();

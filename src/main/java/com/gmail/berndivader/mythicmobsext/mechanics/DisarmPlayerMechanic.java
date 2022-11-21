@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,8 +29,8 @@ public class DisarmPlayerMechanic extends SkillMechanic implements ITargetedEnti
 	long dt;
 	List<WhereEnum> whats;
 
-	public DisarmPlayerMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public DisarmPlayerMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.dt = mlc.getLong(new String[] { "duration", "dur" }, 180);
 

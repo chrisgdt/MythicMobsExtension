@@ -51,7 +51,7 @@ public class FakeAdvancement {
 		}));
 		ArrayList<String[]> fixed = new ArrayList<String[]>();
 		fixed.add(new String[] { "for_free" });
-		requirements = (String[][]) Arrays.stream(fixed.toArray()).toArray(n -> new String[n][]);
+		requirements = Arrays.stream(fixed.toArray()).toArray(String[][]::new);
 		DisplayInfo nmsDisplay = new DisplayInfo(
 				CraftItemStack.asNMSCopy(display.getIcon()),
 				(net.minecraft.network.chat.Component) display.getTitle().getBaseComponent(),

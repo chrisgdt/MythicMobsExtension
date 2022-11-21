@@ -87,7 +87,7 @@ public class QuestsSupport implements Listener {
 		case "completequest_ext":
 		case "takequest_ext":
 		case "failquest_ext": {
-			e.register(new QuestsMechanic(e.getContainer().getManager(), e.getMechanicName(), e.getConfig()));
+			e.register(new QuestsMechanic(e.getContainer().getManager(), e.getContainer().getFile(), e.getMechanicName(), e.getConfig()));
 			break;
 		}
 		}

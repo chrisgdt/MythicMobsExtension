@@ -16,6 +16,8 @@ import org.bukkit.entity.Entity;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "jsmechanic", author = "BerndiVader")
 public class JavascriptMechanic extends SkillMechanic
 		implements INoTargetSkill, ITargetedEntitySkill, ITargetedLocationSkill {
@@ -23,8 +25,8 @@ public class JavascriptMechanic extends SkillMechanic
 	String js = "print('Hello World!');";
 	MythicLineConfig mlc;
 
-	public JavascriptMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public JavascriptMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.mlc = mlc;
 		simple = mlc.getBoolean("simple", false);

@@ -8,11 +8,13 @@ import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.skills.SkillMechanic;
 
+import java.io.File;
+
 public class RemoveSpeechBubbleMechanic extends SkillMechanic implements INoTargetSkill {
 	private String id;
 
-	public RemoveSpeechBubbleMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public RemoveSpeechBubbleMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 		this.id = mlc.getString("id", "bubble");

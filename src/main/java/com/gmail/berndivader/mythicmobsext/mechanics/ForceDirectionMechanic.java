@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.concurrent.ThreadLocalRandom;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
@@ -27,8 +28,8 @@ public class ForceDirectionMechanic extends SkillMechanic implements ITargetedEn
 	long duration;
 	double noise;
 
-	public ForceDirectionMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ForceDirectionMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

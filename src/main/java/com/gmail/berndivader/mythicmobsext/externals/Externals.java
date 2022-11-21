@@ -77,10 +77,10 @@ public class Externals implements Listener {
 				ClassLoader cl = URLClassLoader.newInstance(urls, this.getClass().getClassLoader());
 				JarFile jar = new JarFile(external);
 				Enumeration<JarEntry> e = jar.entries();
-				String cn1 = new String();
+				String cn1 = "";
 				while (e.hasMoreElements()) {
 					try {
-						JarEntry je = (JarEntry) e.nextElement();
+						JarEntry je = e.nextElement();
 						cn1 = je.getName();
 						if (je.isDirectory() || !cn1.endsWith(".class"))
 							continue;
@@ -112,7 +112,6 @@ public class Externals implements Listener {
 						}
 					} catch (Exception ex) {
 						Main.logger.info("Unable to load " + cn1 + " but continue.");
-						continue;
 					}
 				}
 				jar.close();

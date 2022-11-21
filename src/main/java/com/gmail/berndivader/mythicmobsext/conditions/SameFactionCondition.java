@@ -8,7 +8,6 @@ import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.SkillCaster;
 import io.lumine.mythic.api.skills.conditions.IEntityComparisonCondition;
 import io.lumine.mythic.core.mobs.ActiveMob;
-import io.lumine.mythic.core.skills.SkillString;
 
 import org.bukkit.entity.Entity;
 

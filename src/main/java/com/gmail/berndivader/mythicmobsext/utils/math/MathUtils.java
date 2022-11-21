@@ -244,7 +244,7 @@ public final class MathUtils {
 
 		int endGain = to.getBlockY() - from.getBlockY();
 		double horizDist = Math.sqrt(distanceSquared(from, to));
-		double maxGain = heightGain > (endGain + heightGain) ? heightGain : (endGain + heightGain);
+		double maxGain = Math.max(heightGain, (endGain + heightGain));
 
 		double a = -horizDist * horizDist / (4 * maxGain);
 		double b = horizDist;

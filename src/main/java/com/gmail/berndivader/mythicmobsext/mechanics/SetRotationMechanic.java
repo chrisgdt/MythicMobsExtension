@@ -15,6 +15,8 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "setrotation", author = "BerndiVader")
 public class SetRotationMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	public static String str = "mmRotate";
@@ -22,8 +24,8 @@ public class SetRotationMechanic extends SkillMechanic implements ITargetedEntit
 	private float pitchOff;
 	private long d;
 
-	public SetRotationMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public SetRotationMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.yawOff = mlc.getFloat(new String[] { "yawoffset", "yaw", "yo", "y" }, 5.0F);
 		this.pitchOff = mlc.getFloat(new String[] { "pitchoffset", "pitch", "po", "p" }, 0F);

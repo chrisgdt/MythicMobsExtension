@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.javascript;
 
+import java.io.File;
 import java.util.regex.Pattern;
 
 import javax.script.ScriptException;
@@ -20,6 +21,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.Objective;
 
 import com.gmail.berndivader.mythicmobsext.Main;
@@ -32,8 +34,8 @@ public class EvalMechanic extends SkillMechanic implements INoTargetSkill, ITarg
 	String js = "mme_eval";
 	String[] parse;
 
-	public EvalMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public EvalMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		String temp = mlc.getString(new String[] { "evaluate", "eval", "e" }, "");
 		if ((temp.startsWith("\""))) {
@@ -90,7 +92,7 @@ public class EvalMechanic extends SkillMechanic implements INoTargetSkill, ITarg
 							.setScore((int) s1);
 					;
 				} else {
-					Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective(parse[2], "dummy")
+					Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective(parse[2], Criteria.DUMMY, parse[2])
 							.getScore(target instanceof Player ? target.getName() : target.getUniqueId().toString())
 							.setScore((int) (s1));
 				}
@@ -104,7 +106,7 @@ public class EvalMechanic extends SkillMechanic implements INoTargetSkill, ITarg
 			if (o1 != null) {
 				o1.getScore(parse[2]).setScore((int) (s1));
 			} else {
-				Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective(parse[1], "dummy")
+				Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective(parse[1], Criteria.DUMMY, parse[1])
 						.getScore(parse[2]).setScore((int) (s1));
 			}
 		}

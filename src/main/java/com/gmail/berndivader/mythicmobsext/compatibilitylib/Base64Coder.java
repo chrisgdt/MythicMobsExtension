@@ -20,6 +20,7 @@ package com.gmail.berndivader.mythicmobsext.compatibilitylib;
 //Project home page: www.source-code.biz/base64coder/java
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 /**
 * A Base64 encoder/decoder.
@@ -47,7 +48,7 @@ static {
 //Mapping table from Base64 characters to 6-bit nibbles.
 private static final byte[] map2 = new byte[128];
 static {
-   for (int i=0; i<map2.length; i++) map2[i] = -1;
+   Arrays.fill(map2, (byte) -1);
    for (int i=0; i<64; i++) map2[map1[i]] = (byte)i; }
 
 /**

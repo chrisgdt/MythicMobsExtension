@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,8 +12,6 @@ import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.api.skills.ThreadSafetyLevel;
-import io.lumine.mythic.core.mobs.ActiveMob;
-import io.lumine.mythic.core.skills.SkillCondition;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.Entity;
@@ -40,8 +39,8 @@ public class GetEntityMetadataMap extends SkillMechanic implements ITargetedEnti
 	UsageEnum usage;
 	String data;
 
-	public GetEntityMetadataMap(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public GetEntityMetadataMap(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
@@ -90,7 +89,6 @@ public class GetEntityMetadataMap extends SkillMechanic implements ITargetedEnti
 		while (map_iter.hasNext()) {
 			Entry<String, Map<Plugin, MetadataValue>> map_entry = map_iter.next();
 			if (filter == FilterEnum.NONE) {
-				continue;
 			} else if (filter == FilterEnum.ENTITY) {
 				if (!map_entry.getKey().split(":")[0].toLowerCase().equals(entity_uuid.toString()))
 					map_iter.remove();

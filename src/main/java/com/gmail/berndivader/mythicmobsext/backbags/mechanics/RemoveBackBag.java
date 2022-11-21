@@ -11,12 +11,14 @@ import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.skills.SkillMechanic;
 
+import java.io.File;
+
 public class RemoveBackBag extends SkillMechanic implements INoTargetSkill {
 	PlaceholderString bag_name;
 	boolean all;
 
-	public RemoveBackBag(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public RemoveBackBag(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		bag_name = mlc.getPlaceholderString(new String[] { "title", "name" }, BackBagHelper.str_name);

@@ -16,16 +16,18 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "forcespectate", author = "BerndiVader")
 public class ForceSpectateMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private long d;
 	public static String str = "mmSpectate";
 	boolean shaderOnly;
 
-	public ForceSpectateMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ForceSpectateMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
-		this.d = (long) mlc.getInteger(new String[] { "duration", "dur" }, 120);
+		this.d = mlc.getInteger(new String[] { "duration", "dur" }, 120);
 		this.shaderOnly = mlc.getBoolean("shaderonly", false);
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 	}

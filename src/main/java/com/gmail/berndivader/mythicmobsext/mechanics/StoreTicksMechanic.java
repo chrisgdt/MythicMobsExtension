@@ -18,13 +18,15 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "storetick,storeservertick", author = "BerndiVader")
 public class StoreTicksMechanic extends SkillMechanic implements INoTargetSkill {
 	boolean bl1;
 	PlaceholderString s1;
 
-	public StoreTicksMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public StoreTicksMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		bl1 = mlc.getBoolean("meta", false);
 		s1 = mlc.getPlaceholderString("tag", "");

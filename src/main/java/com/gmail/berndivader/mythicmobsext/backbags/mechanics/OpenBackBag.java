@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.backbags.mechanics;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +26,8 @@ public class OpenBackBag extends SkillMechanic implements INoTargetSkill, ITarge
 	PlaceholderString bag_name;
 	List<Integer> excluded_slots;
 
-	public OpenBackBag(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public OpenBackBag(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		size = mlc.getInteger("size", 9);

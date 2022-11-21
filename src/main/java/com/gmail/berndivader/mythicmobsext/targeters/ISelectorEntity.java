@@ -75,7 +75,7 @@ public abstract class ISelectorEntity extends IEntitySelector {
 
 	public HashSet<AbstractEntity> applyOffsets(HashSet<AbstractEntity> targets) {
 		if (this.use_relative) {
-			targets.stream().forEach(abstract_entity -> {
+			targets.forEach(abstract_entity -> {
 				Location location = abstract_entity.getBukkitEntity().getLocation();
 				if (length != 0)
 					location.add(location.getDirection().clone().multiply(this.length));

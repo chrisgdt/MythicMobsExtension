@@ -23,6 +23,7 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
+import java.io.File;
 import java.util.Optional;
 
 @ExternalAnnotation(name = "customsummon", author = "BerndiVader")
@@ -37,8 +38,8 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 	double addx, addy, addz, inFrontBlocks;
 	String reason;
 
-	public CustomSummonMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public CustomSummonMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
@@ -63,7 +64,7 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 		this.setowner = mlc.getBoolean(new String[] { "setowner", "so" }, false);
 		this.leashtocaster = mlc.getBoolean(new String[] { "leashtocaster", "leash", "lc" }, false);
 		Optional<MythicMob> mob = Utils.mobmanager.getMythicMob(strType);
-		if (!mob.isPresent())
+		if (mob.isEmpty())
 			this.me = BukkitEntityType.getMythicEntity(strType);
 		else {
 			this.mm = mob.get();
@@ -93,7 +94,7 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 		if (this.mm != null) {
 			for (int i = 1; i <= amount; i++) {
 				AbstractLocation l = noise > 0 ? Utils.findSafeSpawnLocation(target, this.noise,
-						(int) this.yNoise, this.mm.getMythicEntity().getHeight(), this.yUpOnly) : target;
+						this.yNoise, this.mm.getMythicEntity().getHeight(), this.yUpOnly) : target;
 				if (this.yaw != -1337)
 					l.setYaw(Math.abs(this.yaw));
 				ActiveMob ams = this.mm.spawn(l, data.getCaster().getLevel());
@@ -138,7 +139,7 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 		if (this.me != null) {
 			for (int i = 1; i <= amount; ++i) {
 				AbstractLocation l = this.noise > 0
-						? Utils.findSafeSpawnLocation(target, (int) this.noise, (int) this.yNoise,
+						? Utils.findSafeSpawnLocation(target, this.noise, this.yNoise,
 								this.me.getHeight(), this.yUpOnly)
 						: target;
 				if (this.yaw != -1337)

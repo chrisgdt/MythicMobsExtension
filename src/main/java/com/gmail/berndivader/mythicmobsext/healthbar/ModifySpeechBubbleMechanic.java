@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.healthbar;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -24,8 +25,8 @@ public class ModifySpeechBubbleMechanic extends SkillMechanic implements ITarget
 	private int ll;
 	private int i1;
 
-	public ModifySpeechBubbleMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ModifySpeechBubbleMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

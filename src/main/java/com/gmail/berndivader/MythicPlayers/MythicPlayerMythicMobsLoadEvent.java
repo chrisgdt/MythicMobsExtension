@@ -18,21 +18,21 @@ public class MythicPlayerMythicMobsLoadEvent implements Listener {
 		switch (mech) {
 		case "activeplayer":
 		case "activeplayer_ext": {
-			skill = new mmCreateActivePlayer(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig());
+			skill = new mmCreateActivePlayer(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig());
 			//skill = new mmCreateActivePlayer(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			break;
 		}
 		case "normalplayer":
 		case "normalplayer_ext": {
-			skill = new mmNormalPlayer(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig());
+			skill = new mmNormalPlayer(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig());
 			//skill = new mmNormalPlayer(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			break;
 		}
 		case "settarget":
 		case "settarget_ext": {
-			skill = new mmSetTarget(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig());
+			skill = new mmSetTarget(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig());
 			//skill = new mmSetTarget(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			break;

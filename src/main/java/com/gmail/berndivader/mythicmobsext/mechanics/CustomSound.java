@@ -11,13 +11,15 @@ import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "customsound", author = "BerndiVader")
 public class CustomSound extends SkillMechanic implements ITargetedEntitySkill {
 	String type;
 	float volume, pitch;
 
-	public CustomSound(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public CustomSound(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 
 		type = mlc.getString("type", "block.chest.open");

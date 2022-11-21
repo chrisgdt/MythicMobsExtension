@@ -49,7 +49,7 @@ public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill
 // Getting all the frames at once then displaying it seems to cause
 // a notable delay before the particles start for big files
 	
-	String file;
+	String fileImage;
 	String backgroundColor;
 	String resize;
 	String transform;
@@ -60,10 +60,10 @@ public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill
 	PlaceholderString scaleAmount;
 	Particle particle;
 	
-	public ParticleImage(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ParticleImage(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
-		file = mlc.getString(new String[] {"file", "f"}, null);
+		fileImage = mlc.getString(new String[] {"file", "f"}, null);
 		scaleAmount = PlaceholderString.of(mlc.getString(new String[] {"scale", "s"}, "4"));
 		backgroundColor = mlc.getString(new String[] {"bgcolor", "color", "c"}, "white");
 		resize = mlc.getString("resize", "false");
@@ -92,9 +92,9 @@ public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill
 
 	public void start(Location loc) {
 		
-		if(file.contains(".gif")) {
+		if(fileImage.contains(".gif")) {
 			// GIF animation
-			File dir = new File(Main.getPlugin().getDataFolder().getPath() + "/images/" + file);
+			File dir = new File(Main.getPlugin().getDataFolder().getPath() + "/images/" + fileImage);
 			try {
 				ArrayList<BufferedImage> frames = getFrames(dir);
 				loop = 0;
@@ -118,7 +118,7 @@ public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill
 		else {
 			// Normal picture
 			BufferedImage img = null;
-			File dir = new File(Main.getPlugin().getDataFolder().getPath() + "/images/" + file);
+			File dir = new File(Main.getPlugin().getDataFolder().getPath() + "/images/" + fileImage);
 			try {
 				img = ImageIO.read(dir);
 			} catch (IOException e) {e.printStackTrace();}

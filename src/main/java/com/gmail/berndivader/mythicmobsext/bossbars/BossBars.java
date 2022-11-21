@@ -89,17 +89,17 @@ public class BossBars implements Listener {
 		switch (e.getMechanicName().toLowerCase()) {
 		case "createbossbar":
 		case "createbossbar_ext":
-			e.register(new CreateBossBar(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			e.register(new CreateBossBar(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig()));
 			//e.register(new CreateBossBar(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "removebossbar":
 		case "removebossbar_ext":
-			e.register(new RemoveBossBar(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			e.register(new RemoveBossBar(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig()));
 			//e.register(new RemoveBossBar(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "progressbossbar":
 		case "progressbossbar_ext":
-			e.register(new ProgressBossBar(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			e.register(new ProgressBossBar(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig()));
 			//e.register(new ProgressBossBar(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		}

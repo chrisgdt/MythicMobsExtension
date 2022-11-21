@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.Optional;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
@@ -27,8 +28,8 @@ public class PushCasterMechanic extends SkillMechanic implements ITargetedEntity
 	double reducemagnetobydistance;
 	Optional<RangedDouble> clamp = Optional.empty();
 
-	public PushCasterMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public PushCasterMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

@@ -14,13 +14,15 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "changeresourcepack", author = "BerndiVader")
 public class ChangeResourcePackMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
 	String url, hash;
 
-	public ChangeResourcePackMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ChangeResourcePackMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		url = mlc.getString("url", "");
 		hash = mlc.getString("hash", "mme");

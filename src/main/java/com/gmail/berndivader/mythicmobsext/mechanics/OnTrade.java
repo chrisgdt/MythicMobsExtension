@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.Optional;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -27,8 +28,8 @@ public class OnTrade extends Aura implements ITargetedEntitySkill {
    protected int oldXP;
    protected int newXP;
 
-   public OnTrade(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-       super(manager, skill, mlc);
+   public OnTrade(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+       super(manager, file, skill, mlc);
        this.line = skill;
       this.onTradeSkillName = mlc.getString(new String[]{"ontradeskill", "ontrade", "os", "s", "skill"});
       this.cancelEvent = mlc.getBoolean(new String[]{"cancelevent", "ce"}, false);
@@ -48,21 +49,21 @@ public class OnTrade extends Aura implements ITargetedEntitySkill {
 
    private class Tracker extends Aura.AuraTracker implements IParentSkill, Runnable {
       public Tracker(SkillMetadata data, AbstractEntity entity) {
-         super((AbstractEntity)entity, data);
+         super(entity, data);
          this.start();
       }
 
       public void auraStart() {
          this.registerAuraComponent(Events.subscribe(InventoryClickEvent.class).filter((event) -> {
         	if ( event.getInventory().getHolder()!=null && ((Entity) event.getInventory().getHolder()).getType().equals(EntityType.VILLAGER) ) {
-        		oldXP = ( (Villager) ((Entity) event.getInventory().getHolder())).getVillagerExperience();
-                return ((Entity) event.getInventory().getHolder()).getUniqueId().equals(((AbstractEntity)this.entity.get()).getUniqueId());
+        		oldXP = ( (Villager) event.getInventory().getHolder()).getVillagerExperience();
+                return ((Entity) event.getInventory().getHolder()).getUniqueId().equals(this.entity.get().getUniqueId());
         	}
         	return false;
          }).handler((event) -> {
         	 if ( event.getInventory().getHolder()!=null && ((Entity) event.getInventory().getHolder()).getType().equals(EntityType.VILLAGER) ) {
 	        	 Schedulers.sync().runLater(() -> {
-	        		 newXP = ( (Villager) ((Entity) event.getInventory().getHolder())).getVillagerExperience();
+	        		 newXP = ( (Villager) event.getInventory().getHolder()).getVillagerExperience();
 	        		 
 	        		 if (newXP!=oldXP) {
 		        		 SkillMetadata meta = this.skillMetadata.deepClone();

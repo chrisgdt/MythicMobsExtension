@@ -2,9 +2,6 @@ package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoal
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentContents;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;

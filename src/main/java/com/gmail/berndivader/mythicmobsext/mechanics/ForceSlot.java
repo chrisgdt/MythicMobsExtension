@@ -12,12 +12,14 @@ import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "forceslot", author = "BerndiVader")
 public class ForceSlot extends SkillMechanic implements ITargetedEntitySkill {
 	int slot;
 
-	public ForceSlot(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ForceSlot(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

@@ -21,7 +21,7 @@ public class WorldGuardRegionCondition extends AbstractCustomCondition implement
 	public WorldGuardRegionCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
 
-		region_names = Arrays.asList(mlc.getString(new String[] { "regions", "region", "r" }, new String()).split(","));
+		region_names = Arrays.asList(mlc.getString(new String[] { "regions", "region", "r" }, "").split(","));
 		use_priority = mlc.getBoolean("usepriority", false);
 	}
 

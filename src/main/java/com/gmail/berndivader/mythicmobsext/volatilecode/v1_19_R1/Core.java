@@ -9,6 +9,7 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.advancement.Fak
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.navigation.ControllerFly;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.navigation.ControllerVex;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.navigation.NavigationClimb;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalOtherTeams;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalTravelAround;
 import io.lumine.mythic.api.skills.SkillResult;
 import net.minecraft.core.BlockPos;
@@ -521,13 +522,11 @@ public class Core implements Handler, Listener {
 		try {
 			goalsField = Mob.class.getDeclaredField("targetSelector");
 			goalsField.setAccessible(true);
-			GoalSelector goals = (GoalSelector) goalsField.get((Object) e);
-			switch (goal) {
-			case "otherteams":
-				goals.addGoal(i, new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalOtherTeams(
-								(PathfinderMob) e, net.minecraft.world.entity.player.Player.class, true));
-				break;
-			default:
+			GoalSelector goals = (GoalSelector) goalsField.get(e);
+			if ("otherteams".equals(goal)) {
+				goals.addGoal(i, new PathfinderGoalOtherTeams(
+						(PathfinderMob) e, net.minecraft.world.entity.player.Player.class, true));
+			} else {
 				List<String> gList = new ArrayList<>();
 				gList.add(uGoal);
 				Utils.mythicmobs.getVolatileCodeHandler().getAIHandler().addPathfinderGoals(entity, gList);
@@ -626,7 +625,7 @@ public class Core implements Handler, Listener {
 							}
 						}
 					}
-					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathFinderGoalShoot((Mob) e, d1, i1, i2, f1));
+					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathFinderGoalShoot(e, d1, i1, i2, f1));
 				}
 				break;
 			}
@@ -774,14 +773,14 @@ public class Core implements Handler, Listener {
 			}
 			case "doorsopen": {
 				if (e instanceof Mob) {
-					boolean bl1 = data != null ? Boolean.parseBoolean(data) : false;
+					boolean bl1 = data != null && Boolean.parseBoolean(data);
 					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalDoorOpen(e, bl1));
 				}
 				break;
 			}
 			case "doorsbreak": {
 				if (e instanceof Mob) {
-					boolean bl1 = data != null ? Boolean.parseBoolean(data) : false;
+					boolean bl1 = data != null && Boolean.parseBoolean(data);
 					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalDoorBreak(e, bl1));
 				}
 				break;
@@ -1115,9 +1114,7 @@ public class Core implements Handler, Listener {
 		ServerPlayer eh = ((CraftPlayer) p).getHandle();
 		net.minecraft.world.item.Item i = i1 == -1 ? eh.getItemInHand(InteractionHand.MAIN_HAND).getItem()
 				: eh.getInventory().getItem(i1).getItem();
-		if (eh.getCooldowns().cooldowns.containsKey(i)) {
-			eh.getCooldowns().cooldowns.remove(i);
-		}
+		eh.getCooldowns().cooldowns.remove(i);
 		eh.getCooldowns().addCooldown(i, j1);
 		return SkillResult.SUCCESS;
 	}

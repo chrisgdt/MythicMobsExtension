@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.healthbar;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
@@ -29,8 +30,8 @@ public class SpeechBubbleMechanic extends SkillMechanic implements ITargetedEnti
 	private boolean b1;
 	private boolean b2;
 
-	public SpeechBubbleMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public SpeechBubbleMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,6 @@ import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.adapters.AbstractLocation;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.core.drops.Drop;
-import io.lumine.mythic.api.drops.DropMetadata;
 import io.lumine.mythic.api.drops.IIntangibleDrop;
 import io.lumine.mythic.api.drops.IItemDrop;
 import io.lumine.mythic.api.drops.IMessagingDrop;
@@ -43,8 +43,8 @@ public class DropMythicItemMechanic extends SkillMechanic implements ITargetedEn
 	boolean tag, give, stackable, silent;
 	String amount;
 
-	public DropMythicItemMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public DropMythicItemMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

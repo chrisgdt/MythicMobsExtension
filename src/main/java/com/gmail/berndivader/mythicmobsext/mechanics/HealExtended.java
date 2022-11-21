@@ -18,6 +18,8 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.RandomDouble;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "heal", author = "BerndiVader")
 public class HealExtended extends SkillMechanic implements ITargetedEntitySkill, INoTargetSkill {
 	double healByDistance;
@@ -30,8 +32,8 @@ public class HealExtended extends SkillMechanic implements ITargetedEntitySkill,
 	RegainReason reason;
 	PlaceholderString amountPlaceholder;
 	
-	public HealExtended(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public HealExtended(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		
 		amountPlaceholder= PlaceholderString.of(mlc.getString("amount","0"));

@@ -13,11 +13,13 @@ import org.bukkit.entity.Player;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "clearactiveitem,resetshield", author = "BerndiVader")
 public class ClearActiveItemMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
-	public ClearActiveItemMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ClearActiveItemMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 	}

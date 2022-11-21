@@ -14,14 +14,16 @@ import org.bukkit.event.inventory.InventoryType;
 import com.gmail.berndivader.mythicmobsext.backbags.InventoryViewer;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "snoopinventory,openinventory", author = "BerndiVader")
 public class SnoopInventory extends SkillMechanic implements ITargetedEntitySkill {
 
 	boolean view_only, snoop;
 	InventoryType type;
 
-	public SnoopInventory(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public SnoopInventory(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

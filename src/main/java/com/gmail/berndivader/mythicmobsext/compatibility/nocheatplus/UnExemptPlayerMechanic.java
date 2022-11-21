@@ -8,10 +8,12 @@ import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.core.skills.SkillExecutor;
 
+import java.io.File;
+
 public class UnExemptPlayerMechanic extends ExemptPlayerMechanic implements INoTargetSkill, ITargetedEntitySkill {
 
-	public UnExemptPlayerMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public UnExemptPlayerMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 	}
 
 	@Override

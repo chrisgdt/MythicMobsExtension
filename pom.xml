@@ -3,7 +3,7 @@
 
     <groupId>com.gmail.berndivader</groupId>
     <artifactId>MythicMobsExtension</artifactId>
-    <version>1.749-SNAPSHOT</version>
+    <version>1.750-SNAPSHOT</version>
     <name>MythicMobsExtension</name>
 
     <repositories>
@@ -28,12 +28,12 @@
         <repository>
             <!-- Citizens repo -->
             <id>everything</id>
-            <url>http://repo.citizensnpcs.co/</url>
+            <url>https://maven.citizensnpcs.co/repo/</url>
         </repository>
         <repository>
             <!-- LibsDisguises repository -->
             <id>md_5-public</id>
-            <url>http://repo.md-5.net/content/groups/public/</url>
+            <url>https://repo.md-5.net/content/groups/public/</url>
         </repository>
         <repository>
             <!-- NoCheatPlus -->
@@ -56,10 +56,10 @@
             <name>lumine-repo</name>
             <url>https://mvn.lumine.io/repository/maven-public/</url>
         </repository>
-        <repository>
+        <!--repository>
             <id>lumine-snapshot</id>
-            <url>http://mvn.lumine.io/repository/maven-snapshots/</url>
-        </repository>
+            <url>https://mvn.lumine.io/repository/maven-snapshots/</url>
+        </repository-->
         <repository>
             <!-- add github project as depencency (Quest, Towny) -->
             <id>jitpack.io</id>
@@ -93,19 +93,19 @@
         <dependency>
             <groupId>me.filoghost.holographicdisplays</groupId>
             <artifactId>holographicdisplays-api</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizensapi</artifactId>
-            <version>2.0.28-SNAPSHOT</version>
+            <version>2.0.30-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>4.7.0</version>
+            <version>4.8.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -148,7 +148,7 @@
         <dependency>
             <groupId>io.lumine</groupId>
             <artifactId>Mythic-Dist</artifactId>
-            <version>5.1.0-SNAPSHOT</version>
+            <version>5.2.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 

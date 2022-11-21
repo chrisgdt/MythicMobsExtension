@@ -22,7 +22,7 @@ public class MovementSpeedCondition extends AbstractCustomCondition implements I
 	public boolean check(AbstractEntity e) {
 		if (e.isLiving()) {
 			LivingEntity le1 = (LivingEntity) e.getBukkitEntity();
-			return r1.equals((double) le1.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue());
+			return r1.equals(le1.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue());
 		}
 		return false;
 	}

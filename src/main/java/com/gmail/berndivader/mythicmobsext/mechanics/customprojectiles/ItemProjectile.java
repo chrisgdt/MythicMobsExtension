@@ -1,12 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.adapters.AbstractLocation;
 import io.lumine.mythic.api.adapters.AbstractVector;
-import io.lumine.mythic.api.adapters.TaskManager;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.*;
 import io.lumine.mythic.bukkit.BukkitAdapter;
@@ -41,8 +41,8 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 	protected float pEntityPitchOffset;
 	short durability;
 
-	public ItemProjectile(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ItemProjectile(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 
 		String i = mlc.getString(new String[] { "pobject", "projectileblock", "pitem" }, "DIRT");
 		Optional<MythicItem> optional = Utils.mythicmobs.getItemManager().getItem(i);
@@ -202,7 +202,8 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 			if (ItemProjectile.this.projectileGravity > 0.0f) {
 				this.currentVelocity.setY(this.currentVelocity.getY() - this.gravity);
 			}
-			this.taskId = TaskManager.get().scheduleTask(this, 0, ItemProjectile.this.tickInterval);
+
+			this.taskId = Main.taskManager.scheduleTask(this, 0, ItemProjectile.this.tickInterval);
 			if (ItemProjectile.this.hitPlayers || ItemProjectile.this.hitNonPlayers) {
 				this.inRange
 						.addAll(ItemProjectile.this.entitymanager.getLivingEntities(this.currentLocation.getWorld()));
@@ -247,7 +248,7 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 			this.pItem.setPickupDelay(Integer.MAX_VALUE);
 			Volatile.handler.setItemMotion(this.pItem, l, null);
 			Volatile.handler.teleportEntityPacket(this.pItem);
-			Volatile.handler.changeHitBox((Entity) this.pItem, 0, 0, 0);
+			Volatile.handler.changeHitBox(this.pItem, 0, 0, 0);
 		}
 
 		public void modifyVelocity(double v) {
@@ -406,7 +407,7 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 				ItemProjectile.this.onEndSkill.get()
 						.execute(sData.setOrigin(this.currentLocation).setLocationTarget(this.currentLocation));
 			}
-			TaskManager.get().cancelTask(this.taskId);
+			Main.taskManager.cancelTask(this.taskId);
 			this.pItem.remove();
 			this.cancelled = true;
 		}

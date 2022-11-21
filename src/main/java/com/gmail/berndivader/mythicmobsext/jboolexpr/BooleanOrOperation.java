@@ -25,13 +25,10 @@ final class BooleanOrOperation implements IBoolean {
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("(");
-		buffer.append(this.iBoolean1);
-		buffer.append("||");
-		buffer.append(this.iBoolean2);
-		buffer.append(")");
-		return buffer.toString();
+		return "(" +
+				this.iBoolean1 +
+				"||" +
+				this.iBoolean2 +
+				")";
 	}
-
 }

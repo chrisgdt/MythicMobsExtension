@@ -14,13 +14,15 @@ import org.bukkit.entity.Player;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "changegamemode", author = "BerndiVader")
 public class ChangeGamemodeMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
 	GameMode mode;
 
-	public ChangeGamemodeMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ChangeGamemodeMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

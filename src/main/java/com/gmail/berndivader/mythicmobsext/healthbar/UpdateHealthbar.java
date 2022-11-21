@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.healthbar;
 
+import java.io.File;
 import java.util.UUID;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
@@ -13,8 +14,8 @@ import io.lumine.mythic.core.skills.SkillMechanic;
 
 public class UpdateHealthbar extends SkillMechanic implements ITargetedEntitySkill {
 
-	public UpdateHealthbar(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public UpdateHealthbar(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 	}

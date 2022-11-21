@@ -1,12 +1,13 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-import io.lumine.mythic.api.MythicPlugin;
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.ITargetedEntitySkill;
@@ -47,8 +48,8 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 	SkillMetadata data;
 	AbstractEntity target;
 	
-	public GetItemData(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public GetItemData(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
@@ -167,11 +168,11 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 	        if (this.type != VariableType.INTEGER && this.type != VariableType.FLOAT)
 	            var = Variable.ofType(this.type, value, this.duration);
 	        else if (this.type == VariableType.INTEGER) {
-	        	if(value=="null"||value==null) value = "0";
+	        	if(Objects.equals(value, "null") ||value==null) value = "0";
 	            var = Variable.ofType(this.type, Integer.valueOf(value), this.duration);
 	        }
 	        else if (this.type == VariableType.FLOAT) {
-	        	if(value=="null"||value==null) value = "0";
+	        	if(Objects.equals(value, "null") ||value==null) value = "0";
 	        	var = Variable.ofType(this.type, Float.valueOf(value), this.duration);
 	        }
 	        variables.put(this.key, var);

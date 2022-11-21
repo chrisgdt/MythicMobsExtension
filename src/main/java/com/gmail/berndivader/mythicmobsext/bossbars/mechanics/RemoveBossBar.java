@@ -12,12 +12,14 @@ import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.bossbars.BossBars;
 
+import java.io.File;
+
 public class RemoveBossBar extends SkillMechanic implements ITargetedEntitySkill {
 
 	PlaceholderString title;
 
-	public RemoveBossBar(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public RemoveBossBar(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		title = mlc.getPlaceholderString("title", "Bar");
 	}
@@ -26,7 +28,7 @@ public class RemoveBossBar extends SkillMechanic implements ITargetedEntitySkill
 	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		if (abstract_entity.isPlayer()) {
 			if (BossBars.contains(abstract_entity.getUniqueId())) {
-				BossBars.removeBar((Player) abstract_entity.getBukkitEntity(), title.get(data, abstract_entity));
+				BossBars.removeBar(abstract_entity.getBukkitEntity(), title.get(data, abstract_entity));
 				return SkillResult.SUCCESS;
 			}
 		}

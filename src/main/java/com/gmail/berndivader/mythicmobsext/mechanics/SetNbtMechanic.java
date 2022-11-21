@@ -13,12 +13,14 @@ import org.bukkit.entity.Entity;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "setnbt", author = "BerndiVader")
 public class SetNbtMechanic extends SkillMechanic implements ITargetedEntitySkill, INoTargetSkill {
 	PlaceholderString s1;
 
-	public SetNbtMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public SetNbtMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager,file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

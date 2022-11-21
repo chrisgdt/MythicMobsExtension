@@ -11,6 +11,8 @@ import io.lumine.mythic.core.skills.SkillMechanic;
 import io.lumine.mythic.core.skills.SkillString;
 import org.bukkit.entity.LivingEntity;
 
+import java.io.File;
+
 public class CreateHealthbar extends SkillMechanic implements ITargetedEntitySkill {
 
 	protected double offset;
@@ -20,8 +22,8 @@ public class CreateHealthbar extends SkillMechanic implements ITargetedEntitySki
 	protected int counter;
 	protected boolean ignoreYaw;
 
-	public CreateHealthbar(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public CreateHealthbar(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

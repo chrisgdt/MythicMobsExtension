@@ -14,13 +14,15 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "disorientation", author = "BerndiVader")
 public class Disorientation extends SkillMechanic implements ITargetedEntitySkill {
 
 	byte state = 0;
 
-	public Disorientation(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public Disorientation(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		state |= mlc.getBoolean("look", true) ? 0b1 : 0b0;
 		state |= mlc.getBoolean("position", true) ? 0b10 : 0b00;

@@ -14,6 +14,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "nodamageticks", author = "BerndiVader")
 public class NoDamageTicksMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	public static String str;
@@ -23,8 +25,8 @@ public class NoDamageTicksMechanic extends SkillMechanic implements ITargetedEnt
 		str = "mmenodelaydmg";
 	}
 
-	public NoDamageTicksMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public NoDamageTicksMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		j1 = mlc.getInteger("damagedelay", 1);
 		j2 = mlc.getInteger("duration", 1);

@@ -10,11 +10,13 @@ import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.skills.SkillMechanic;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "dropcombat", author = "BerndiVader")
 public class DropCombatMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
-	public DropCombatMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public DropCombatMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 	}
 

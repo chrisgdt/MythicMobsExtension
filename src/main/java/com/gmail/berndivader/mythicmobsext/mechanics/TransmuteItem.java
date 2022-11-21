@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 
+import java.io.File;
 import java.util.Optional;
 
 @ExternalAnnotation(name = "transmuteitem", author = "Seyarada")
@@ -28,8 +29,8 @@ public class TransmuteItem extends SkillMechanic implements ITargetedEntitySkill
 	Material resultMaterial;
 	String resultMLC;
 	
-	public TransmuteItem(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public TransmuteItem(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		amount = PlaceholderInt.of(mlc.getString(new String[] {"amount", "a"}, "-1"));
 		

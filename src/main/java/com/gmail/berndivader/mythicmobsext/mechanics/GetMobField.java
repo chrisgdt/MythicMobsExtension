@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Optional;
 
@@ -24,8 +25,8 @@ public class GetMobField extends SkillMechanic implements ITargetedEntitySkill, 
 	boolean bl1;
 	Field f1;
 
-	public GetMobField(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public GetMobField(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		s2 = mlc.getString("meta", null);
 		bl1 = mlc.getBoolean("stance", false);

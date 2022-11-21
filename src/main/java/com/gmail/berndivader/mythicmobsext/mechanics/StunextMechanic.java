@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -48,8 +49,8 @@ public class StunextMechanic extends SkillMechanic implements ITargetedEntitySki
 		uuids = new ArrayList<>();
 	}
 
-	public StunextMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public StunextMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
@@ -110,8 +111,7 @@ public class StunextMechanic extends SkillMechanic implements ITargetedEntitySki
 					new FixedMetadataValue(Main.getPlugin(), duration));
 			this.ai_status = final_target.hasAI();
 			if (cancel_interaction) {
-				if (uuids.contains(final_target.getUniqueId()))
-					uuids.remove(final_target.getUniqueId());
+				uuids.remove(final_target.getUniqueId());
 				uuids.add(final_target.getUniqueId());
 				Main.pluginmanager.registerEvents(this, Main.getPlugin());
 			}

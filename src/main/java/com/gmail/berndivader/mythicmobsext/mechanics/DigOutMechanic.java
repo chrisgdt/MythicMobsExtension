@@ -22,18 +22,20 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "digout", author = "BerndiVader")
 public class DigOutMechanic extends SkillMechanic implements INoTargetSkill {
 	long speed;
 	int particle_amount;
 	Sound sound;
 
-	public DigOutMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public DigOutMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 		
-		speed = (long) mlc.getInteger("speed", 5);
+		speed = mlc.getInteger("speed", 5);
 		particle_amount = mlc.getInteger("amount", 5);
 		try {
 			sound = Sound.valueOf(mlc.getString("sound", "block_stone_hit").toUpperCase());
@@ -55,7 +57,7 @@ public class DigOutMechanic extends SkillMechanic implements INoTargetSkill {
 		if (block.isLiquid() || block.getType() == Material.AIR)
 			return SkillResult.CONDITION_FAILED;
 
-		final String particle_name = "blockcrack_" + block.getType().getId() + "_" + block.getData();
+		//final String particle_name = "blockcrack_" + block.getType().getId() + "_" + block.getData();
 
 		boolean gravity = entity.hasGravity();
 		boolean invulnerable = entity.isInvulnerable();

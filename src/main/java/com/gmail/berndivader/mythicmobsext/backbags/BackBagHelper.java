@@ -61,41 +61,41 @@ public class BackBagHelper implements Listener {
 		switch (e.getMechanicName().toLowerCase()) {
 		case "openbackbag":
 		case "openbackbag_ext":
-			e.register(new OpenBackBag(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			e.register(new OpenBackBag(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig()));
 			//e.register(new OpenBackBag(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "createbackbag":
 		case "createbackbag_ext":
-			e.register(new CreateBackBag(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			e.register(new CreateBackBag(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig()));
 			//e.register(new CreateBackBag(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "removebackbag":
 		case "removebackbag_ext":
-			e.register(new RemoveBackBag(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			e.register(new RemoveBackBag(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig()));
 			//e.register(new RemoveBackBag(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "expandbackbag":
 		case "expandbackbag_ext":
-			e.register(new ExpandBackBag(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			e.register(new ExpandBackBag(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig()));
 			//e.register(new ExpandBackBag(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "movetobackbag":
 		case "savetobackbag":
 		case "movetobackbag_ext":
 		case "savetobackbag_ext":
-			e.register(new MoveToBackBag(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			e.register(new MoveToBackBag(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig()));
 			//e.register(new MoveToBackBag(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "takefrombackbag":
 		case "loadfrombackbag":
 		case "takefrombackbag_ext":
 		case "loadfrombackbag_ext":
-			e.register(new RestoreFromBackBag(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			e.register(new RestoreFromBackBag(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig()));
 			//e.register(new RestoreFromBackBag(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "renamebackbag":
 		case "renamebackbag_ext":
-			e.register(new RenameBackBag(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			e.register(new RenameBackBag(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig()));
 			//e.register(new RenameBackBag(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		}
@@ -133,8 +133,7 @@ public class BackBagHelper implements Listener {
 	}
 
 	public static void removeAll(UUID uuid) {
-		if (bags.containsKey(uuid))
-			bags.remove(uuid);
+		bags.remove(uuid);
 	}
 
 	public static void addInventory(UUID uuid, BackBagInventory bag_inventory) {
@@ -368,7 +367,7 @@ public class BackBagHelper implements Listener {
 		if (BackBagHelper.hasBackBag(owner.getUniqueId())) {
 			BackBagInventory bag = BackBagHelper.getBagInventory(owner.getUniqueId(), bag_name);
 			if (bag.getSize() > size) {
-				List<ItemStack> content = Arrays.asList(bag.getInventory().getContents()).stream()
+				List<ItemStack> content = Arrays.stream(bag.getInventory().getContents())
 						.filter(p -> p != null && p.getType() != Material.AIR).collect(Collectors.toList());
 				if (content.size() > size) {
 					for (int i1 = content.size() - 1; i1 >= size; i1--) {

@@ -14,14 +14,16 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "jumpto", author = "BerndiVader")
 public class JumpCasterExtMechanic extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 
 	double height, gravity, speed;
 	boolean use_speed, use_gravity;
 
-	public JumpCasterExtMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public JumpCasterExtMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

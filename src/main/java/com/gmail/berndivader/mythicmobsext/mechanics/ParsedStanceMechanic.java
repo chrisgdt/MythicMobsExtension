@@ -14,14 +14,16 @@ import io.lumine.mythic.core.skills.SkillMechanic;
 import io.lumine.mythic.core.skills.SkillString;
 import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "parsedstance,pstance", author = "BerndiVader")
 public class ParsedStanceMechanic extends SkillMechanic
 		implements ITargetedEntitySkill, ITargetedLocationSkill, INoTargetSkill {
 
 	protected PlaceholderString stance;
 
-	public ParsedStanceMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ParsedStanceMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		String s = mlc.getString(new String[] { "stance", "s" });
 		if (s.startsWith("\"") && s.endsWith("\""))

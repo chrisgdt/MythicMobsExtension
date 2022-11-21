@@ -11,11 +11,13 @@ import com.gmail.berndivader.mythicmobsext.Main;
 
 import fr.neatmonster.nocheatplus.checks.CheckType;
 
+import java.io.File;
+
 public class ExemptPlayerMechanic extends SkillMechanic implements INoTargetSkill, ITargetedEntitySkill {
 	CheckType[] types;
 
-	public ExemptPlayerMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ExemptPlayerMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		types = new CheckType[0];

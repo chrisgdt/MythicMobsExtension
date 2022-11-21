@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.bossbars.mechanics;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +30,8 @@ public class CreateBossBar extends SkillMechanic implements ITargetedEntitySkill
 	List<BarFlag> flags;
 	int flags_size;
 
-	public CreateBossBar(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public CreateBossBar(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		title = mlc.getPlaceholderString("title", "Bar");
 		style = BarStyle.valueOf(SegmentedEnum.real(mlc.getInteger("segment", 6)).name());

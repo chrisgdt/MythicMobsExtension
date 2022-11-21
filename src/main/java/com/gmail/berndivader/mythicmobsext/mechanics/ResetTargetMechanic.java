@@ -3,7 +3,6 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.*;
-import io.lumine.mythic.core.mobs.ActiveMob;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.skills.SkillMechanic;
 import io.lumine.mythic.core.skills.SkillTriggers;
@@ -16,13 +15,15 @@ import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "resettarget,settarget_ext", author = "BerndiVader")
 public class ResetTargetMechanic extends SkillMechanic implements ITargetedEntitySkill, INoTargetSkill {
 	boolean event, trigger, set;
 	TargetReason reason;
 
-	public ResetTargetMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ResetTargetMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 
 		set = line.charAt(0) == 's';

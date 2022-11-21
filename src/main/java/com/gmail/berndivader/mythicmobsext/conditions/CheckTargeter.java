@@ -49,7 +49,7 @@ public class CheckTargeter extends AbstractCustomCondition implements IEntityCon
 
 		String targeter = this.stargeter.get(data);
 		if (caster.getClass().equals(BukkitEntity.class) || caster.getClass().equals(BukkitPlayer.class)) {
-			targeter = this.stargeter.get(data, (AbstractEntity) caster);
+			targeter = this.stargeter.get(data, caster);
 		}
 		
 		Collection<?> entries = getDestination(targeter, data);

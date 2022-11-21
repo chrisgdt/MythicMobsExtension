@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,7 +10,6 @@ import java.util.Optional;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.adapters.AbstractLocation;
-import io.lumine.mythic.api.adapters.TaskManager;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.*;
 import io.lumine.mythic.bukkit.BukkitAdapter;
@@ -23,6 +23,8 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
@@ -48,8 +50,8 @@ public class IStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 	boolean hitTarget = true, hitPlayers = false, hitNonPlayers = false, hitTargetOnly = false, invunerable, lifetime;
 	short durability;
 
-	public IStatueMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public IStatueMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
@@ -180,10 +182,16 @@ public class IStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 			this.item.setGravity(false);
 			this.item.setTicksLived(Integer.MAX_VALUE);
 			this.item.setPickupDelay(Integer.MAX_VALUE);
-			if (durability > Short.MIN_VALUE)
-				this.item.getItemStack().setDurability(IStatueMechanic.this.durability);
+			if (durability > Short.MIN_VALUE) {
+				// this.item.getItemStack().setDurability(IStatueMechanic.this.durability);
+				ItemMeta meta = this.item.getItemStack().getItemMeta();
+				if (meta instanceof Damageable) {
+					((Damageable) meta).setDamage(this.item.getItemStack().getType().getMaxDurability() - IStatueMechanic.this.durability);
+					this.item.getItemStack().setItemMeta(meta);
+				}
+			}
 			vh.teleportEntityPacket(this.item);
-			vh.changeHitBox((Entity) this.item, 0, 0, 0);
+			vh.changeHitBox(this.item, 0, 0, 0);
 			if (IStatueMechanic.this.onStartSkill.isPresent()
 					&& IStatueMechanic.this.onStartSkill.get().isUsable(data)) {
 				SkillMetadata sData = data.deepClone();
@@ -191,7 +199,7 @@ public class IStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 				sData.setOrigin(BukkitAdapter.adapt(this.currentLocation.clone()));
 				IStatueMechanic.this.onStartSkill.get().execute(sData);
 			}
-			this.taskId = TaskManager.get().scheduleTask(this, 0, 1);
+			this.taskId = Main.taskManager.scheduleTask(this, 0, 1);
 		}
 
 		@Override
@@ -288,7 +296,7 @@ public class IStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 				IStatueMechanic.this.onEndSkill.get().execute(sData.setOrigin(BukkitAdapter.adapt(this.currentLocation))
 						.setLocationTarget(BukkitAdapter.adapt(this.currentLocation)));
 			}
-			TaskManager.get().cancelTask(this.taskId);
+			Main.taskManager.cancelTask(this.taskId);
 			this.item.remove();
 			this.cancelled = true;
 		}

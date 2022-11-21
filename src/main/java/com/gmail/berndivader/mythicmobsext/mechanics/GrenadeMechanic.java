@@ -20,6 +20,8 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "grenade", author = "BerndiVader")
 public class GrenadeMechanic extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 	private Plugin plugin = Main.getPlugin();
@@ -35,8 +37,8 @@ public class GrenadeMechanic extends SkillMechanic implements ITargetedEntitySki
 	private boolean undotnt;
 	private boolean ued;
 
-	public GrenadeMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public GrenadeMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

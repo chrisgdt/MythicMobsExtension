@@ -126,32 +126,32 @@ public class Healthbar {
 			int hplength = sHP.length();
 			int length = 10 + hplength;
 			int gray = (int) Math.floor(percent * (double) length);
-			StringBuilder line = new StringBuilder().append((Object) ChatColor.DARK_RED).append("[");
+			StringBuilder line = new StringBuilder().append(ChatColor.DARK_RED).append("[");
 			boolean passed = false;
 			for (int i = 0; i < length; ++i) {
 				if (!passed && i > gray) {
 					passed = true;
 				}
 				if (i < 5) {
-					line.append((Object) (passed ? ChatColor.DARK_GRAY : ChatColor.RED));
+					line.append(passed ? ChatColor.DARK_GRAY : ChatColor.RED);
 					line.append("|");
 					continue;
 				}
 				if (i < 5 + hplength) {
-					line.append((Object) (passed ? ChatColor.GRAY : ChatColor.DARK_RED));
+					line.append(passed ? ChatColor.GRAY : ChatColor.DARK_RED);
 					try {
-						line.append(sHP.substring(i - 5, i - 4));
+						line.append(sHP.charAt(i - 5));
 					} catch (Exception exception) {
 					}
 					continue;
 				}
 				if (i == hplength + 2 && !passed) {
-					line.append((Object) ChatColor.RED);
+					line.append(ChatColor.RED);
 				}
-				line.append((Object) (passed ? ChatColor.DARK_GRAY : ChatColor.RED));
+				line.append(passed ? ChatColor.DARK_GRAY : ChatColor.RED);
 				line.append("|");
 			}
-			return line.append((Object) ChatColor.DARK_RED).append("]").toString();
+			return line.append(ChatColor.DARK_RED).append("]").toString();
 		} else {
 			String line = this.template;
 			line = line.replace("$h", Integer.toString(hp));

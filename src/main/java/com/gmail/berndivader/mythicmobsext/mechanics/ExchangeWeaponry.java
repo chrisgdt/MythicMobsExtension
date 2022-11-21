@@ -15,14 +15,16 @@ import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "exchange,exchangeweaponry", author = "BerndiVader")
 public class ExchangeWeaponry extends SkillMechanic implements ITargetedEntitySkill {
 	
 	private final String destination;
 	private final String where;
 	
-	public ExchangeWeaponry(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ExchangeWeaponry(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

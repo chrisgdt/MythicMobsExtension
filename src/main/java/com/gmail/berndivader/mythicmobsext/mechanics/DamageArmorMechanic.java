@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -28,8 +29,8 @@ public class DamageArmorMechanic extends SkillMechanic implements ITargetedEntit
 	protected int rndMin, rndMax;
 	protected String signal;
 
-	public DamageArmorMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public DamageArmorMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -9,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.adapters.AbstractLocation;
 import io.lumine.mythic.api.adapters.AbstractVector;
-import io.lumine.mythic.api.adapters.TaskManager;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.*;
 import io.lumine.mythic.bukkit.BukkitAdapter;
@@ -42,8 +42,8 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 	protected float pEntityPitchOffset;
 	protected byte bite;
 
-	public BlockProjectile(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public BlockProjectile(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 
 		this.pEntityName = mlc.getString(new String[] { "pobject", "projectileblock", "pblock" }, "DIRT").toUpperCase();
@@ -202,7 +202,7 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 			}
 			this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
 			this.pBlock = this.pLocation.getWorld().spawnFallingBlock(this.pLocation.add(0.0d, this.pVOff, 0.0d),
-					Material.valueOf(customItemName), (byte) BlockProjectile.this.bite);
+					Material.valueOf(customItemName), BlockProjectile.this.bite);
 			EntityCacheHandler.add(this.pBlock);
 			this.pBlock.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			if (!this.targetable)
@@ -212,9 +212,9 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 			this.pBlock.setTicksLived(Integer.MAX_VALUE);
 			this.pBlock.setInvulnerable(true);
 			this.pBlock.setGravity(false);
-			Volatile.handler.changeHitBox((Entity) this.pBlock, 0, 0, 0);
+			Volatile.handler.changeHitBox(this.pBlock, 0, 0, 0);
 
-			this.taskId = TaskManager.get().scheduleTask(this, 0, BlockProjectile.this.tickInterval);
+			this.taskId = Main.taskManager.scheduleTask(this, 0, BlockProjectile.this.tickInterval);
 			if (BlockProjectile.this.hitPlayers || BlockProjectile.this.hitNonPlayers) {
 				this.inRange
 						.addAll(BlockProjectile.this.entitymanager.getLivingEntities(this.currentLocation.getWorld()));
@@ -402,7 +402,7 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 				BlockProjectile.this.onEndSkill.get()
 						.execute(sData.setOrigin(this.currentLocation).setLocationTarget(this.currentLocation));
 			}
-			TaskManager.get().cancelTask(this.taskId);
+			Main.taskManager.cancelTask(this.taskId);
 			this.pBlock.remove();
 			this.cancelled = true;
 		}

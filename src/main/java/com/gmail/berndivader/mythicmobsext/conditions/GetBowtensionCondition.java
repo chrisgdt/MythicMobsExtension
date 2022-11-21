@@ -35,7 +35,7 @@ public class GetBowtensionCondition extends AbstractCustomCondition implements I
 			} else {
 				if (p.getInventory().getItemInMainHand().getType() == Material.BOW
 						|| p.getInventory().getItemInOffHand().getType() == Material.BOW) {
-					d1 = (double) Utils.getBowTension((Player) e.getBukkitEntity());
+					d1 = Utils.getBowTension((Player) e.getBukkitEntity());
 				}
 			}
 		}

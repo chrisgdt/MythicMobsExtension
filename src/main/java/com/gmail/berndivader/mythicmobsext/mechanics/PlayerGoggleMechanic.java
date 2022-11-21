@@ -18,16 +18,18 @@ import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "playergoggle,playergoggleat", author = "BerndiVader")
 public class PlayerGoggleMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	public static String str = "mmGoggle";
 	private long dur;
 	private Handler vh = Volatile.handler;
 
-	public PlayerGoggleMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public PlayerGoggleMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
-		this.dur = (long) mlc.getInteger(new String[] { "duration", "dur" }, 120);
+		this.dur = mlc.getInteger(new String[] { "duration", "dur" }, 120);
 	}
 
 	@Override

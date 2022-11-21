@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,8 +33,8 @@ import com.google.gson.JsonParser;
 public class ModifyItem extends SkillMechanic implements ITargetedEntitySkill {
 	ModdingItem modding_item;
 
-	public ModifyItem(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ModifyItem(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 
 		WhereEnum where = Utils.enum_lookup(WhereEnum.class, mlc.getString("what", "HAND").toUpperCase());

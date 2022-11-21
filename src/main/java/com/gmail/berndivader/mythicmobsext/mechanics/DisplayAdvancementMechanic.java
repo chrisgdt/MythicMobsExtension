@@ -15,14 +15,16 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "sendtoast", author = "BerndiVader")
 public class DisplayAdvancementMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	Material material;
 	PlaceholderString message;
 	String frame;
 
-	public DisplayAdvancementMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public DisplayAdvancementMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		material = Material.STONE;
 		try {

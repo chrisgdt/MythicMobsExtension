@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Optional;
@@ -21,8 +22,8 @@ public class CustomRandomSkillMechanic extends SkillMechanic implements IMetaSki
 	LinkedList<SkillEntry> entrylist;
 	boolean b1, shuffle;
 
-	public CustomRandomSkillMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public CustomRandomSkillMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.target_creative = true;
 		skillmanager = Utils.mythicmobs.getSkillManager();

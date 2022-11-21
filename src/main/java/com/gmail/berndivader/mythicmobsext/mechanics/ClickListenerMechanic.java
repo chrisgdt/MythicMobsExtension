@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.Optional;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
@@ -38,8 +39,8 @@ public class ClickListenerMechanic extends AuraMechanic implements ITargetedEnti
 		str = "MME_CLICKLISTENER";
 	}
 
-	public ClickListenerMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ClickListenerMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
@@ -57,7 +58,7 @@ public class ClickListenerMechanic extends AuraMechanic implements ITargetedEnti
 		actionbar = mlc.getBoolean("actionbar", true);
 		crouch = mlc.getBoolean("crouch", true);
 		metaString = mlc.getString("meta", "actionstring");
-		matchString = mlc.getString("matchstring", new String());
+		matchString = mlc.getString("matchstring", "");
 	}
 
 	@Override
@@ -86,7 +87,7 @@ public class ClickListenerMechanic extends AuraMechanic implements ITargetedEnti
 			this.hasEnded = finish = false;
 			this.crouch = ClickListenerMechanic.this.crouch;
 			this.p = p;
-			this.actionString = new String();
+			this.actionString = "";
 			Main.pluginmanager.registerEvents(this, Main.getPlugin());
 			p.setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
 			if (startSkill.isPresent()) {

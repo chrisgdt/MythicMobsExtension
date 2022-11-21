@@ -14,12 +14,14 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.bossbars.BossBars;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
+import java.io.File;
+
 public class ProgressBossBar extends SkillMechanic implements ITargetedEntitySkill {
 	PlaceholderString title, expr;
 	boolean set;
 
-	public ProgressBossBar(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ProgressBossBar(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);;
 		this.line = skill;
 		title = mlc.getPlaceholderString("title", "Bar");
 		set = mlc.getBoolean("set", false);

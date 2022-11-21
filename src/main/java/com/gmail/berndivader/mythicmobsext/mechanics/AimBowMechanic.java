@@ -21,6 +21,8 @@ import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "bowaimbot", author = "BerndiVader")
 public class AimBowMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	static String meta_str;
@@ -29,8 +31,8 @@ public class AimBowMechanic extends SkillMechanic implements ITargetedEntitySkil
 		meta_str = "MMEAIMBOT";
 	}
 
-	public AimBowMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public AimBowMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 	}

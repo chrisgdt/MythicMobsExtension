@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -46,8 +47,8 @@ public class ItemThrowProjectile extends SkillMechanic implements ITargetedEntit
 	boolean hitPlayers, hitNonPlayers, invunerable, lifetime, stopGround, gravity, stopBlock;
 	short durability;
 
-	public ItemThrowProjectile(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ItemThrowProjectile(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

@@ -12,14 +12,16 @@ import io.lumine.mythic.core.skills.SkillMechanic;
 import io.lumine.mythic.core.skills.SkillString;
 import io.lumine.mythic.core.skills.placeholders.parsers.PlaceholderStringImpl;
 
+import java.io.File;
+
 public class LineSpeechBubbleMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private PlaceholderString oline;
 	private PlaceholderString nline;
 	private String id;
 	private String cmp;
 
-	public LineSpeechBubbleMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public LineSpeechBubbleMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

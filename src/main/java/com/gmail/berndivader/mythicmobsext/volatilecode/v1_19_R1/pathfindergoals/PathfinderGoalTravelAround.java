@@ -142,7 +142,6 @@ public class PathfinderGoalTravelAround extends Goal {
 				to = event.getTo();
 				mob.moveTo(to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch());
 				g.getNodeEvaluator();
-				return;
 			}
 		}
 	}

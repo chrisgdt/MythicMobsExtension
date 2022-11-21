@@ -14,13 +14,15 @@ import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "renameentity", author = "BerndiVader")
 public class RenameEntityMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	PlaceholderString name;
 	boolean v;
 
-	public RenameEntityMechanic(SkillExecutor manager, String line, MythicLineConfig mlc) {
-		super(manager, line, mlc);
+	public RenameEntityMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = line;
 		String tmp = mlc.getString(new String[] { "name", "n" }, "");
 		if (tmp.charAt(0) == '"' && tmp.charAt(tmp.length() - 1) == '"') {

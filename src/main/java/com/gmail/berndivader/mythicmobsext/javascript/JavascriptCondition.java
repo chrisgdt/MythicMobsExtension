@@ -44,7 +44,7 @@ public class JavascriptCondition extends AbstractCustomCondition implements IEnt
 		try {
 			if(Nashorn.invocable!=null) {
 				return (boolean) Nashorn.invocable.invokeFunction(js,
-						e1 != null ? (Entity) e1 : l1 != null ? (Location) l1 : null, mlc);
+						e1 != null ? e1 : l1 != null ? l1 : null, mlc);
 			} else {
 				Main.logger.warning("No javascript engine present!");
 			}

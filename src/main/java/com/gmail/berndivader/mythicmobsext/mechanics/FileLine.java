@@ -28,15 +28,15 @@ import io.lumine.mythic.core.skills.variables.VariableType;
 public class FileLine extends VariableMechanic implements ITargetedEntitySkill {
    PlaceholderString value;
    VariableType type;
-   File file;
+   File fileOrigin;
    int line;
    String fileName;
 
-   public FileLine(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-       super(manager, skill, mlc);
+   public FileLine(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+       super(manager, file, skill, mlc);
       
       fileName = mlc.getString(new String[] { "file", "f"}, "");
-      file = new File(Main.getPlugin().getDataFolder().getPath() + "/files/" + fileName);
+      fileOrigin = new File(Main.getPlugin().getDataFolder().getPath() + "/files/" + fileName);
       line = mlc.getInteger(new String[] { "line", "l"}, -1);
 
       String strType = mlc.getString(new String[]{"type", "t"}, VariableType.INTEGER.toString());

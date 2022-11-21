@@ -13,6 +13,8 @@ import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "customvelocity", author = "BerndiVader")
 public class CustomVelocityMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	protected double velocityX;
@@ -21,8 +23,8 @@ public class CustomVelocityMechanic extends SkillMechanic implements ITargetedEn
 	protected boolean debug;
 	private char c;
 
-	public CustomVelocityMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public CustomVelocityMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

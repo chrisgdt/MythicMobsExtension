@@ -18,14 +18,16 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "setmobhealth", author = "BerndiVader")
 public class SetMobHealthMechanic extends SkillMechanic implements INoTargetSkill, ITargetedEntitySkill {
 	private PlaceholderString r;
 	private char m;
 	private boolean b, b1;
 
-	public SetMobHealthMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public SetMobHealthMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.r = new PlaceholderStringImpl(
 				mlc.getString(new String[] { "amount", "a", "health", "h" }, "20").toLowerCase());

@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -47,8 +49,8 @@ public class EnchantWeaponryMechanic extends SkillMechanic implements ITargetedE
 		SET, ADD, DEL;
 	}
 
-	public EnchantWeaponryMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public EnchantWeaponryMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
@@ -89,7 +91,7 @@ public class EnchantWeaponryMechanic extends SkillMechanic implements ITargetedE
 					level = "1";
 				}
 			}
-			if ((ench = Enchantment.getByName(name)) != null) {
+			if ((ench = Enchantment.getByKey(NamespacedKey.fromString(name))) != null) {
 				enchants.add(new Enchant(ench, level));
 			} else {
 				Main.logger.warning("Ignore enchantment " + name + " in " + line);
@@ -173,14 +175,14 @@ public class EnchantWeaponryMechanic extends SkillMechanic implements ITargetedE
 				if (stack.containsEnchantment(enchant)) {
 					stack.removeEnchantment(enchant);
 				} else {
-					stack.addUnsafeEnchantment(enchant, (int) enchants.get(i1).level.rollInteger());
+					stack.addUnsafeEnchantment(enchant, enchants.get(i1).level.rollInteger());
 				}
 			}
 			break;
 		case ADD:
 			for (int i1 = 0; i1 < length; i1++) {
 				Enchantment enchant = enchants.get(i1).enchantment;
-				stack.addUnsafeEnchantment(enchant, (int) enchants.get(i1).level.rollInteger());
+				stack.addUnsafeEnchantment(enchant, enchants.get(i1).level.rollInteger());
 			}
 			break;
 		case DEL:

@@ -12,11 +12,13 @@ import org.bukkit.entity.Player;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "playloading", author = "BerndiVader")
 public class PlayLoadingMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
-	public PlayLoadingMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public PlayLoadingMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 	}
 

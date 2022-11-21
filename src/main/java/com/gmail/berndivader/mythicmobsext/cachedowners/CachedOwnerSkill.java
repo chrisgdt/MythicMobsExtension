@@ -12,10 +12,12 @@ import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 
+import java.io.File;
+
 public class CachedOwnerSkill extends SkillMechanic implements ITargetedEntitySkill {
 
-	public CachedOwnerSkill(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public CachedOwnerSkill(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 	}
 
 	@Override
@@ -25,7 +27,7 @@ public class CachedOwnerSkill extends SkillMechanic implements ITargetedEntitySk
 			am.setOwner(target.getUniqueId());
 			if (target.isPlayer() && data.getCaster().getEntity().getBukkitEntity() instanceof Wolf) {
 				((Wolf) data.getCaster().getEntity().getBukkitEntity())
-						.setOwner((AnimalTamer) ((Player) target.getBukkitEntity()));
+						.setOwner((AnimalTamer) target.getBukkitEntity());
 				((Wolf) data.getCaster().getEntity().getBukkitEntity()).setTamed(true);
 			}
 			CachedOwnerHandler.addCachedOwner(am.getUniqueId(), target.getUniqueId());

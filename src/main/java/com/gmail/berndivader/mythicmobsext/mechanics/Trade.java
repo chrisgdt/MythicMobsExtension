@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,8 +37,8 @@ public class Trade extends SkillMechanic implements ITargetedEntitySkill {
 	String title;
 	List<String> tradesRaw = new ArrayList<>();
 
-	public Trade(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public Trade(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 		title = mlc.getString(new String[] { "title", "t"}, "Trades");

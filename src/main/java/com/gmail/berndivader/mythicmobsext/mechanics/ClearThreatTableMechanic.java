@@ -9,11 +9,13 @@ import io.lumine.mythic.core.mobs.ActiveMob;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.skills.SkillMechanic;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "clearthreattarget,dropcombat", author = "BerndiVader")
 public class ClearThreatTableMechanic extends SkillMechanic implements INoTargetSkill {
 
-	public ClearThreatTableMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ClearThreatTableMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 	}
 

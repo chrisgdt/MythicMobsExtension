@@ -14,6 +14,6 @@ public class PathfinderGoalMeleeRangeAttack extends MeleeAttackGoal {
 
 	@Override
 	protected double getAttackReachSqr(LivingEntity entity) {
-		return (double) (this.mob.getBbWidth() * this.range * this.mob.getBbWidth() * this.range + entity.getBbWidth());
+		return this.mob.getBbWidth() * this.range * this.mob.getBbWidth() * this.range + entity.getBbWidth();
 	}
 }

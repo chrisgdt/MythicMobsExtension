@@ -12,12 +12,14 @@ import org.bukkit.entity.Player;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "playerzoom", author = "BerndiVader")
 public class PlayerZoomMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private Float f1;
 
-	public PlayerZoomMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public PlayerZoomMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		f(mlc.getFloat(new String[] { "value", "v", "amount", "a" }, 0.0F));
 	}

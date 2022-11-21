@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,8 +30,8 @@ public class DropInventoryMechanic extends SkillMechanic implements ITargetedEnt
 	private int p;
 	boolean c;
 
-	public DropInventoryMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public DropInventoryMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

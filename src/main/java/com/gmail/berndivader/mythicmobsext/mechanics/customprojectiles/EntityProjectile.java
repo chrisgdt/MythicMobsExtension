@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -9,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.adapters.AbstractLocation;
 import io.lumine.mythic.api.adapters.AbstractVector;
-import io.lumine.mythic.api.adapters.TaskManager;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.*;
 import io.lumine.mythic.bukkit.BukkitAdapter;
@@ -41,8 +41,8 @@ public class EntityProjectile extends CustomProjectile implements ITargetedEntit
 	protected float pEntitySpin;
 	protected float pEntityPitchOffset;
 
-	public EntityProjectile(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public EntityProjectile(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 
 		this.pEntityName = mlc.getString(new String[] { "pobject", "projectileentity", "pentity" }, "MINECART")
 				.toUpperCase();
@@ -208,7 +208,7 @@ public class EntityProjectile extends CustomProjectile implements ITargetedEntit
 				this.pEntity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.pEntity.setGravity(false);
 			Volatile.handler.changeHitBox(this.pEntity, 0, 0, 0);
-			this.taskId = TaskManager.get().scheduleTask(this, 0, EntityProjectile.this.tickInterval);
+			this.taskId = Main.taskManager.scheduleTask(this, 0, EntityProjectile.this.tickInterval);
 			if (EntityProjectile.this.hitPlayers || EntityProjectile.this.hitNonPlayers) {
 				this.inRange
 						.addAll(EntityProjectile.this.entitymanager.getLivingEntities(this.currentLocation.getWorld()));
@@ -404,7 +404,7 @@ public class EntityProjectile extends CustomProjectile implements ITargetedEntit
 				EntityProjectile.this.onEndSkill.get()
 						.execute(sData.setOrigin(this.currentLocation).setLocationTarget(this.currentLocation));
 			}
-			TaskManager.get().cancelTask(this.taskId);
+			Main.taskManager.cancelTask(this.taskId);
 			this.pEntity.remove();
 			this.cancelled = true;
 		}

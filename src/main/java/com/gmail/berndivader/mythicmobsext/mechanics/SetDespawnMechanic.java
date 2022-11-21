@@ -12,12 +12,14 @@ import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "despawning", author = "BerndiVader")
 public class SetDespawnMechanic extends SkillMechanic implements ITargetedEntitySkill, INoTargetSkill {
 	boolean set;
 
-	public SetDespawnMechanic(SkillExecutor manager, String line, MythicLineConfig mlc) {
-		super(manager, line, mlc);
+	public SetDespawnMechanic(SkillExecutor manager, File file, String line, MythicLineConfig mlc) {
+		super(manager, file, line, mlc);
 		this.line = line;
 		set = mlc.getBoolean("set", true);
 	}

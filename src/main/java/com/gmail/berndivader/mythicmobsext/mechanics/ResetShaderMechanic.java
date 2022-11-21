@@ -11,11 +11,13 @@ import org.bukkit.entity.Player;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "resetshader", author = "BerndiVader")
 public class ResetShaderMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
-	public ResetShaderMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ResetShaderMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 	}
 

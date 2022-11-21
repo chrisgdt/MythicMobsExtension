@@ -56,11 +56,11 @@ public class CachedOwnerHandler implements Listener {
 		String mechanicsName = e.getMechanicName().toLowerCase();
 		switch (mechanicsName) {
 		case "setcachedowner":
-			e.register(new CachedOwnerSkill(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			e.register(new CachedOwnerSkill(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig()));
 			//e.register(new CachedOwnerSkill(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "restorecachedowner":
-			e.register(new RestoreCachedOwnerMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			e.register(new RestoreCachedOwnerMechanic(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig()));
 			//e.register(new RestoreCachedOwnerMechanic(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		}
@@ -105,9 +105,7 @@ public class CachedOwnerHandler implements Listener {
 	}
 
 	public static void removeCachedOwner(UUID slave) {
-		if (CachedOwnerHandler.cachedOwners.containsKey(slave)) {
-			CachedOwnerHandler.cachedOwners.remove(slave);
-		}
+		CachedOwnerHandler.cachedOwners.remove(slave);
 	}
 
 	public static ConcurrentHashMap<UUID, UUID> loadCachedOwners() {

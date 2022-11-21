@@ -12,12 +12,14 @@ import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "oxygen", author = "BerndiVader")
 public class OxygenMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private int amount;
 
-	public OxygenMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public OxygenMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

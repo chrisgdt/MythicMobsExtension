@@ -16,6 +16,8 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "playerspin", author = "BerndiVader")
 public class PlayerSpinMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	public static String str = "mmSpin";
@@ -23,10 +25,10 @@ public class PlayerSpinMechanic extends SkillMechanic implements ITargetedEntity
 	private float s;
 	final private Handler vh = Volatile.handler;
 
-	public PlayerSpinMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public PlayerSpinMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
-		this.d = (long) mlc.getInteger(new String[] { "duration", "dur" }, 120);
+		this.d = mlc.getInteger(new String[] { "duration", "dur" }, 120);
 		this.s = mlc.getFloat(new String[] { "speed", "s" }, 30.0F);
 	}
 

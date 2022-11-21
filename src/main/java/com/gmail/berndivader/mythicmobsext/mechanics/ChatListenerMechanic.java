@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.Optional;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
@@ -45,8 +46,8 @@ public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntit
 		response = "BOTRESPONSE";
 	}
 
-	public ChatListenerMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public ChatListenerMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
@@ -69,7 +70,7 @@ public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntit
 		multi = mlc.getBoolean("multi", false);
 		storage = mlc.getString("meta", null);
 		sense = mlc.getBoolean("sensitive", true);
-		botId = mlc.getString("bot", new String());
+		botId = mlc.getString("bot", "");
 		if ((s1 = mlc.getString("matchskill")) != null)
 			matchSkill = Utils.mythicmobs.getSkillManager().getSkill(s1);
 		if ((s1 = mlc.getString("falseskill")) != null)
@@ -143,7 +144,7 @@ public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntit
 			if (!sense)
 				s2 = s2.toLowerCase();
 			Skill sk = null;
-			if (ChatListenerMechanic.this.radius.equals((double) Math.sqrt(MathUtils.distance3D(
+			if (ChatListenerMechanic.this.radius.equals(Math.sqrt(MathUtils.distance3D(
 					this.skillMetadata.getCaster().getEntity().getBukkitEntity().getLocation().toVector(),
 					e.getPlayer().getLocation().toVector())))) {
 				if (!bot) {
@@ -191,7 +192,7 @@ public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntit
 							try {
 								thought = steveSession.think(s222);
 							} catch (Exception e1) {
-								thought = new String();
+								thought = "";
 								e1.printStackTrace();
 							}
 							if (thought.length() > 0) {

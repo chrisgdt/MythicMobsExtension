@@ -15,7 +15,7 @@ public class WorldGuardFlagCondition extends AbstractCustomCondition implements 
 		super(line, mlc);
 
 		flag_name = mlc.getString("flag", "mob-spawning");
-		args = mlc.getString("args", new String()).toLowerCase();
+		args = mlc.getString("args", "").toLowerCase();
 	}
 
 	@Override

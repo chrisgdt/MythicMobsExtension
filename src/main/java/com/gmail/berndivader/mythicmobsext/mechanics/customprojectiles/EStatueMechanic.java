@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,7 +10,6 @@ import java.util.Optional;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.adapters.AbstractLocation;
-import io.lumine.mythic.api.adapters.TaskManager;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.*;
 import io.lumine.mythic.bukkit.BukkitAdapter;
@@ -45,8 +45,8 @@ public class EStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 	boolean hitTarget = true, hitPlayers = false, hitNonPlayers = false, hitTargetOnly = false, noAI = true,
 			facedir = false, invunerable, lifetime;
 
-	public EStatueMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public EStatueMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		String i = mlc.getString(new String[] { "entity", "e" }, "pig").toUpperCase();
@@ -176,7 +176,7 @@ public class EStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 			if (this.entity instanceof LivingEntity)
 				((LivingEntity) this.entity).setAI(!EStatueMechanic.this.noAI);
 			vh.teleportEntityPacket(this.entity);
-			vh.changeHitBox((Entity) this.entity, 0, 0, 0);
+			vh.changeHitBox(this.entity, 0, 0, 0);
 			if (EStatueMechanic.this.onStartSkill.isPresent()
 					&& EStatueMechanic.this.onStartSkill.get().isUsable(data)) {
 				SkillMetadata sData = data.deepClone();
@@ -185,7 +185,7 @@ public class EStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 				EStatueMechanic.this.onStartSkill.get().execute(sData);
 			}
 			this.oldLocation = this.currentLocation.clone();
-			this.taskId = TaskManager.get().scheduleTask(this, 0, 1);
+			this.taskId = Main.taskManager.scheduleTask(this, 0, 1);
 		}
 
 		@Override
@@ -292,7 +292,7 @@ public class EStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 				EStatueMechanic.this.onEndSkill.get().execute(sData.setOrigin(BukkitAdapter.adapt(this.currentLocation))
 						.setLocationTarget(BukkitAdapter.adapt(this.currentLocation)));
 			}
-			TaskManager.get().cancelTask(this.taskId);
+			Main.taskManager.cancelTask(this.taskId);
 			this.entity.remove();
 			this.cancelled = true;
 		}

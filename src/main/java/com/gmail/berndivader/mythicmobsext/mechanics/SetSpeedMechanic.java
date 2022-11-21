@@ -14,13 +14,15 @@ import org.bukkit.entity.LivingEntity;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "setspeed,randomspeed", author = "BerndiVader")
 public class SetSpeedMechanic extends SkillMechanic implements ITargetedEntitySkill, INoTargetSkill {
 	private String s1;
 	boolean bl1;
 
-	public SetSpeedMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public SetSpeedMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		s1 = mlc.getString(new String[] { "amount", "a", "range", "r" }, "0.2D").toLowerCase();
 		bl1 = mlc.getBoolean("debug", false);

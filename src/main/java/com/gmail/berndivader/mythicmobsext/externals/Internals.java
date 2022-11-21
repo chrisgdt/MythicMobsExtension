@@ -128,7 +128,6 @@ public class Internals implements Listener {
 							}
 						} catch (Throwable ex) {
 							Main.logger.info("Unable to load " + cn1 + " but continue.");
-							continue;
 						}
 					}
 				}

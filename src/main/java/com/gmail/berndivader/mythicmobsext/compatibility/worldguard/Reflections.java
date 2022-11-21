@@ -190,7 +190,7 @@ class Reflections {
 	}
 
 	public static String class_EntityType_getName(Object entity_type) {
-		String s1 = new String();
+		String s1 = "";
 		try {
 			s1 = (String) class_EntityType_getName.invoke(entity_type);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {

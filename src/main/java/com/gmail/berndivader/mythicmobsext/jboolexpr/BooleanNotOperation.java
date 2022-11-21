@@ -18,10 +18,8 @@ final class BooleanNotOperation implements IBoolean {
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("(!");
-		buffer.append(this.iBoolean);
-		buffer.append(")");
-		return buffer.toString();
+		return "(!" +
+				this.iBoolean +
+				")";
 	}
 }

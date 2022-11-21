@@ -26,7 +26,7 @@ public class MotionSpeed extends AbstractCustomCondition implements IEntityCondi
 		if (e.isLiving()) {
 			Vec3D motion=NMSUtils.getEntityLastMot(e.getBukkitEntity());
 			LivingEntity le1 = (LivingEntity) e.getBukkitEntity();
-			return r1.equals((double) le1.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue());
+			return r1.equals(le1.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue());
 		}
 		return false;
 	}

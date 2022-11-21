@@ -9,7 +9,6 @@ import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.api.skills.ThreadSafetyLevel;
-import io.lumine.mythic.core.skills.AbstractSkill;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.skills.SkillMechanic;
 import org.bukkit.entity.LivingEntity;
@@ -17,6 +16,7 @@ import org.bukkit.entity.LivingEntity;
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
 import com.gmail.berndivader.MythicPlayers.PlayerManager;
 
+import java.io.File;
 import java.util.Optional;
 
 public class mmCreateActivePlayer extends SkillMechanic implements ITargetedEntitySkill {
@@ -24,8 +24,8 @@ public class mmCreateActivePlayer extends SkillMechanic implements ITargetedEnti
 	protected PlayerManager playermanager = MythicPlayers.inst().getPlayerManager();
 	private String mobtype;
 
-	public mmCreateActivePlayer(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public mmCreateActivePlayer(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.mobtype = mlc.getString(new String[] { "mobtype", "type", "mob", "t", "m" }, "Player");
@@ -37,7 +37,7 @@ public class mmCreateActivePlayer extends SkillMechanic implements ITargetedEnti
 			return SkillResult.ERROR;
 		}
 		Optional<MythicMob> omm = mobmanager.getMythicMob(this.mobtype);
-		if (!omm.isPresent()) {
+		if (omm.isEmpty()) {
 			return SkillResult.ERROR;
 		}
 		MythicMob mm = omm.get();

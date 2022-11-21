@@ -14,12 +14,14 @@ import io.lumine.mythic.core.skills.SkillMechanic;
 import io.lumine.mythic.core.skills.SkillTriggers;
 import io.lumine.mythic.core.skills.TriggeredSkill;
 
+import java.io.File;
+
 @ExternalAnnotation(name = "setthreattarget", author = "BerndiVader")
 public class SetThreatTableTargetMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private double amount;
 
-	public SetThreatTableTargetMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public SetThreatTableTargetMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

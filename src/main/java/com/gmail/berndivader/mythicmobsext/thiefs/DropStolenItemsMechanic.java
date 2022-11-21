@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.thiefs;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -15,8 +16,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class DropStolenItemsMechanic extends SkillMechanic implements INoTargetSkill {
 
-	public DropStolenItemsMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public DropStolenItemsMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 	}

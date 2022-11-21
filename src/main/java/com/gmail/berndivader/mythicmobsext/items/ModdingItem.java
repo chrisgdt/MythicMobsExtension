@@ -200,8 +200,7 @@ public class ModdingItem implements Cloneable {
 				size = lores.length;
 				List<String> lore_list = item_meta.getLore();
 				for (int i1 = 0; i1 < size; i1++) {
-					if (lore_list.contains(lores[i1]))
-						lore_list.remove(lores[i1]);
+					lore_list.remove(lores[i1]);
 				}
 				item_meta.setLore(lore_list);
 				item_stack.setItemMeta(item_meta);

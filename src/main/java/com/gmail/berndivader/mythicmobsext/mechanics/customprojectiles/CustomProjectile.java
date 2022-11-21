@@ -1,11 +1,11 @@
 package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 
+import java.io.File;
 import java.util.Optional;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.adapters.AbstractLocation;
 import io.lumine.mythic.api.config.MythicLineConfig;
-import io.lumine.mythic.api.mobs.MobManager;
 import io.lumine.mythic.api.skills.*;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.EntityManager;
@@ -72,8 +72,8 @@ public class CustomProjectile extends SkillMechanic implements ITargetedEntitySk
 	protected float pEntitySpin;
 	protected float pEntityPitchOffset;
 
-	public CustomProjectile(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public CustomProjectile(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

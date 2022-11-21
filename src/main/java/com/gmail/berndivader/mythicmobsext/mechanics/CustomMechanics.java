@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -40,12 +41,12 @@ public class CustomMechanics implements Listener {
 	private boolean registerMechanic(Class<? extends SkillMechanic> cl1, MythicMechanicLoadEvent e) {
 		SkillMechanic skill = null;
 		try {
-			Constructor<? extends SkillMechanic> construct = cl1.getConstructor(SkillExecutor.class, String.class, MythicLineConfig.class);
+			Constructor<? extends SkillMechanic> construct = cl1.getConstructor(SkillExecutor.class, File.class, String.class, MythicLineConfig.class);
 			// TODO : InvocationTargetException when loading castif
 			// comes from MythicMobs, the field this.line of SkillMechanic is always null so e.getContainer().getConfigLine() is null and CastIf gets an exception
 
 			//skill = construct.newInstance(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig());
-			skill = construct.newInstance(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig());
+			skill = construct.newInstance(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig());
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e1) {
 			e1.printStackTrace();

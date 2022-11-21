@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.backbags.mechanics;
 
+import java.io.File;
 import java.util.List;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
@@ -28,8 +29,8 @@ public class MoveToBackBag extends SkillMechanic implements INoTargetSkill, ITar
 	String meta_name, slot;
 	HoldingItem holding;
 
-	public MoveToBackBag(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public MoveToBackBag(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		what = WhereEnum.getWhere(mlc.getString("what", "head"));
@@ -70,7 +71,7 @@ public class MoveToBackBag extends SkillMechanic implements INoTargetSkill, ITar
 					ItemStack new_item = old_item.clone();
 					if (tag_where)
 						HoldingItem.tagWhere(holding, new_item);
-					int tmp_slot = backbag_slot <= inventory.getSize() ? backbag_slot : inventory.getSize();
+					int tmp_slot = Math.min(backbag_slot, inventory.getSize());
 					if (backbag_slot == -1) {
 						if ((tmp_slot = inventory.firstEmpty()) > -1) {
 							inventory.addItem(new_item);

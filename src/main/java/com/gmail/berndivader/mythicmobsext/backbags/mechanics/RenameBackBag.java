@@ -13,11 +13,13 @@ import org.bukkit.entity.Entity;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagInventory;
 
+import java.io.File;
+
 public class RenameBackBag extends SkillMechanic implements INoTargetSkill {
 	PlaceholderString bag_name, new_bag_name;
 
-	public RenameBackBag(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public RenameBackBag(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		bag_name = mlc.getPlaceholderString(new String[] { "title", "name" }, BackBagHelper.str_name);

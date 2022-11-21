@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.File;
 import java.util.Iterator;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
@@ -20,8 +21,8 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 public class RemovePotionEffectMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private String[] type;
 
-	public RemovePotionEffectMechanic(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public RemovePotionEffectMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 

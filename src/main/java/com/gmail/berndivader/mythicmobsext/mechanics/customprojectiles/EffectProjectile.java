@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -7,10 +8,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.gmail.berndivader.mythicmobsext.Main;
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.adapters.AbstractLocation;
 import io.lumine.mythic.api.adapters.AbstractVector;
-import io.lumine.mythic.api.adapters.TaskManager;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.*;
 import io.lumine.mythic.bukkit.BukkitAdapter;
@@ -35,8 +36,8 @@ public class EffectProjectile extends CustomProjectile implements ITargetedEntit
 	protected Optional<Skill> onBounceSkill = Optional.empty();
 	protected String onBounceSkillName;
 
-	public EffectProjectile(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public EffectProjectile(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.mythicmobs = Utils.mythicmobs;
 		this.onBounceSkillName = mlc.getString(new String[] { "onbounceskill", "onbounce", "ob" });
 		if (this.onBounceSkillName != null) {
@@ -178,7 +179,7 @@ public class EffectProjectile extends CustomProjectile implements ITargetedEntit
 				this.currentVelocity.setY(this.currentVelocity.getY() - this.gravity);
 			}
 
-			this.taskId = TaskManager.get().scheduleTask(this, 0, EffectProjectile.this.tickInterval);
+			this.taskId = Main.taskManager.scheduleTask(this, 0, EffectProjectile.this.tickInterval);
 			if (EffectProjectile.this.hitPlayers || EffectProjectile.this.hitNonPlayers) {
 				this.inRange
 						.addAll(EffectProjectile.this.entitymanager.getLivingEntities(this.currentLocation.getWorld()));
@@ -371,7 +372,7 @@ public class EffectProjectile extends CustomProjectile implements ITargetedEntit
 				EffectProjectile.this.onEndSkill.get()
 						.execute(sData.setOrigin(this.currentLocation).setLocationTarget(this.currentLocation));
 			}
-			TaskManager.get().cancelTask(this.taskId);
+			Main.taskManager.cancelTask(this.taskId);
 			this.cancelled = true;
 		}
 

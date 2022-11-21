@@ -1,5 +1,6 @@
 package com.gmail.berndivader.MythicPlayers.Mechanics;
 
+import java.io.File;
 import java.util.Optional;
 
 import com.gmail.berndivader.MythicPlayers.ActivePlayer;
@@ -21,8 +22,8 @@ public class mmNormalPlayer extends SkillMechanic implements ITargetedEntitySkil
 	protected PlayerManager playermanager = MythicPlayers.inst().getPlayerManager();
 	protected MobManager mobmanager = Utils.mobmanager;
 
-	public mmNormalPlayer(SkillExecutor manager, String skill, MythicLineConfig mlc) {
-		super(manager, skill, mlc);
+	public mmNormalPlayer(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
+		super(manager, file, skill, mlc);
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 	}
 

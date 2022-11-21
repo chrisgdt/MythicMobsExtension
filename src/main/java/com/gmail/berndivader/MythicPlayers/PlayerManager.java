@@ -12,7 +12,6 @@ import io.lumine.mythic.api.mobs.MobManager;
 import io.lumine.mythic.api.mobs.MythicMob;
 import io.lumine.mythic.api.skills.SkillTrigger;
 import io.lumine.mythic.bukkit.BukkitAdapter;
-import io.lumine.mythic.core.skills.SkillCondition;
 import io.lumine.mythic.core.skills.SkillMechanic;
 import io.lumine.mythic.core.skills.SkillTriggers;
 import io.lumine.mythic.core.skills.TriggeredSkill;
@@ -120,7 +119,7 @@ public class PlayerManager implements Listener {
 
 	public boolean attachActivePlayer(LivingEntity l, boolean dotrigger) {
 		Optional<MythicMob> omm = mobmanager.getMythicMob(l.getMetadata(meta_MYTHICPLAYER).get(0).asString());
-		if (!omm.isPresent()) {
+		if (omm.isEmpty()) {
 			l.removeMetadata(meta_MYTHICPLAYER, mythicplayers.plugin());
 			return false;
 		}

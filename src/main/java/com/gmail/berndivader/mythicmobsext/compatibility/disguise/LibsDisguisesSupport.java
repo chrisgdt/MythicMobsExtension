@@ -48,7 +48,7 @@ public class LibsDisguisesSupport implements Listener {
 		switch (e.getMechanicName().toLowerCase()) {
 		case "parseddisguise":
 		case "parseddisguise_ext": {
-			e.register(new ParsedDisguiseMechanic(e.getContainer().getManager(), e.getConfig().getLine(), e.getConfig()));
+			e.register(new ParsedDisguiseMechanic(e.getContainer().getManager(), e.getContainer().getFile(), e.getConfig().getLine(), e.getConfig()));
 			//e.register(new ParsedDisguiseMechanic(e.getContainer().getManager(), e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		}

@@ -48,8 +48,8 @@ public class Vector2D {
 	 * @param z the Z coordinate
 	 */
 	public Vector2D(int x, int z) {
-		this.x = (double) x;
-		this.z = (double) z;
+		this.x = x;
+		this.z = z;
 	}
 
 	/**
@@ -59,8 +59,8 @@ public class Vector2D {
 	 * @param z the Z coordinate
 	 */
 	public Vector2D(float x, float z) {
-		this.x = (double) x;
-		this.z = (double) z;
+		this.x = x;
+		this.z = z;
 	}
 
 	/**
