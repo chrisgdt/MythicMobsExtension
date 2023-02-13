@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.advancement;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.advancement;
 
 import java.util.*;
 
@@ -6,20 +6,20 @@ import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.SerializationContext;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.resources.ResourceLocation;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
 import com.google.gson.JsonObject;
 
 public class FakeAdvancement {
-	private com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.advancement.FakeDisplay display;
+	private com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.advancement.FakeDisplay display;
 
-	public FakeAdvancement(com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.advancement.FakeDisplay display) {
+	public FakeAdvancement(com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.advancement.FakeDisplay display) {
 		this.display = display;
 	}
 
-	public com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.advancement.FakeDisplay getDisplay() {
+	public com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.advancement.FakeDisplay getDisplay() {
 		return this.display;
 	}
 

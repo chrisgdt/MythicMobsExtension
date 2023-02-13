@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 

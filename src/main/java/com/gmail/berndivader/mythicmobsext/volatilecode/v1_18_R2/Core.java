@@ -1,16 +1,16 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2;
 
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Predicate;
 
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.advancement.FakeAdvancement;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.advancement.FakeDisplay;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.navigation.ControllerFly;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.navigation.ControllerVex;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.navigation.NavigationClimb;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalOtherTeams;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalTravelAround;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.advancement.FakeAdvancement;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.advancement.FakeDisplay;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.navigation.ControllerFly;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.navigation.ControllerVex;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.navigation.NavigationClimb;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalOtherTeams;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalTravelAround;
 import io.lumine.mythic.api.skills.SkillResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.TagParser;
@@ -48,9 +48,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R1.entity.*;
-import org.bukkit.craftbukkit.v1_19_R1.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R2.entity.*;
+import org.bukkit.craftbukkit.v1_18_R2.util.CraftMagicNumbers;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -576,7 +576,7 @@ public class Core implements Handler, Listener {
 						range = Float.parseFloat(data);
 					}
 					pathfindergoal = Optional
-							.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack((PathfinderMob) e, 1.0, true, range));
+							.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalMeleeRangeAttack((PathfinderMob) e, 1.0, true, range));
 				}
 				break;
 			}
@@ -588,7 +588,7 @@ public class Core implements Handler, Listener {
 						s = Double.parseDouble(data);
 					if (data1 != null)
 						r = Float.parseFloat(data1);
-					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalAttack((PathfinderMob) e, s, true, r));
+					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalAttack((PathfinderMob) e, s, true, r));
 				}
 				break;
 			}
@@ -625,7 +625,7 @@ public class Core implements Handler, Listener {
 							}
 						}
 					}
-					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathFinderGoalShoot(e, d1, i1, i2, f1));
+					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathFinderGoalShoot(e, d1, i1, i2, f1));
 				}
 				break;
 			}
@@ -657,7 +657,7 @@ public class Core implements Handler, Listener {
 					}
 					if (tE != null && tE.isAlive()) {
 						pathfindergoal = Optional.of(
-								new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalFollowEntity(
+								new com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalFollowEntity(
 										e, tE, speed, zR, aR));
 					}
 				}
@@ -668,33 +668,33 @@ public class Core implements Handler, Listener {
 					int chance = 50;
 					if (data1 != null && MathUtils.isNumeric(data1))
 						chance = Integer.parseInt(data1);
-					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalBreakBlocks(e, data, chance));
+					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalBreakBlocks(e, data, chance));
 				}
 				break;
 			}
 			case "jumpoffvehicle": {
 				if (e instanceof PathfinderMob) {
-					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle(e));
+					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalJumpOffFromVehicle(e));
 				}
 				break;
 			}
 			case "notifycollide": {
 				if (e instanceof Mob) {
 					int c = data != null && MathUtils.isNumeric(data) ? Integer.parseInt(data) : 5;
-					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalNotifyOnCollide(e, c));
+					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalNotifyOnCollide(e, c));
 				}
 				break;
 			}
 			case "notifyheal": {
 				if (e instanceof net.minecraft.world.entity.LivingEntity) {
-					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalNotifyHeal(e, "mme_heal"));
+					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalNotifyHeal(e, "mme_heal"));
 				}
 				break;
 			}
 			case "notifygrow":
 			case "grownotify": {
 				if (e instanceof AgeableMob) {
-					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalEntityGrowNotify(e, data));
+					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalEntityGrowNotify(e, data));
 				} else {
 					Main.logger.warning("No ageable entity");
 				}
@@ -738,7 +738,7 @@ public class Core implements Handler, Listener {
 							}
 						}
 					}
-					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalReturnHome(e, speed, x, y, z, mR, tR, iT));
+					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalReturnHome(e, speed, x, y, z, mR, tR, iT));
 					break;
 				}
 			}
@@ -767,21 +767,21 @@ public class Core implements Handler, Listener {
 							}
 						}
 					}
-					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalTravelAround(e, speed, mR, tR, iT));
+					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalTravelAround(e, speed, mR, tR, iT));
 					break;
 				}
 			}
 			case "doorsopen": {
 				if (e instanceof Mob) {
 					boolean bl1 = data != null && Boolean.parseBoolean(data);
-					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalDoorOpen(e, bl1));
+					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalDoorOpen(e, bl1));
 				}
 				break;
 			}
 			case "doorsbreak": {
 				if (e instanceof Mob) {
 					boolean bl1 = data != null && Boolean.parseBoolean(data);
-					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalDoorBreak(e, bl1));
+					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalDoorBreak(e, bl1));
 				}
 				break;
 			}
@@ -804,10 +804,10 @@ public class Core implements Handler, Listener {
 				}
 				break;
 			case "vexa": {
-				pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalVexA(e));
+				pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalVexA(e));
 			}
 			case "vexd": {
-				pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalVexD(e));
+				pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalVexD(e));
 			}
 			}
 			if (pathfindergoal.isPresent()) {
@@ -859,8 +859,8 @@ public class Core implements Handler, Listener {
 			while (iter.hasNext()) {
 				Object object = iter.next();
 				Goal goal = (Goal) NMSUtils.getPathfinderGoalFromPathFinderSelectorItem(object);
-				if (goal instanceof com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalTravelAround) {
-					((com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalTravelAround) goal).addTravelPoint(vector, remove);
+				if (goal instanceof com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalTravelAround) {
+					((com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalTravelAround) goal).addTravelPoint(vector, remove);
 				}
 			}
 		} catch (Exception ex) {
