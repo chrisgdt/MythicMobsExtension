@@ -21,7 +21,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.Objective;
 
 import com.gmail.berndivader.mythicmobsext.Main;
@@ -92,7 +91,7 @@ public class EvalMechanic extends SkillMechanic implements INoTargetSkill, ITarg
 							.setScore((int) s1);
 					;
 				} else {
-					Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective(parse[2], Criteria.DUMMY, parse[2])
+					Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective(parse[2], "dummy", parse[2])
 							.getScore(target instanceof Player ? target.getName() : target.getUniqueId().toString())
 							.setScore((int) (s1));
 				}
@@ -106,7 +105,7 @@ public class EvalMechanic extends SkillMechanic implements INoTargetSkill, ITarg
 			if (o1 != null) {
 				o1.getScore(parse[2]).setScore((int) (s1));
 			} else {
-				Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective(parse[1], Criteria.DUMMY, parse[1])
+				Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective(parse[1], "dummy", parse[1])
 						.getScore(parse[2]).setScore((int) (s1));
 			}
 		}

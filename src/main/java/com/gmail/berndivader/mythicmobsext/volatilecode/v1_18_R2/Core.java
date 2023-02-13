@@ -13,6 +13,7 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_18_R2.pathfindergoals.PathfinderGoalTravelAround;
 import io.lumine.mythic.api.skills.SkillResult;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.CompoundTag;
@@ -285,10 +286,10 @@ public class Core implements Handler, Listener {
 				entityplayer1.getWorldServer().isDebugWorld(), entityplayer1.getWorldServer().isFlatWorld(), true));
 		 */
 		entityplayer1.connection.send(new ClientboundRespawnPacket(
-				entityplayer1.level.dimensionTypeId(), entityplayer1.level.dimension(),
+				Holder.direct(entityplayer1.level.dimensionType()), entityplayer1.level.dimension(),
 				BiomeManager.obfuscateSeed(entityplayer1.getLevel().getSeed()),
 				entityplayer1.gameMode.getGameModeForPlayer(), entityplayer1.gameMode.getPreviousGameModeForPlayer(),
-				entityplayer1.getLevel().isDebug(), entityplayer1.getLevel().isFlat(), true, entityplayer1.getLastDeathLocation()));
+				entityplayer1.getLevel().isDebug(), entityplayer1.getLevel().isFlat(), true));
 		entityplayer1.connection.send(new ClientboundSetChunkCacheRadiusPacket(worldServer.spigotConfig.viewDistance));
 		entityplayer1.spawnIn(worldServer);
 
