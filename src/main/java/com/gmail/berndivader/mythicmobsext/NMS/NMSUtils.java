@@ -10,6 +10,7 @@ import java.util.Map;
 import io.lumine.mythic.core.drops.Drop;
 import net.minecraft.server.dedicated.DedicatedServer;
 import org.bukkit.Server;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftLivingEntity;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -28,7 +29,7 @@ import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 public class NMSUtils extends CompatibilityUtils {
 
 	protected static Class<?> class_IChatBaseComponent_ChatSerializer;
-	protected static Class<?> class_EntitySnowman;
+	//protected static Class<?> class_EntitySnowman;
 
 	protected static Class<?> class_PathfinderGoalSelector_PathfinderGoalSelectorItem;
 	protected static Class<?> class_IInventory;
@@ -54,9 +55,9 @@ public class NMSUtils extends CompatibilityUtils {
 	protected static Method class_EntityCreature_setGoalTargetMethod;
 	protected static Method class_EntityPlayer_clearActiveItemMethod;
 	protected static Method class_EntityLiving_getArmorStrengthMethod;
-	protected static Method class_EntitySnowman_setHasPumpkinMethod;
-	protected static Method class_EntityLiving_getArrowCountMethod;
-	protected static Method class_EntityLiving_setArrowCountMethod;
+	//protected static Method class_EntitySnowman_setHasPumpkinMethod;
+	//protected static Method class_EntityLiving_getArrowCountMethod;
+	//protected static Method class_EntityLiving_setArrowCountMethod;
 
 	protected static Method class_Drop_getDropMethod;
 
@@ -67,7 +68,7 @@ public class NMSUtils extends CompatibilityUtils {
 		boolean bool = com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils.initialize(Main.getPlugin().getLogger());
 		try {
 			class_IChatBaseComponent_ChatSerializer = fixBukkitClass("IChatBaseComponent$ChatSerializer", true, "network.chat");
-			class_EntitySnowman = fixBukkitClass("EntitySnowman", true, "world.entity.animal");
+			//class_EntitySnowman = fixBukkitClass("EntitySnowman", true, "world.entity.animal");
 			class_PathfinderGoalSelector_PathfinderGoalSelectorItem = fixBukkitClass(Utils.serverV < 14 ?
 							"PathfinderGoalSelector$PathfinderGoalSelectorItem" : "PathfinderGoalWrapped",
 					true, "world.entity.ai.goal");
@@ -370,11 +371,12 @@ public class NMSUtils extends CompatibilityUtils {
 	 * @param bool    {@link Boolean}
 	 */
 	public static void setSnowmanPumpkin(Snowman snowman, boolean bool) {
-		try {
+		/*try {
 			class_EntitySnowman_setHasPumpkinMethod.invoke(getHandle(snowman), bool);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			e.printStackTrace();
-		}
+		}*/
+		snowman.setDerp(bool);
 	}
 
 	/**
@@ -382,14 +384,15 @@ public class NMSUtils extends CompatibilityUtils {
 	 * @return int {@link Integer}
 	 */
 	public static int getArrowsOnEntity(LivingEntity entity) {
-		int arrow_count;
+		/*int arrow_count;
 		try {
 			arrow_count = (int) class_EntityLiving_getArrowCountMethod.invoke(getHandle(entity));
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			e.printStackTrace();
 			arrow_count = -1;
 		}
-		return arrow_count;
+		return arrow_count;*/
+		return entity.getArrowsInBody();
 	}
 
 	/**
@@ -397,11 +400,12 @@ public class NMSUtils extends CompatibilityUtils {
 	 * @param amount {@link Integer}
 	 */
 	public static void setArrowsOnEntity(LivingEntity entity, int amount) {
-		try {
+		/*try {
 			class_EntityLiving_setArrowCountMethod.invoke(getHandle(entity), amount);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			e.printStackTrace();
-		}
+		}*/
+		entity.setArrowsInBody(amount);
 	}
 
 	/**

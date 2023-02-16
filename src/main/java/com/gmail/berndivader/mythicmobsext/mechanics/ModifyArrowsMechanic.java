@@ -17,20 +17,20 @@ import java.io.File;
 
 @ExternalAnnotation(name = "modifyarrows", author = "BerndiVader")
 public class ModifyArrowsMechanic extends SkillMechanic implements ITargetedEntitySkill {
-	private int a;
-	private char m;
+	private final int amount;
+	private final char mode;
 
 	public ModifyArrowsMechanic(SkillExecutor manager, File file, String skill, MythicLineConfig mlc) {
 		super(manager, file, skill, mlc);
 		this.line = skill;
-		this.m = mlc.getString(new String[] { "mode", "m" }, "c").toUpperCase().charAt(0);
-		this.a = mlc.getInteger(new String[] { "amount", "a" }, 1);
+		this.mode  = mlc.getString(new String[] { "mode", "m" }, "c").toUpperCase().charAt(0);
+		this.amount = mlc.getInteger(new String[] { "amount", "a" }, 1);
 	}
 
 	@Override
 	public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving()) {
-			modifyArrowsAtEntity(target.getBukkitEntity(), this.a, this.m);
+			modifyArrowsAtEntity(target.getBukkitEntity(), this.amount, this.mode);
 			return SkillResult.SUCCESS;
 		}
 		return SkillResult.CONDITION_FAILED;
@@ -44,17 +44,13 @@ public class ModifyArrowsMechanic extends SkillMechanic implements ITargetedEnti
 	static void modifyArrowsAtEntity(Entity entity, int amount, char action) {
 		int a = NMSUtils.getArrowsOnEntity((LivingEntity) entity);
 		switch (action) {
-		case 'A':
-			amount += a;
-			break;
-		case 'S':
-			amount = a - amount;
-			if (amount < 0)
-				a = 0;
-			break;
-		case 'C':
-			amount = 0;
-			break;
+			case 'A' -> amount += a;
+			case 'S' -> {
+				amount = a - amount;
+				if (amount < 0)
+					a = 0;
+			}
+			case 'C' -> amount = 0;
 		}
 		NMSUtils.setArrowsOnEntity((LivingEntity) entity, amount);
 	}
