@@ -28,7 +28,7 @@ import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 public class NMSUtils extends CompatibilityUtils {
 
 	protected static Class<?> class_IChatBaseComponent_ChatSerializer;
-	protected static Class<?> class_EntitySnowman;
+	//protected static Class<?> class_EntitySnowman;
 
 	protected static Class<?> class_PathfinderGoalSelector_PathfinderGoalSelectorItem;
 	protected static Class<?> class_IInventory;
@@ -54,9 +54,9 @@ public class NMSUtils extends CompatibilityUtils {
 	protected static Method class_EntityCreature_setGoalTargetMethod;
 	protected static Method class_EntityPlayer_clearActiveItemMethod;
 	protected static Method class_EntityLiving_getArmorStrengthMethod;
-	protected static Method class_EntitySnowman_setHasPumpkinMethod;
-	protected static Method class_EntityLiving_getArrowCountMethod;
-	protected static Method class_EntityLiving_setArrowCountMethod;
+	//protected static Method class_EntitySnowman_setHasPumpkinMethod;
+	//protected static Method class_EntityLiving_getArrowCountMethod;
+	//protected static Method class_EntityLiving_setArrowCountMethod;
 
 	protected static Method class_Drop_getDropMethod;
 
@@ -67,7 +67,7 @@ public class NMSUtils extends CompatibilityUtils {
 		boolean bool = com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils.initialize(Main.getPlugin().getLogger());
 		try {
 			class_IChatBaseComponent_ChatSerializer = fixBukkitClass("IChatBaseComponent$ChatSerializer", true, "network.chat");
-			class_EntitySnowman = fixBukkitClass("EntitySnowman", true, "world.entity.animal");
+			//class_EntitySnowman = fixBukkitClass("EntitySnowman", true, "world.entity.animal");
 			class_PathfinderGoalSelector_PathfinderGoalSelectorItem = fixBukkitClass(Utils.serverV < 14 ?
 							"PathfinderGoalSelector$PathfinderGoalSelectorItem" : "PathfinderGoalWrapped",
 					true, "world.entity.ai.goal");
@@ -75,23 +75,23 @@ public class NMSUtils extends CompatibilityUtils {
 			class_CraftInventory = fixBukkitClass("inventory.CraftInventory", false);
 			class_MetadataStoreBase = fixBukkitClass("org.bukkit.metadata.MetadataStoreBase");
 
-			/*class_Entity_lastXField = class_Entity.getDeclaredField(version < 17 ? "lastX" : "u"); // 1.17 : xo
-			class_Entity_lastXField.setAccessible(true);
-			class_Entity_lastYField = class_Entity.getDeclaredField(version < 17 ? "lastY" : "v"); // 1.17 : yo
-			class_Entity_lastYField.setAccessible(true);
-			class_Entity_lastZField = class_Entity.getDeclaredField(version < 17 ? "lastZ" : "w"); // 1.17 : zo
-			class_Entity_lastZField.setAccessible(true);
-			class_Entity_lastPitchField = class_Entity.getDeclaredField(version < 17 ? "lastPitch" : "x"); // 1.17 : yRotO
-			class_Entity_lastPitchField.setAccessible(true);
-			class_Entity_lastYawField = class_Entity.getDeclaredField(version < 17 ? "lastYaw" : "y"); // 1.17 : xRotO
-			class_Entity_lastYawField.setAccessible(true);
+            /*class_Entity_lastXField = class_Entity.getDeclaredField(version < 17 ? "lastX" : "u"); // 1.17 : xo
+            class_Entity_lastXField.setAccessible(true);
+            class_Entity_lastYField = class_Entity.getDeclaredField(version < 17 ? "lastY" : "v"); // 1.17 : yo
+            class_Entity_lastYField.setAccessible(true);
+            class_Entity_lastZField = class_Entity.getDeclaredField(version < 17 ? "lastZ" : "w"); // 1.17 : zo
+            class_Entity_lastZField.setAccessible(true);
+            class_Entity_lastPitchField = class_Entity.getDeclaredField(version < 17 ? "lastPitch" : "x"); // 1.17 : yRotO
+            class_Entity_lastPitchField.setAccessible(true);
+            class_Entity_lastYawField = class_Entity.getDeclaredField(version < 17 ? "lastYaw" : "y"); // 1.17 : xRotO
+            class_Entity_lastYawField.setAccessible(true);
 
-			if (Utils.serverV < 14) {
-				class_Entity_fireProof = class_Entity.getDeclaredField("fireProof");
-				class_Entity_fireProof.setAccessible(true);
-			}
+            if (Utils.serverV < 14) {
+                class_Entity_fireProof = class_Entity.getDeclaredField("fireProof");
+                class_Entity_fireProof.setAccessible(true);
+            }
 
-			 */
+             */
 			class_MetadataStoreBase_metadataMapField = class_MetadataStoreBase.getDeclaredField("metadataMap");
 			class_MetadataStoreBase_metadataMapField.setAccessible(true);
 
@@ -101,23 +101,23 @@ public class NMSUtils extends CompatibilityUtils {
 			class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PriorityField = class_PathfinderGoalSelector_PathfinderGoalSelectorItem
 					.getDeclaredField("b");
 			class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PriorityField.setAccessible(true);
-			/*
-			class_MinecraftServer_currentTickField = class_MinecraftServer.getDeclaredField("currentTick");
-			class_MinecraftServer_currentTickField.setAccessible(true);
+            /*
+            class_MinecraftServer_currentTickField = class_MinecraftServer.getDeclaredField("currentTick");
+            class_MinecraftServer_currentTickField.setAccessible(true);
 
-			class_Entity_getFlagMethod = class_Entity.getMethod(version < 18 ? "getFlag" : "h", Integer.TYPE);
-			class_IChatBaseComponent_ChatSerializer_aMethod = class_IChatBaseComponent_ChatSerializer.getMethod("a",
-					String.class);
-			class_EntityCreature_setGoalTargetMethod = class_EntityCreature.getMethod(version < 18 ? "setGoalTarget" : "setTarget",
-					class_EntityLiving, TargetReason.class, Boolean.TYPE);
-			class_EntityPlayer_clearActiveItemMethod = class_EntityPlayer.getMethod(version < 18 ? "clearActiveItem" : "eR");
-			//class_EntityLiving_getArmorStrengthMethod = class_EntityLiving.getMethod(version < 18 ? "getArmorStrength" : "ei");
-			//class_EntitySnowman_setHasPumpkinMethod = class_EntitySnowman.getMethod(version < 18 ? "setHasPumpkin" : "v", Boolean.TYPE);
-			//class_EntityLiving_getArrowCountMethod = class_EntityLiving.getMethod(version < 18 ? "getArrowCount" : "em");
-			//class_EntityLiving_setArrowCountMethod = class_EntityLiving.getMethod("setArrowCount", Integer.TYPE, Boolean.TYPE);
-			//class_PathfinderGoalSelector_PathfinderGoalSelectorItem_equalsMethod = class_PathfinderGoalSelector_PathfinderGoalSelectorItem
-			//		.getMethod("equals", Object.class);
-			*/
+            class_Entity_getFlagMethod = class_Entity.getMethod(version < 18 ? "getFlag" : "h", Integer.TYPE);
+            class_IChatBaseComponent_ChatSerializer_aMethod = class_IChatBaseComponent_ChatSerializer.getMethod("a",
+                    String.class);
+            class_EntityCreature_setGoalTargetMethod = class_EntityCreature.getMethod(version < 18 ? "setGoalTarget" : "setTarget",
+                    class_EntityLiving, TargetReason.class, Boolean.TYPE);
+            class_EntityPlayer_clearActiveItemMethod = class_EntityPlayer.getMethod(version < 18 ? "clearActiveItem" : "eR");
+            //class_EntityLiving_getArmorStrengthMethod = class_EntityLiving.getMethod(version < 18 ? "getArmorStrength" : "ei");
+            //class_EntitySnowman_setHasPumpkinMethod = class_EntitySnowman.getMethod(version < 18 ? "setHasPumpkin" : "v", Boolean.TYPE);
+            //class_EntityLiving_getArrowCountMethod = class_EntityLiving.getMethod(version < 18 ? "getArrowCount" : "em");
+            //class_EntityLiving_setArrowCountMethod = class_EntityLiving.getMethod("setArrowCount", Integer.TYPE, Boolean.TYPE);
+            //class_PathfinderGoalSelector_PathfinderGoalSelectorItem_equalsMethod = class_PathfinderGoalSelector_PathfinderGoalSelectorItem
+            //      .getMethod("equals", Object.class);
+            */
 
 			class_CraftServer_getEntityMetadataStoreMethod = class_CraftServer.getMethod("getEntityMetadata");
 			class_CraftServer_getPlayerMetadataStoreMethod = class_CraftServer.getMethod("getPlayerMetadata");
@@ -186,18 +186,18 @@ public class NMSUtils extends CompatibilityUtils {
 	 */
 	public static int getCurrentTick(Server server) {
 		return ((DedicatedServer) getHandle(server)).getTickCount();
-		/*
-		int i1 = 0;
-		Object o1;
-		try {
-			if ((o1 = getHandle(server)) != null) {
-				i1 = class_MinecraftServer_currentTickField.getInt(o1);
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return i1;
-		 */
+        /*
+        int i1 = 0;
+        Object o1;
+        try {
+            if ((o1 = getHandle(server)) != null) {
+                i1 = class_MinecraftServer_currentTickField.getInt(o1);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return i1;
+         */
 	}
 
 	/**
@@ -370,11 +370,12 @@ public class NMSUtils extends CompatibilityUtils {
 	 * @param bool    {@link Boolean}
 	 */
 	public static void setSnowmanPumpkin(Snowman snowman, boolean bool) {
-		try {
-			class_EntitySnowman_setHasPumpkinMethod.invoke(getHandle(snowman), bool);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			e.printStackTrace();
-		}
+        /*try {
+            class_EntitySnowman_setHasPumpkinMethod.invoke(getHandle(snowman), bool);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
+        }*/
+		snowman.setDerp(bool);
 	}
 
 	/**
@@ -382,14 +383,15 @@ public class NMSUtils extends CompatibilityUtils {
 	 * @return int {@link Integer}
 	 */
 	public static int getArrowsOnEntity(LivingEntity entity) {
-		int arrow_count;
-		try {
-			arrow_count = (int) class_EntityLiving_getArrowCountMethod.invoke(getHandle(entity));
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			e.printStackTrace();
-			arrow_count = -1;
-		}
-		return arrow_count;
+        /*int arrow_count;
+        try {
+            arrow_count = (int) class_EntityLiving_getArrowCountMethod.invoke(getHandle(entity));
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
+            arrow_count = -1;
+        }
+        return arrow_count;*/
+		return entity.getArrowsInBody();
 	}
 
 	/**
@@ -397,11 +399,12 @@ public class NMSUtils extends CompatibilityUtils {
 	 * @param amount {@link Integer}
 	 */
 	public static void setArrowsOnEntity(LivingEntity entity, int amount) {
-		try {
-			class_EntityLiving_setArrowCountMethod.invoke(getHandle(entity), amount);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			e.printStackTrace();
-		}
+        /*try {
+            class_EntityLiving_setArrowCountMethod.invoke(getHandle(entity), amount);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
+        }*/
+		entity.setArrowsInBody(amount);
 	}
 
 	/**
@@ -445,8 +448,6 @@ public class NMSUtils extends CompatibilityUtils {
 		}
 		return metadata_map;
 	}
-	
-	
 
 	/**
 	 * @param entity {@link Player}
