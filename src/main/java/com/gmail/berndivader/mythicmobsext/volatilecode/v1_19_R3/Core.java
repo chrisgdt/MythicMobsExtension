@@ -1,16 +1,16 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3;
 
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Predicate;
 
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.advancement.FakeAdvancement;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.advancement.FakeDisplay;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.navigation.ControllerFly;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.navigation.ControllerVex;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.navigation.NavigationClimb;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalOtherTeams;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalTravelAround;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.advancement.FakeAdvancement;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.advancement.FakeDisplay;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.navigation.ControllerFly;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.navigation.ControllerVex;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.navigation.NavigationClimb;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalOtherTeams;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalTravelAround;
 import io.lumine.mythic.api.skills.SkillResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.TagParser;
@@ -48,9 +48,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R1.entity.*;
-import org.bukkit.craftbukkit.v1_19_R1.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R3.entity.*;
+import org.bukkit.craftbukkit.v1_19_R3.util.CraftMagicNumbers;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -80,14 +80,14 @@ public class Core implements Handler, Listener {
 	private static Field ai_pathfinderlist_b;
 	private static Field ai_pathfinderlist_c;
 
-	private static Set<RelativeArgument> rot_set = new HashSet<>(Arrays
-			.asList(RelativeArgument.X_ROT, RelativeArgument.Y_ROT));
-	private static Set<RelativeArgument> rot_pos_set = new HashSet<>(
-			Arrays.asList(RelativeArgument.X_ROT, RelativeArgument.Y_ROT,
-					RelativeArgument.X, RelativeArgument.Y, RelativeArgument.Z));
-	private static Set<RelativeArgument> pos_set = new HashSet<>(
-			Arrays.asList(RelativeArgument.X, RelativeArgument.Y,
-					RelativeArgument.Z));
+	private static Set<RelativeMovement> rot_set = new HashSet<>(Arrays
+			.asList(RelativeMovement.X_ROT, RelativeMovement.Y_ROT));
+	private static Set<RelativeMovement> rot_pos_set = new HashSet<>(
+			Arrays.asList(RelativeMovement.X_ROT, RelativeMovement.Y_ROT,
+					RelativeMovement.X, RelativeMovement.Y, RelativeMovement.Z));
+	private static Set<RelativeMovement> pos_set = new HashSet<>(
+			Arrays.asList(RelativeMovement.X, RelativeMovement.Y,
+					RelativeMovement.Z));
 
 	static {
 		try {
@@ -284,11 +284,12 @@ public class Core implements Handler, Listener {
 				entityplayer1.playerInteractManager.getGameMode(), entityplayer1.playerInteractManager.c(),
 				entityplayer1.getWorldServer().isDebugWorld(), entityplayer1.getWorldServer().isFlatWorld(), true));
 		 */
+		// before 1.19.3 : var8 true = keep all metadata (e.g. for dimension change), after : byte to say which data to keep
 		entityplayer1.connection.send(new ClientboundRespawnPacket(
 				entityplayer1.level.dimensionTypeId(), entityplayer1.level.dimension(),
 				BiomeManager.obfuscateSeed(entityplayer1.getLevel().getSeed()),
 				entityplayer1.gameMode.getGameModeForPlayer(), entityplayer1.gameMode.getPreviousGameModeForPlayer(),
-				entityplayer1.getLevel().isDebug(), entityplayer1.getLevel().isFlat(), true, entityplayer1.getLastDeathLocation()));
+				entityplayer1.getLevel().isDebug(), entityplayer1.getLevel().isFlat(), ClientboundRespawnPacket.KEEP_ALL_DATA, entityplayer1.getLastDeathLocation()));
 		entityplayer1.connection.send(new ClientboundSetChunkCacheRadiusPacket(worldServer.spigotConfig.viewDistance));
 		entityplayer1.spawnIn(worldServer);
 
@@ -404,17 +405,17 @@ public class Core implements Handler, Listener {
 	private void playerConnectionTeleport(Entity entity, double x, double y, double z, float yaw, float pitch,
 			boolean f, boolean g) {
 		ServerPlayer me = ((CraftPlayer) entity).getHandle();
-		Set<RelativeArgument> set = new HashSet<>();
+		Set<RelativeMovement> set = new HashSet<>();
 		if (f) {
 			set = rot_set;
 			yaw = 0.0F;
 			pitch = 0.0F;
 		}
 		if (g) {
-			set.add(RelativeArgument.Y);
+			set.add(RelativeMovement.Y);
 			y = 0.0D;
 		}
-		me.connection.send(new ClientboundPlayerPositionPacket(x, y, z, yaw, pitch, set, 0, false));
+		me.connection.send(new ClientboundPlayerPositionPacket(x, y, z, yaw, pitch, set, 0));
 	}
 
 	@Override
@@ -431,14 +432,14 @@ public class Core implements Handler, Listener {
 	@Override
 	public void playerConnectionLookAt(Player entity, float yaw, float pitch) {
 		ServerPlayer me = ((CraftPlayer) entity).getHandle();
-		me.connection.send(new ClientboundPlayerPositionPacket(0, 0, 0, yaw, pitch, pos_set, 0, false));
+		me.connection.send(new ClientboundPlayerPositionPacket(0, 0, 0, yaw, pitch, pos_set, 0));
 	}
 
 	@Override
 	public void playerConnectionSpin(Entity entity, float s) {
 		if (entity instanceof CraftPlayer) {
 			ServerPlayer me = ((CraftPlayer) entity).getHandle();
-			me.connection.send(new ClientboundPlayerPositionPacket(0, 0, 0, s, 0, rot_pos_set, 0, false));
+			me.connection.send(new ClientboundPlayerPositionPacket(0, 0, 0, s, 0, rot_pos_set, 0));
 		}
 	}
 
@@ -576,7 +577,7 @@ public class Core implements Handler, Listener {
 						range = Float.parseFloat(data);
 					}
 					pathfindergoal = Optional
-							.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack((PathfinderMob) e, 1.0, true, range));
+							.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalMeleeRangeAttack((PathfinderMob) e, 1.0, true, range));
 				}
 				break;
 			}
@@ -588,7 +589,7 @@ public class Core implements Handler, Listener {
 						s = Double.parseDouble(data);
 					if (data1 != null)
 						r = Float.parseFloat(data1);
-					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalAttack((PathfinderMob) e, s, true, r));
+					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalAttack((PathfinderMob) e, s, true, r));
 				}
 				break;
 			}
@@ -625,7 +626,7 @@ public class Core implements Handler, Listener {
 							}
 						}
 					}
-					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathFinderGoalShoot(e, d1, i1, i2, f1));
+					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathFinderGoalShoot(e, d1, i1, i2, f1));
 				}
 				break;
 			}
@@ -657,7 +658,7 @@ public class Core implements Handler, Listener {
 					}
 					if (tE != null && tE.isAlive()) {
 						pathfindergoal = Optional.of(
-								new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalFollowEntity(
+								new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalFollowEntity(
 										e, tE, speed, zR, aR));
 					}
 				}
@@ -668,33 +669,33 @@ public class Core implements Handler, Listener {
 					int chance = 50;
 					if (data1 != null && MathUtils.isNumeric(data1))
 						chance = Integer.parseInt(data1);
-					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalBreakBlocks(e, data, chance));
+					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalBreakBlocks(e, data, chance));
 				}
 				break;
 			}
 			case "jumpoffvehicle": {
 				if (e instanceof PathfinderMob) {
-					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle(e));
+					pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalJumpOffFromVehicle(e));
 				}
 				break;
 			}
 			case "notifycollide": {
 				if (e instanceof Mob) {
 					int c = data != null && MathUtils.isNumeric(data) ? Integer.parseInt(data) : 5;
-					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalNotifyOnCollide(e, c));
+					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalNotifyOnCollide(e, c));
 				}
 				break;
 			}
 			case "notifyheal": {
 				if (e instanceof net.minecraft.world.entity.LivingEntity) {
-					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalNotifyHeal(e, "mme_heal"));
+					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalNotifyHeal(e, "mme_heal"));
 				}
 				break;
 			}
 			case "notifygrow":
 			case "grownotify": {
 				if (e instanceof AgeableMob) {
-					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalEntityGrowNotify(e, data));
+					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalEntityGrowNotify(e, data));
 				} else {
 					Main.logger.warning("No ageable entity");
 				}
@@ -738,7 +739,7 @@ public class Core implements Handler, Listener {
 							}
 						}
 					}
-					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalReturnHome(e, speed, x, y, z, mR, tR, iT));
+					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalReturnHome(e, speed, x, y, z, mR, tR, iT));
 					break;
 				}
 			}
@@ -767,21 +768,21 @@ public class Core implements Handler, Listener {
 							}
 						}
 					}
-					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalTravelAround(e, speed, mR, tR, iT));
+					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalTravelAround(e, speed, mR, tR, iT));
 					break;
 				}
 			}
 			case "doorsopen": {
 				if (e instanceof Mob) {
 					boolean bl1 = data != null && Boolean.parseBoolean(data);
-					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalDoorOpen(e, bl1));
+					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalDoorOpen(e, bl1));
 				}
 				break;
 			}
 			case "doorsbreak": {
 				if (e instanceof Mob) {
 					boolean bl1 = data != null && Boolean.parseBoolean(data);
-					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalDoorBreak(e, bl1));
+					pathfindergoal = Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalDoorBreak(e, bl1));
 				}
 				break;
 			}
@@ -804,10 +805,10 @@ public class Core implements Handler, Listener {
 				}
 				break;
 			case "vexa": {
-				pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalVexA(e));
+				pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalVexA(e));
 			}
 			case "vexd": {
-				pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalVexD(e));
+				pathfindergoal = Optional.of(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalVexD(e));
 			}
 			}
 			if (pathfindergoal.isPresent()) {
@@ -859,8 +860,8 @@ public class Core implements Handler, Listener {
 			while (iter.hasNext()) {
 				Object object = iter.next();
 				Goal goal = (Goal) NMSUtils.getPathfinderGoalFromPathFinderSelectorItem(object);
-				if (goal instanceof com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalTravelAround) {
-					((com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals.PathfinderGoalTravelAround) goal).addTravelPoint(vector, remove);
+				if (goal instanceof com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalTravelAround) {
+					((com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals.PathfinderGoalTravelAround) goal).addTravelPoint(vector, remove);
 				}
 			}
 		} catch (Exception ex) {
@@ -876,7 +877,7 @@ public class Core implements Handler, Listener {
 		for (WrappedGoal avaibleGoal : avaibleGoals) {
 			Goal goal = avaibleGoal.getGoal();
 		}
-		goals.removeAllGoals();
+		goals.removeAllGoals((goal) -> true); // update 1.19.4 : need Predicate<Goal> as entry, seems to act like filter
 		try {
 			((Map) ai_pathfinderlist_c.get(goals)).clear();
 			LinkedHashSet<Object> list = (LinkedHashSet) ai_pathfinderlist_b.get((Object) goals);

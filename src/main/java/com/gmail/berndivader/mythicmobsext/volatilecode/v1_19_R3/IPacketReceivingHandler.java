@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3;
 
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;

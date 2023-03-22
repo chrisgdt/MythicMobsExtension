@@ -3,7 +3,7 @@
 
     <groupId>com.gmail.berndivader</groupId>
     <artifactId>MythicMobsExtension</artifactId>
-    <version>1.750-SNAPSHOT</version>
+    <version>1.751-SNAPSHOT</version>
     <name>MythicMobsExtension</name>
 
     <repositories>
@@ -111,7 +111,7 @@
         <dependency>
             <groupId>LibsDisguises</groupId>
             <artifactId>LibsDisguises</artifactId>
-            <version>10.0.26</version>
+            <version>10.0.28</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -148,7 +148,7 @@
         <dependency>
             <groupId>io.lumine</groupId>
             <artifactId>Mythic-Dist</artifactId>
-            <version>5.2.0-SNAPSHOT</version>
+            <version>5.2.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -248,7 +248,7 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- Library versions -->
-        <minecraft.version>1.19.2</minecraft.version>
+        <minecraft.version>1.19.4</minecraft.version>
         <minecraft.serverVersion>${minecraft.version}-R0.1-SNAPSHOT</minecraft.serverVersion>
 
         <!-- Default values if dev.properties file does not exist -->

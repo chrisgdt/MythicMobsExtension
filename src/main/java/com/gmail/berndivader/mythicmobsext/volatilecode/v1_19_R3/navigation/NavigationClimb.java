@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.navigation;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.navigation;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 
@@ -26,7 +26,7 @@ public class NavigationClimb extends GroundPathNavigation {
 
 	@Override
 	public Path createPath(Entity entity, int i1) {
-		this.i = new BlockPos(entity.getX(), entity.getY(), entity.getZ());
+		this.i = new BlockPos(entity.getBlockX(), entity.getBlockY(), entity.getBlockZ());
 		return super.createPath(entity, i1);
 	}
 
@@ -36,7 +36,7 @@ public class NavigationClimb extends GroundPathNavigation {
 		if (pathEntity != null) {
 			return this.moveTo(pathEntity, d2);
 		}
-		this.i = new BlockPos(entity.getX(), entity.getY(), entity.getZ());
+		this.i = new BlockPos(entity.getBlockX(), entity.getBlockY(), entity.getBlockZ());
 		this.speedModifier = d2;
 		return true;
 	}
@@ -47,7 +47,7 @@ public class NavigationClimb extends GroundPathNavigation {
 			if (this.i != null) {
 				if (this.i.closerToCenterThan(this.mob.position(), this.mob.getBbWidth())
 						|| this.mob.getY() > (double) this.i.getY()
-								&& new BlockPos(this.i.getX(), this.mob.getY(), this.i.getZ())
+								&& new BlockPos(this.i.getX(), this.mob.getBlockY(), this.i.getZ())
 										.closerToCenterThan(this.mob.position(), this.mob.getBbWidth())) {
 					this.i = null;
 				} else {

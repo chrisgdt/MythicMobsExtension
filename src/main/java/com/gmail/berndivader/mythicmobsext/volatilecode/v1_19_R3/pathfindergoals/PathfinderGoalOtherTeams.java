@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 

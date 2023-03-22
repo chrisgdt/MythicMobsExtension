@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals;
 
 import net.minecraft.core.BlockPos;
 
@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftEntity;
 import org.bukkit.event.entity.EntityTeleportEvent;
 
 public class PathfinderGoalFollowEntity extends Goal {

@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftEntity;
 import org.bukkit.event.entity.EntityTeleportEvent;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;

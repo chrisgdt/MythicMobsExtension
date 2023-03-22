@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R1.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 
@@ -48,7 +48,7 @@ public class PathfinderGoalInteractDoor extends Goal {
 				continue;
 			return true;
 		}
-		this.b = new BlockPos(this.mob.getX(), this.mob.getY(), this.mob.getZ()).above();
+		this.b = new BlockPos(this.mob.getBlockX(), this.mob.getBlockY(), this.mob.getBlockZ()).above();
 		this.c = this.a(this.b);
 		return this.c != null;
 	}
