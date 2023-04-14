@@ -3,7 +3,7 @@
 
     <groupId>com.gmail.berndivader</groupId>
     <artifactId>MythicMobsExtension</artifactId>
-    <version>1.751-SNAPSHOT</version>
+    <version>1.752-SNAPSHOT</version>
     <name>MythicMobsExtension</name>
 
     <repositories>

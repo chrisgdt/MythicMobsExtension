@@ -4,6 +4,8 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_19_R3.CraftChunk;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
@@ -480,8 +482,8 @@ public class NMSUtils {
             class_PlayerConnection = fixBukkitClass("PlayerConnection", true, "server.network");
             class_Chunk = fixBukkitClass("Chunk", true, "world.level.chunk");
              */
-            class_CraftPlayer = fixBukkitClass("entity.CraftPlayer", false);
-            class_CraftChunk = fixBukkitClass("CraftChunk", false);
+            //class_CraftPlayer = fixBukkitClass("entity.CraftPlayer", false);
+            //class_CraftChunk = fixBukkitClass("CraftChunk", false);
             class_CraftEntity = fixBukkitClass("entity.CraftEntity", false);
             //class_TileEntitySign = fixBukkitClass("TileEntitySign", true, "world.level.block.entity");
             class_CraftServer = fixBukkitClass("CraftServer", false);
@@ -521,8 +523,8 @@ public class NMSUtils {
             class_Entity_getDataWatcherMethod = class_Entity.getMethod("getDataWatcher");
             class_ArmorStand_setInvisible = class_EntityArmorStand.getDeclaredMethod("setInvisible", Boolean.TYPE);
              */
-            class_CraftPlayer_getHandleMethod = class_CraftPlayer.getMethod("getHandle");
-            class_CraftChunk_getHandleMethod = class_CraftChunk.getMethod("getHandle");
+            //class_CraftPlayer_getHandleMethod = class_CraftPlayer.getMethod("getHandle");
+            //class_CraftChunk_getHandleMethod = class_CraftChunk.getMethod("getHandle");
             class_CraftEntity_getHandleMethod = class_CraftEntity.getMethod("getHandle");
             class_CraftLivingEntity_getHandleMethod = class_CraftLivingEntity.getMethod("getHandle");
             class_CraftWorld_getHandleMethod = class_CraftWorld.getMethod("getHandle");
@@ -1814,6 +1816,7 @@ public class NMSUtils {
     }
 */
     public static Object getHandle(org.bukkit.Chunk chunk) {
+        /*
         Object handle = null;
         try {
             handle = class_CraftChunk_getHandleMethod.invoke(chunk);
@@ -1821,16 +1824,20 @@ public class NMSUtils {
             ex.printStackTrace();
         }
         return handle;
+         */
+        return ((CraftChunk) chunk).getHandle();
     }
 
     public static Object getHandle(org.bukkit.entity.Player player) {
-        Object handle = null;
+        return ((CraftPlayer) player).getHandle();
+       /*Object handle = null;
         try {
             handle = class_CraftPlayer_getHandleMethod.invoke(player);
         } catch (Throwable ex) {
             ex.printStackTrace();
         }
         return handle;
+        */
     }
 /*
     protected static void sendPacket(Server server, Location source, Collection<? extends Player> players, Object packet) throws Exception  {
