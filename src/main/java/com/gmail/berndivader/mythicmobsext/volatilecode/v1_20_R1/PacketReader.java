@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

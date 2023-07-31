@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.pathfindergoals;
 
 import net.minecraft.world.entity.Mob;
 
@@ -20,13 +20,13 @@ public class PathfinderGoalDoorOpen extends PathfinderGoalInteractDoor {
 	@Override
 	public void start() {
 		this.h = 20;
-		this.c.setOpen(this.mob, this.mob.level, this.c.defaultBlockState(), this.b, true);
+		this.c.setOpen(this.mob, this.mob.level(), this.c.defaultBlockState(), this.b, true);
 	}
 
 	@Override
 	public void stop() {
 		if (this.g)
-			this.c.setOpen(this.mob, this.mob.level, this.c.defaultBlockState(), this.b, false);
+			this.c.setOpen(this.mob, this.mob.level(), this.c.defaultBlockState(), this.b, false);
 	}
 
 	@Override

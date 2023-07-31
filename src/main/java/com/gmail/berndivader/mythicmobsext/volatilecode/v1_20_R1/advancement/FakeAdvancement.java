@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.advancement;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.advancement;
 
 import java.util.*;
 
@@ -6,20 +6,20 @@ import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.SerializationContext;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.resources.ResourceLocation;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
 import com.google.gson.JsonObject;
 
 public class FakeAdvancement {
-	private com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.advancement.FakeDisplay display;
+	private com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.advancement.FakeDisplay display;
 
-	public FakeAdvancement(com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.advancement.FakeDisplay display) {
+	public FakeAdvancement(com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.advancement.FakeDisplay display) {
 		this.display = display;
 	}
 
-	public com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.advancement.FakeDisplay getDisplay() {
+	public com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.advancement.FakeDisplay getDisplay() {
 		return this.display;
 	}
 
@@ -58,7 +58,7 @@ public class FakeAdvancement {
 				(net.minecraft.network.chat.Component) display.getDescription().getBaseComponent(), backgroundTexture,
 				display.getFrame().getNMS(), true, false, true);
 		Advancement nmsAdvancement = new Advancement(key, null, nmsDisplay,
-				new AdvancementRewards(0, new ResourceLocation[0], new ResourceLocation[0], null), criterias, requirements);
+				new AdvancementRewards(0, new ResourceLocation[0], new ResourceLocation[0], null), criterias, requirements, false);
 
 		HashMap<ResourceLocation, AdvancementProgress> progresses = new HashMap<>();
 		AdvancementProgress progress = new AdvancementProgress();

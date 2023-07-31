@@ -206,7 +206,10 @@ public class NMSUtils extends CompatibilityUtils {
 	 * @param o1  - instance {@link Object}
 	 * @param o2  - value {@link Object}
 	 */
+	@Deprecated
 	public static void setFinalField(String s1, Class<?> cl1, Object o1, Object o2) {
+		// TODO: problably not working anymore
+		//       see https://stackoverflow.com/questions/56039341/get-declared-fields-of-java-lang-reflect-fields-in-jdk12/56043252
 		try {
 			Field f1 = cl1.getDeclaredField(s1);
 			f1.setAccessible(true);

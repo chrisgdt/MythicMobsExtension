@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.pathfindergoals;
 
 import java.util.EnumSet;
 

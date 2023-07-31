@@ -1,11 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.compatibilitylib;
 
+import net.minecraft.world.level.chunk.ChunkStatus;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_19_R3.CraftChunk;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
@@ -1825,7 +1826,7 @@ public class NMSUtils {
         }
         return handle;
          */
-        return ((CraftChunk) chunk).getHandle();
+        return ((CraftChunk) chunk).getHandle(ChunkStatus.EMPTY);
     }
 
     public static Object getHandle(org.bukkit.entity.Player player) {

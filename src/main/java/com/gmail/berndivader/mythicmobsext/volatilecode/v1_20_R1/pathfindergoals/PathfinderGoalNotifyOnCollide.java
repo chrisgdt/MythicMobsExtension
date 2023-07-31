@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.pathfindergoals;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,7 +31,7 @@ public class PathfinderGoalNotifyOnCollide extends Goal {
 		this.c = i1;
 		this.e = e2;
 		this.am = Optional.ofNullable(Utils.mobmanager.getMythicMobInstance(e.getBukkitEntity()));
-		this.w = e2.level;
+		this.w = e2.level();
 		this.cooldown = new HashMap<>();
 	}
 

@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.pathfindergoals;
 
 import java.util.EnumSet;
 import java.util.Optional;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
 import org.bukkit.event.entity.EntityTeleportEvent;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -42,7 +42,7 @@ public class PathfinderGoalReturnHome extends Goal {
 									double tR, boolean iT) {
 		this.d = entity;
 		this.f = d0;
-		this.a = entity.level;
+		this.a = entity.level();
 		g = entity.getNavigation();
 		this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
 		this.v = new Vec3(hx, hy + (double) d.getEyeHeight(), hz);

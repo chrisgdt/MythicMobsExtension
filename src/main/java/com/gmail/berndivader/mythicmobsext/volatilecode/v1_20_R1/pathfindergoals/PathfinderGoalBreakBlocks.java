@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.pathfindergoals;
 
 import java.util.HashSet;
 
@@ -8,7 +8,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_19_R3.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_20_R1.event.CraftEventFactory;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -86,7 +86,7 @@ public class PathfinderGoalBreakBlocks extends Goal {
 		} else {
 			bdz = (dx > 0) ? 1 : -1;
 		}
-		return this.entity.level.getWorld().getBlockAt((int) Math.floor(this.entity.getX() + bdx),
+		return this.entity.level().getWorld().getBlockAt((int) Math.floor(this.entity.getX() + bdx),
 				(int) Math.floor(this.entity.getY()), (int) Math.floor(this.entity.getZ() + bdz));
 	}
 
@@ -102,10 +102,10 @@ public class PathfinderGoalBreakBlocks extends Goal {
 					public void run() {
 						BlockPos position = new BlockPos(block.getX(), block.getY(), block.getZ());
 						if (!CraftEventFactory.callEntityChangeBlockEvent(entity, position,
-								entity.level.getBlockState(position).getBlock().defaultBlockState()).isCancelled()) {
+								entity.level().getBlockState(position).getBlock().defaultBlockState())) {
 							// level.triggereffect(int, BlockPos, int) ???
-							entity.level.destroyBlockProgress(2001, position,
-									net.minecraft.world.level.block.Block.getId(entity.level.getBlockState(position)));
+							entity.level().destroyBlockProgress(2001, position,
+									net.minecraft.world.level.block.Block.getId(entity.level().getBlockState(position)));
 							block.breakNaturally();
 							PathfinderGoalBreakBlocks.this.isBreaking = false;
 						}

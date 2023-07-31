@@ -44,7 +44,7 @@ public class ClickListenerMechanic extends AuraMechanic implements ITargetedEnti
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
-		this.auraName = Optional.of(mlc.getString("buffname", str));
+		this.auraName = Optional.of(mlc.getPlaceholderString("buffname", str));
 		String s1;
 		if ((s1 = mlc.getString("startskill")) != null)
 			startSkill = Utils.mythicmobs.getSkillManager().getSkill(s1);
@@ -165,7 +165,7 @@ public class ClickListenerMechanic extends AuraMechanic implements ITargetedEnti
 		public boolean terminate() {
 			if (!this.hasEnded) {
 				if (ClickListenerMechanic.this.auraName.isPresent()) {
-					this.skillMetadata.getCaster().unregisterAura(ClickListenerMechanic.this.auraName.get(), this);
+					this.skillMetadata.getCaster().unregisterAura(ClickListenerMechanic.this.auraName.get().get(), this);
 				}
 				this.hasEnded = true;
 			}

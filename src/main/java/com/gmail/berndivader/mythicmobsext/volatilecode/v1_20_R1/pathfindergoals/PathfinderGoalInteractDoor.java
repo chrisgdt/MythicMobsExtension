@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.pathfindergoals;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 
@@ -10,7 +10,6 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
 
@@ -32,7 +31,7 @@ public class PathfinderGoalInteractDoor extends Goal {
 
 	@Override
 	public boolean canUse() {
-		if (!this.mob.horizontalCollision || (bl1 && !this.mob.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)))
+		if (!this.mob.horizontalCollision || (bl1 && !this.mob.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)))
 			return false;
 		GroundPathNavigation n1 = (GroundPathNavigation) this.mob.getNavigation();
 		Path pe1 = n1.getPath();
@@ -74,9 +73,9 @@ public class PathfinderGoalInteractDoor extends Goal {
 	}
 
 	private DoorBlock a(BlockPos bp1) {
-		BlockState bd1 = this.mob.level.getBlockState(bp1);
+		BlockState bd1 = this.mob.level().getBlockState(bp1);
 		Block b1 = bd1.getBlock();
-		if ((b1 instanceof DoorBlock) && bd1.getMaterial() == Material.WOOD)
+		if ((b1 instanceof DoorBlock) && ((DoorBlock) b1).type().canOpenByHand())
 			return (DoorBlock) b1;
 		return null;
 	}

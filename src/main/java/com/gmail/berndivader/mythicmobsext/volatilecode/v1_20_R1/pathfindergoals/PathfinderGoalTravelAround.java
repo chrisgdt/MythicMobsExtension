@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.pathfindergoals;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
 import org.bukkit.event.entity.EntityTeleportEvent;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -46,7 +46,7 @@ public class PathfinderGoalTravelAround extends Goal {
 	public PathfinderGoalTravelAround(Mob entity, double d0, double mR, double tR, boolean iT) {
 		this.mob = entity;
 		this.f = d0;
-		this.a = entity.level;
+		this.a = entity.level();
 		g = entity.getNavigation();
 		this.travelpoints = new ArrayList<>();
 		this.travel_index = 0;

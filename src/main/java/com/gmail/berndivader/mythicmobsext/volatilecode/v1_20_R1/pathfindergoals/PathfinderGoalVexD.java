@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.pathfindergoals;
 
 import java.util.EnumSet;
 
@@ -37,7 +37,7 @@ public class PathfinderGoalVexD extends Goal {
 		while (i2 < 3) {
 			BlockPos blockposition1 = blockposition.offset(Main.random.nextInt(15) - 7,
 					Main.random.nextInt(11) - 5, Main.random.nextInt(15) - 7);
-			if (entity.level.isEmptyBlock(blockposition1)) {
+			if (entity.level().isEmptyBlock(blockposition1)) {
 				entity.getMoveControl().setWantedPosition((double) blockposition1.getX() + 0.5, (double) blockposition1.getY() + 0.5,
 						(double) blockposition1.getZ() + 0.5, 0.25);
 				if (entity.getTarget() != null)

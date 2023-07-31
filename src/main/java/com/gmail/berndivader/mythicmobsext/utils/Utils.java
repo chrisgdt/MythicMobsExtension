@@ -336,7 +336,7 @@ public class Utils implements Listener {
 		if (e.isCancelled())
 			return;
 		Entity victim = e.getEntity();
-		if (victim != null && victim.hasMetadata(meta_MYTHICDAMAGE) && victim.hasMetadata(meta_DAMAGECAUSE)) {
+		if (victim.hasMetadata(meta_MYTHICDAMAGE) && victim.hasMetadata(meta_DAMAGECAUSE)) {
 			NMSUtils.setFinalField("cause", EntityDamageEvent.class, e,
 					DamageCause.valueOf(victim.getMetadata(meta_DAMAGECAUSE).get(0).asString()));
 			victim.removeMetadata(meta_DAMAGECAUSE, Main.getPlugin());

@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_19_R3.navigation;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.navigation;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
@@ -31,7 +31,7 @@ public class ControllerFly extends MoveControl {
 			float f10 = f5 * f8 + f4 * f7;
 			PathNavigation navigationAbstract = this.mob.getNavigation();
 			if (navigationAbstract != null && (pathfinderAbstract = navigationAbstract.getNodeEvaluator()) != null
-					&& pathfinderAbstract.getBlockPathType(this.mob.level, Mth.floor(this.mob.getX() + (double) f9),
+					&& pathfinderAbstract.getBlockPathType(this.mob.level(), Mth.floor(this.mob.getX() + (double) f9),
 					Mth.floor(this.mob.getY()),
 					Mth.floor(this.mob.getZ() + (double) f10)) != BlockPathTypes.WALKABLE) {
 				this.strafeForwards = 1.0f;
