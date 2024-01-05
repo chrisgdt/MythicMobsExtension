@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3.pathfindergoals;
 
 import java.util.HashMap;
 import java.util.Iterator;

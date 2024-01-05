@@ -1,9 +1,9 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.advancement;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3.advancement;
 
 import com.gmail.berndivader.mythicmobsext.utils.JSONMessage;
 import javax.annotation.Nullable;
 
-import net.minecraft.advancements.FrameType;
+import net.minecraft.advancements.AdvancementType;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -49,15 +49,15 @@ public class FakeDisplay {
 	}
 
 	public static enum AdvancementFrame {
-		TASK(FrameType.TASK), GOAL(FrameType.GOAL), CHALLENGE(FrameType.CHALLENGE);
+		TASK(AdvancementType.TASK), GOAL(AdvancementType.GOAL), CHALLENGE(AdvancementType.CHALLENGE);
 
-		private FrameType nms;
+		private AdvancementType nms;
 
-		private AdvancementFrame(FrameType nms) {
+		private AdvancementFrame(AdvancementType nms) {
 			this.nms = nms;
 		}
 
-		public FrameType getNMS() {
+		public AdvancementType getNMS() {
 			return this.nms;
 		}
 	}

@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.protocollib;
 
+import com.comphenix.protocol.injector.temporary.TemporaryPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
@@ -11,7 +12,6 @@ import com.comphenix.protocol.events.ListeningWhitelist;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketListener;
 import com.comphenix.protocol.injector.GamePhase;
-import com.comphenix.protocol.injector.server.TemporaryPlayer;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.compatibility.protocollib.wrapper.WrapperPlayServerUpdateHealth;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;

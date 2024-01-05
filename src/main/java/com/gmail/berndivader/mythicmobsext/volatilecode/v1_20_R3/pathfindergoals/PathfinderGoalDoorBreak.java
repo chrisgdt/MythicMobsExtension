@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3.pathfindergoals;
 
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.GameRules;
@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import org.bukkit.craftbukkit.v1_20_R1.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_20_R3.event.CraftEventFactory;
 
 public class PathfinderGoalDoorBreak extends PathfinderGoalInteractDoor {
 	int g;

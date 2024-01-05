@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3.pathfindergoals;
 
 import java.util.HashSet;
 
@@ -8,7 +8,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_20_R1.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_20_R3.event.CraftEventFactory;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;

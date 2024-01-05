@@ -1,9 +1,10 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3;
 
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.common.ServerboundResourcePackPacket;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.level.ServerPlayer;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -33,7 +34,7 @@ public class PacketReceivingHandler implements IPacketReceivingHandler {
 	@Override
 	public Packet<?> handle(ServerboundResourcePackPacket packet) {
 		player.setMetadata(Utils.meta_RESOURCEPACKSTATUS,
-				new FixedMetadataValue(Main.getPlugin(), packet.action.name()));
+				new FixedMetadataValue(Main.getPlugin(), packet.action().name()));
 		return packet;
 	}
 

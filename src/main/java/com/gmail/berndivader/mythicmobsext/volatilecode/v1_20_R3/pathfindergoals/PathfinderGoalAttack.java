@@ -1,13 +1,13 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3.pathfindergoals;
 
 import java.util.Optional;
 
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.phys.Vec3;
 import org.bukkit.entity.Monster;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -25,7 +25,7 @@ public class PathfinderGoalAttack extends MeleeAttackGoal {
 	}
 
 	@Override
-	protected void checkAndPerformAttack(LivingEntity entityLiving, double d2) {
+	protected void checkAndPerformAttack(LivingEntity entityLiving) {
 
 		if (am.isPresent()) {
 			ActiveMob active_mob = am.get();
@@ -36,6 +36,7 @@ public class PathfinderGoalAttack extends MeleeAttackGoal {
 		}
 
 		double d3 = this.getAttackReachSqr(entityLiving);
+		double d2 = getPerceivedTargetDistanceSquareForMeleeAttack(this.mob, entityLiving);
 		if (d2 <= d3 && isTimeToAttack()) {
 			resetAttackCooldown();
 			if (is_monster) {
@@ -48,8 +49,13 @@ public class PathfinderGoalAttack extends MeleeAttackGoal {
 		}
 	}
 
-	@Override
+	// Overriden until 1.20.4 where it were changed
 	protected double getAttackReachSqr(LivingEntity e) {
 		return this.mob.getBbWidth() * this.r * this.mob.getBbWidth() * this.r + e.getBbWidth();
+	}
+
+	// Copied from Mob class (since 1.20.4)
+	public static double getPerceivedTargetDistanceSquareForMeleeAttack(Mob mob, LivingEntity entityliving) {
+		return Math.max(mob.distanceToSqr(entityliving.position()), mob.distanceToSqr(entityliving.position()));
 	}
 }

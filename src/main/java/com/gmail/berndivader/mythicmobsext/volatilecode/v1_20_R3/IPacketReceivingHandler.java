@@ -1,6 +1,7 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3;
 
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.common.ServerboundResourcePackPacket;
 import net.minecraft.network.protocol.game.*;
 
 public interface IPacketReceivingHandler {

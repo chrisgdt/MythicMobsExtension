@@ -82,7 +82,7 @@ public class FileLine extends VariableMechanic implements ITargetedEntitySkill {
              var = Variable.ofType(this.type, Float.valueOf(result), this.duration);
          }
 
-         variables.put(this.key, var);
+         variables.put(this.key.get(), var);
          return SkillResult.SUCCESS;
       }
    }

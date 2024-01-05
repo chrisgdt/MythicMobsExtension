@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R1.navigation;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3.navigation;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
