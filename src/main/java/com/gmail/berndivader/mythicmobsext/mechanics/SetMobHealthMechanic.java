@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.ConfigManager;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.INoTargetSkill;
 import io.lumine.mythic.api.skills.ITargetedEntitySkill;
@@ -42,11 +43,12 @@ public class SetMobHealthMechanic extends SkillMechanic implements INoTargetSkil
 			double h = 20, mod = 0;
 			h = MathUtils.randomRangeDouble(this.r.get(data, t));
 			if (!b && am != null) {
-				mod = ConfigExecutor.defaultLevelModifierHealth.startsWith("+")
-						? Double.valueOf(ConfigExecutor.defaultLevelModifierHealth.substring(1))
-						: (ConfigExecutor.defaultLevelModifierHealth.startsWith("*")
-						? h * Double.valueOf(ConfigExecutor.defaultLevelModifierHealth.substring(1))
-						: h * Double.valueOf(ConfigExecutor.defaultLevelModifierHealth));
+				mod = h * 0.1; // TODO fix defaultLevelModifierHealth private scope ?
+				//mod = ConfigExecutor.defaultLevelModifierHealth.startsWith("+")
+				//		? Double.valueOf(ConfigExecutor.defaultLevelModifierHealth.substring(1))
+				//		: (ConfigExecutor.defaultLevelModifierHealth.startsWith("*")
+				//		? h * Double.valueOf(ConfigExecutor.defaultLevelModifierHealth.substring(1))
+				//		: h * Double.valueOf(ConfigExecutor.defaultLevelModifierHealth));
 			}
 
 			if (am != null && am.getLevel() > 1 && mod > 0.0)
