@@ -39,7 +39,7 @@ public class Curse extends AuraMechanic implements ITargetedEntitySkill {
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
-		this.auraName = Optional.of(str);
+		this.auraName = Optional.ofNullable(mlc.getPlaceholderString(new String[]{str}, null));
 		reasons=new ArrayList<>();
 		
 		ratio=mlc.getFloat("ratio",1f);
@@ -173,7 +173,7 @@ public class Curse extends AuraMechanic implements ITargetedEntitySkill {
 			HandlerList.unregisterAll(this);
 			if (!this.hasEnded) {
 				if (Curse.this.auraName.isPresent()) {
-					this.skillMetadata.getCaster().unregisterAura(Curse.this.auraName.get(), this);
+					this.skillMetadata.getCaster().unregisterAura(Curse.this.auraName.get().get(), this);
 				}
 				this.hasEnded = true;
 			}

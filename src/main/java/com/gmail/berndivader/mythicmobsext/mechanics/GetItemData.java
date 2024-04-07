@@ -14,6 +14,7 @@ import io.lumine.mythic.api.skills.ITargetedEntitySkill;
 import io.lumine.mythic.api.skills.SkillMetadata;
 import io.lumine.mythic.api.skills.SkillResult;
 import io.lumine.mythic.api.skills.ThreadSafetyLevel;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.core.items.MythicItem;
 import io.lumine.mythic.core.logging.MythicLogger;
@@ -175,7 +176,7 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 	        	if(Objects.equals(value, "null") ||value==null) value = "0";
 	        	var = Variable.ofType(this.type, Float.valueOf(value), this.duration);
 	        }
-	        variables.put(this.key, var);
+	        variables.put(this.key.get(), var);
 	      }
 	}
 	

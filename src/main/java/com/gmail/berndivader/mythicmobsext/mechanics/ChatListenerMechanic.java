@@ -51,7 +51,7 @@ public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntit
 		this.line = skill;
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
-		this.auraName = Optional.of(mlc.getString("chatname", "chatlistener"));
+		this.auraName = Optional.of(mlc.getPlaceholderString("chatname", "chatlistener"));
 		String s1 = mlc.getString("phrases", "").toLowerCase();
 		if (s1.startsWith("\"") && s1.endsWith("\"")) {
 			s1 = s1.substring(1, s1.length() - 1);
@@ -86,7 +86,7 @@ public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntit
 		if (!ignoreTrigger && !arg1.isPlayer())
 			return SkillResult.CONDITION_FAILED;
 		if ((multi && !arg1.getBukkitEntity().hasMetadata(str + this.auraName))
-				|| (!multi && !arg0.getCaster().hasAura(auraName.get()))) {
+				|| (!multi && !arg0.getCaster().hasAura(auraName.get().get(arg1)))) {
 			new ChatListener(this, arg0, arg1);
 			return SkillResult.SUCCESS;
 		}
@@ -224,7 +224,7 @@ public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntit
 		public boolean terminate() {
 			if (!this.hasEnded) {
 				if (ChatListenerMechanic.this.auraName.isPresent()) {
-					this.skillMetadata.getCaster().unregisterAura(ChatListenerMechanic.this.auraName.get(), this);
+					this.skillMetadata.getCaster().unregisterAura(ChatListenerMechanic.this.auraName.get().get(), this);
 				}
 				this.hasEnded = true;
 			}
