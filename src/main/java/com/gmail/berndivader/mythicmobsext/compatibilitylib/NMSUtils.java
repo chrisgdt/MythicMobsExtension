@@ -420,7 +420,7 @@ public class NMSUtils {
 
         String[] versions = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
         version = Integer.parseInt(versions[1]);
-        versionMinor = Integer.parseInt(versions[2]);
+        versionMinor = versions.length == 2 ? 0 : Integer.parseInt(versions[2]);
         // Compatibility droppped for 1.17 and lower lol
         //npack = "net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
         cpack = Bukkit.getServer().getClass().getPackage().getName() + ".";

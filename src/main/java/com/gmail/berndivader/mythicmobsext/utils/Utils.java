@@ -146,9 +146,8 @@ public class Utils implements Listener {
 			// Example value of getBukkitVersion: 1.20.1-R0.1-SNAPSHOT
 			String[] versions = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
 			int version = Integer.parseInt(versions[1]);
-			int versionMinor = Integer.parseInt(versions[2]);
 			serverV = version;
-		} catch (Exception e) {
+		} catch (NumberFormatException e) {
 			serverV = 11;
 		}
 		if (Utils.serverV > 11) {
