@@ -205,11 +205,10 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 			this.pam = MythicProjectile.this.mobmanager.getMythicMobInstance(this.pEntity);
 			this.taskId = Main.taskManager.scheduleTask(this, 0, MythicProjectile.this.tickInterval);
 			if (MythicProjectile.this.hitPlayers || MythicProjectile.this.hitNonPlayers) {
-				this.inRange
-						.addAll(MythicProjectile.this.entitymanager.getLivingEntities(this.currentLocation.getWorld()));
+				this.inRange.addAll(this.currentLocation.getWorld().getLivingEntities());
 				this.inRange.removeIf(e -> {
 					if (e != null) {
-						ActiveMob eam = null;
+						ActiveMob eam;
 						if (e.getUniqueId().equals(this.am.getEntity().getUniqueId())
 								|| e.getBukkitEntity().hasMetadata(Utils.noTargetVar)) {
 							return true;

@@ -193,7 +193,7 @@ public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill
 			    		  finalLoc.add(result1, result2, result3);
 			    		  if(particle==Particle.valueOf("REDSTONE")) {
 			    			  Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(r, g, b), 1);
-				    	      world.spawnParticle(Particle.REDSTONE, finalLoc, 1, 0, 0, 0, 0, dustOptions);
+				    	      world.spawnParticle(Particle.DUST, finalLoc, 1, 0, 0, 0, 0, dustOptions);
 			    		  } else {
 			    			  world.spawnParticle(particle, finalLoc, 1, 0, 0, 0, 0);
 			    		  }

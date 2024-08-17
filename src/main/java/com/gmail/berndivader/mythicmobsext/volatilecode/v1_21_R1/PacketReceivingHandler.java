@@ -1,10 +1,10 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_21_R1;
 
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.ServerboundResourcePackPacket;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.level.ServerPlayer;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 

@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_21_R1.pathfindergoals;
 
 import java.util.EnumSet;
 import java.util.Optional;
@@ -14,11 +14,11 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftEntity;
 import org.bukkit.event.entity.EntityTeleportEvent;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -78,8 +78,8 @@ public class PathfinderGoalReturnHome extends Goal {
 	@Override
 	public void start() {
 		h = 0;
-		i = d.getPathfindingMalus(BlockPathTypes.WATER);
-		d.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+		i = d.getPathfindingMalus(PathType.WATER);
+		d.setPathfindingMalus(PathType.WATER, 0.0F);
 		if (this.mM.isPresent() && !this.iF) {
 			ActiveMob am = this.mM.get();
 			am.signalMob(null, "GOAL_STARTRETURNHOME");
@@ -90,7 +90,7 @@ public class PathfinderGoalReturnHome extends Goal {
 	@Override
 	public void stop() {
 		g.getNodeEvaluator();
-		d.setPathfindingMalus(BlockPathTypes.WATER, i);
+		d.setPathfindingMalus(PathType.WATER, i);
 		if (v.distanceToSqr(this.aV) < 10.0D) {
 			this.iF = false;
 			if (this.mM.isPresent()) {

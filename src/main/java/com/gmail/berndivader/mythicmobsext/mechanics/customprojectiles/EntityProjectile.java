@@ -210,8 +210,7 @@ public class EntityProjectile extends CustomProjectile implements ITargetedEntit
 			Volatile.handler.changeHitBox(this.pEntity, 0, 0, 0);
 			this.taskId = Main.taskManager.scheduleTask(this, 0, EntityProjectile.this.tickInterval);
 			if (EntityProjectile.this.hitPlayers || EntityProjectile.this.hitNonPlayers) {
-				this.inRange
-						.addAll(EntityProjectile.this.entitymanager.getLivingEntities(this.currentLocation.getWorld()));
+				this.inRange.addAll(this.currentLocation.getWorld().getLivingEntities());
 				this.inRange.removeIf(e -> {
 					if (e != null) {
 						if (e.getUniqueId().equals(this.am.getEntity().getUniqueId())

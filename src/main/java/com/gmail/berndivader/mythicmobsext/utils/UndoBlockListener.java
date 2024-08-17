@@ -47,7 +47,7 @@ public class UndoBlockListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	private void GrenadeBlockDestroy(EntityExplodeEvent e) {
-		if (e.getEntityType() == EntityType.PRIMED_TNT && !e.isCancelled() && !e.blockList().isEmpty()) {
+		if (e.getEntityType() == EntityType.TNT && !e.isCancelled() && !e.blockList().isEmpty()) {
 			final Entity e1 = e.getEntity();
 			if (!e1.hasMetadata("customgrenade"))
 				return;

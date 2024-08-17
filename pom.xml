@@ -83,6 +83,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${minecraft.serverVersion}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- PlaceHolder API -->
         <dependency>
             <groupId>me.clip</groupId>
@@ -243,7 +250,7 @@
     </build>
 
     <properties>
-        <!-- Project build properties -->
+        <!-- Project build properties  -->
         <project.finalNameBase>${project.artifactId}-MC-${minecraft.version}-v${project.version}</project.finalNameBase>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version.release>17</jdk.version.release>

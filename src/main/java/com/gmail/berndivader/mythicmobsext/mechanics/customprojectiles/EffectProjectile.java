@@ -181,11 +181,10 @@ public class EffectProjectile extends CustomProjectile implements ITargetedEntit
 
 			this.taskId = Main.taskManager.scheduleTask(this, 0, EffectProjectile.this.tickInterval);
 			if (EffectProjectile.this.hitPlayers || EffectProjectile.this.hitNonPlayers) {
-				this.inRange
-						.addAll(EffectProjectile.this.entitymanager.getLivingEntities(this.currentLocation.getWorld()));
+				this.inRange.addAll(this.currentLocation.getWorld().getLivingEntities());
 				this.inRange.removeIf(e -> {
 					if (e != null) {
-						ActiveMob eam = null;
+						ActiveMob eam;
 						if (e.getUniqueId().equals(this.am.getEntity().getUniqueId())
 								|| e.getBukkitEntity().hasMetadata(Utils.noTargetVar)) {
 							return true;

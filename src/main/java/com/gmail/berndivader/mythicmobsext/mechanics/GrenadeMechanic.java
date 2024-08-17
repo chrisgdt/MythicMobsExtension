@@ -76,7 +76,7 @@ public class GrenadeMechanic extends SkillMechanic implements ITargetedEntitySki
 		}
 		for (int a = 0; a < this.amount; a++) {
 			Location sl = source.clone();
-			final TNTPrimed grenade = (TNTPrimed) sl.getWorld().spawnEntity(sl, EntityType.PRIMED_TNT);
+			final TNTPrimed grenade = (TNTPrimed) sl.getWorld().spawnEntity(sl, EntityType.TNT);
 			if (grenade == null)
 				continue;
 			grenade.setVelocity(v);

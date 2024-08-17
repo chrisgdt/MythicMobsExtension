@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3.advancement;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_21_R1.advancement;
 
 import com.gmail.berndivader.mythicmobsext.utils.JSONMessage;
 import javax.annotation.Nullable;

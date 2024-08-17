@@ -1,12 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.compatibilitylib;
 
-import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_20_R3.CraftChunk;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
@@ -36,9 +36,10 @@ public class NMSUtils {
     protected static boolean hasEntityTransformEvent = false;
     protected static boolean hasTimeSkipEvent = false;
 
-    protected static String versionPrefix = "";
-    protected static int version = -1;
-    protected static int versionMinor = -1;
+    public static boolean usingPaper = false;
+    //protected static String versionPrefix = "";
+    public static int version = -1;
+    public static int versionMinor = -1;
     protected static String npack = "";
     protected static String cpack = "";
 
@@ -406,16 +407,22 @@ public class NMSUtils {
         NMSUtils.logger = logger;
         // Find classes Bukkit hides from us. :-D
         // Much thanks to @DPOHVAR for sharing the PowerNBT code that powers the reflection approach.
-        String className = Bukkit.getServer().getClass().getName();
-        String[] packages = StringUtils.split(className, '.');
-        if (packages.length == 5) {
-            versionPrefix = packages[3] + ".";
-        }
+        //String className = Bukkit.getServer().getClass().getName();
+        //String[] packages = StringUtils.split(className, '.');
+        //if (packages.length == 5) {
+        //    versionPrefix = packages[3] + ".";
+        //}
 
-        String[] versions = className.replace(".", ",").split(",")[3].substring(1).split("_");
-        version = Integer.parseInt(versions[1]); // 1.X
-        versionMinor = Integer.parseInt(versions[2].substring(1)); // 1.X.Y
-        npack = "net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+        // Bukkit.getBukkitVersion() -> 1.21.1-R0.1-SNAPSHOT
+        // With Paper : Bukkit.getServer().getClass().getName() -> org.bukkit.craftbukkit.CraftServer
+        // With Spigot: Bukkit.getServer().getClass().getName() -> org.bukkit.craftbukkit.v1_21_R1.CraftServer
+        usingPaper = Bukkit.getServer().getClass().getName().split("\\.").length == 4;
+
+        String[] versions = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
+        version = Integer.parseInt(versions[1]);
+        versionMinor = Integer.parseInt(versions[2]);
+        // Compatibility droppped for 1.17 and lower lol
+        //npack = "net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
         cpack = Bukkit.getServer().getClass().getPackage().getName() + ".";
 
         try {
@@ -1941,7 +1948,7 @@ public class NMSUtils {
         if (nmsStack != null) {
             return null;
         }
-        nmsStack.getOrCreateTag();
+        nmsStack.getTags(); // before 1.21.1: nmsStack.getOrCreateTag();
         return null;
         /*
         if (stack == null) return null;
@@ -1974,7 +1981,8 @@ public class NMSUtils {
     public static boolean hasMeta(ItemStack stack, String tag) {
         if (stack == null || stack.getType() == Material.AIR) return true;
         net.minecraft.world.item.ItemStack handle = (net.minecraft.world.item.ItemStack) getHandle(stack);
-        return handle.hasTag() && handle.getTag().contains(tag);
+        // return handle.hasTag() && handle.getTag().contains(tag);
+        return handle.getTags().anyMatch(t -> t.registry().registry().getNamespace().equals(tag)); // idk TODO
 
         //if (NMSUtils.isEmpty(stack)) return false;
         //return getNode(stack, tag) != null;
@@ -1982,7 +1990,8 @@ public class NMSUtils {
 
     public static Object getTag(ItemStack itemStack) {
         net.minecraft.world.item.ItemStack handle = (net.minecraft.world.item.ItemStack) getHandle(itemStack);
-        return handle.getTag();
+        //return handle.getTag();
+        return null; // idk TODO
 
         /*Object tag = null;
         try {
@@ -2203,9 +2212,9 @@ public class NMSUtils {
 */
     public static void setMetaInt(ItemStack stack, String tag, int value) {
         net.minecraft.world.item.ItemStack handle = (net.minecraft.world.item.ItemStack) getHandle(stack);
-        if (handle.hasTag()) {
-            handle.getTag().putInt(tag, value);
-        }
+        //if (handle.hasTag()) {
+        //    handle.getTag().putInt(tag, value);
+        //} // TODO idk
 
         /*if (NMSUtils.isEmpty(stack)) return;
         try {
@@ -2303,10 +2312,11 @@ public class NMSUtils {
     public static String getMetaString(ItemStack stack, String tag) {
         if (stack == null || stack.getType() == Material.AIR) return null;
         net.minecraft.world.item.ItemStack handle = (net.minecraft.world.item.ItemStack) getHandle(stack);
-        if (!handle.hasTag()) {
-            return null;
-        }
-        return handle.getTag().getString(tag);
+        //if (!handle.hasTag()) {
+        //    return null;
+        //}
+        //return handle.getTag().getString(tag);
+        return ""; // TODO idk
 
         /*if (NMSUtils.isEmpty(stack)) return null;
         String meta = null;
@@ -2324,9 +2334,10 @@ public class NMSUtils {
 
     public static void setMeta(ItemStack stack, String tag, String value) {
         net.minecraft.world.item.ItemStack handle = (net.minecraft.world.item.ItemStack) getHandle(stack);
-        if (handle.hasTag()) {
-            handle.getTag().putString(tag, value);
-        }
+        //if (handle.hasTag()) {
+        //    handle.getTag().putString(tag, value);
+        //}
+        // TODO idk
 
         /*if (NMSUtils.isEmpty(stack)) return;
         try {
@@ -2342,9 +2353,10 @@ public class NMSUtils {
 
     public static void setMetaBoolean(ItemStack stack, String tag, boolean value) {
         net.minecraft.world.item.ItemStack handle = (net.minecraft.world.item.ItemStack) getHandle(stack);
-        if (handle.hasTag()) {
-            handle.getTag().putBoolean(tag, value);
-        }
+        //if (handle.hasTag()) {
+        //    handle.getTag().putBoolean(tag, value);
+        //}
+        // TODO Idk
 
         /*if (NMSUtils.isEmpty(stack)) return;
         try {
@@ -2361,10 +2373,11 @@ public class NMSUtils {
     public static boolean getMetaBoolean(ItemStack stack, String tag, boolean defaultValue) {
         if (stack == null || stack.getType() == Material.AIR) return defaultValue;
         net.minecraft.world.item.ItemStack handle = (net.minecraft.world.item.ItemStack) getHandle(stack);
-        if (!handle.hasTag()) {
-            return defaultValue;
-        }
-        return handle.getTag().getBoolean(tag);
+        //if (!handle.hasTag()) {
+        //    return defaultValue;
+        //}
+        //return handle.getTag().getBoolean(tag);
+        return true; // todo idk
 
         /*
         if (NMSUtils.isEmpty(stack)) return defaultValue;
@@ -2813,9 +2826,9 @@ public class NMSUtils {
         return false;*/
     }
 
-    public static String getVersionPrefix() {
-        return versionPrefix;
-    }
+   // public static String getVersionPrefix() {
+   //     return versionPrefix;
+   // }
 /*
     public static byte getBlockData(FallingBlock falling) {
         // @deprecated Magic value

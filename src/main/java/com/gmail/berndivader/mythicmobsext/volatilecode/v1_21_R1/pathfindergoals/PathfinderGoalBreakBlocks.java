@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_21_R1.pathfindergoals;
 
 import java.util.HashSet;
 
@@ -8,7 +8,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_20_R3.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_21_R1.event.CraftEventFactory;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -95,7 +95,7 @@ public class PathfinderGoalBreakBlocks extends Goal {
 		if (!this.isBreaking && type != Material.AIR && type.isSolid()) {
 			if (Main.random.nextInt(100) <= this.chance) {
 				this.isBreaking = true;
-				PotionEffect effect = new PotionEffect(PotionEffectType.SLOW, 20, 4, false, false);
+				PotionEffect effect = new PotionEffect(PotionEffectType.SLOWNESS, 20, 4, false, false);
 				((LivingEntity) this.entity.getBukkitEntity()).addPotionEffect(effect);
 				new BukkitRunnable() {
 					@Override

@@ -108,8 +108,8 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 				}
 				if (this.invisible)
 					Utils.applyInvisible((LivingEntity) ams.getEntity().getBukkitEntity(), 0);
-				Utils.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
-				if (this.tag.length() > 0) {
+				Utils.mythicmobs.getMobManager().registerActiveMob(ams);
+				if (!this.tag.isEmpty()) {
 					ams.getEntity().addScoreboardTag(new PlaceholderStringImpl(this.tag).get(data, te));
 				}
 				if (this.setowner) {

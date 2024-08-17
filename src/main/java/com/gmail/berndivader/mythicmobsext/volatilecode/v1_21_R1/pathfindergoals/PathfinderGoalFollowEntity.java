@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_21_R1.pathfindergoals;
 
 import net.minecraft.core.BlockPos;
 
@@ -15,10 +15,10 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftEntity;
 import org.bukkit.event.entity.EntityTeleportEvent;
 
 public class PathfinderGoalFollowEntity extends Goal {
@@ -64,14 +64,14 @@ public class PathfinderGoalFollowEntity extends Goal {
 
 	public void start() {
 		h = 0;
-		i = d.getPathfindingMalus(BlockPathTypes.WATER);
-		d.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+		i = d.getPathfindingMalus(PathType.WATER);
+		d.setPathfindingMalus(PathType.WATER, 0.0F);
 	}
 
 	public void stop() {
 		e = null;
 		g.getNodeEvaluator();
-		d.setPathfindingMalus(BlockPathTypes.WATER, i);
+		d.setPathfindingMalus(PathType.WATER, i);
 	}
 
 	public void tick() {

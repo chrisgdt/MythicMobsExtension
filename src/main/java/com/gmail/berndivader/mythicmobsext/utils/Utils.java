@@ -143,8 +143,11 @@ public class Utils implements Listener {
 		renderLength = 512;
 		str_PLUGINPATH = Main.getPlugin().getDataFolder().toString();
 		try {
-			serverV = Integer
-					.parseInt(Bukkit.getServer().getClass().getPackage().getName().substring(23).split("_")[1]);
+			// Example value of getBukkitVersion: 1.20.1-R0.1-SNAPSHOT
+			String[] versions = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
+			int version = Integer.parseInt(versions[1]);
+			int versionMinor = Integer.parseInt(versions[2]);
+			serverV = version;
 		} catch (Exception e) {
 			serverV = 11;
 		}
@@ -702,7 +705,7 @@ public class Utils implements Listener {
 			return 0.118;
 		case SNOWBALL:
 			return 0.076;
-		case THROWN_EXP_BOTTLE:
+		case EXPERIENCE_BOTTLE:
 			return 0.157;
 		case EGG:
 			return 0.074;

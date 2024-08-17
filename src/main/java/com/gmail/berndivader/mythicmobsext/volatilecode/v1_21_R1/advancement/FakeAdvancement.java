@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3.advancement;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_21_R1.advancement;
 
 import java.util.*;
 
@@ -6,28 +6,28 @@ import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.resources.ResourceLocation;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
 public class FakeAdvancement {
-	private com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3.advancement.FakeDisplay display;
+	private com.gmail.berndivader.mythicmobsext.volatilecode.v1_21_R1.advancement.FakeDisplay display;
 
-	public FakeAdvancement(com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3.advancement.FakeDisplay display) {
+	public FakeAdvancement(com.gmail.berndivader.mythicmobsext.volatilecode.v1_21_R1.advancement.FakeDisplay display) {
 		this.display = display;
 	}
 
-	public com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3.advancement.FakeDisplay getDisplay() {
+	public com.gmail.berndivader.mythicmobsext.volatilecode.v1_21_R1.advancement.FakeDisplay getDisplay() {
 		return this.display;
 	}
 
 	public void displayToast(Player player) {
-		ResourceLocation key = new ResourceLocation("mme", "notification");
+		ResourceLocation key = ResourceLocation.fromNamespaceAndPath("mme", "notification");
 		FakeDisplay display = this.getDisplay();
 		ResourceLocation backgroundTexture = null;
 		boolean useBackground = display.getBackgroundTexture() != null;
 		if (useBackground)
-			backgroundTexture = new ResourceLocation(display.getBackgroundTexture());
+			backgroundTexture = ResourceLocation.parse(display.getBackgroundTexture());
 		Map<String, Criterion<?>> criterias = new HashMap<>();
 		Criterion<?> criterion = new Criterion<>(null, // todo
 				new CriterionTriggerInstance() {

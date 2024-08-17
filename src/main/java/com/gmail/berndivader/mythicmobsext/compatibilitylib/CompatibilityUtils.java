@@ -10,7 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftEntity;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -1837,7 +1837,7 @@ public class CompatibilityUtils extends NMSUtils {
         }
         return false;
     }
-*/
+
     public static int[] getServerVersion() {
         String versionString = getVersionPrefix();
         int[] version = new int[2];
@@ -1859,7 +1859,7 @@ public class CompatibilityUtils extends NMSUtils {
         }
         return version;
     }
-/*
+
     public static Color getColor(PotionMeta meta) {
         Color color = Color.BLACK;
         if (class_PotionMeta_getColorMethod != null) {

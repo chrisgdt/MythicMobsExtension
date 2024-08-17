@@ -66,13 +66,13 @@ public class NMSUtils extends CompatibilityUtils {
 	public static boolean initialize() {
 		boolean bool = com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils.initialize(Main.getPlugin().getLogger());
 		try {
-			class_IChatBaseComponent_ChatSerializer = fixBukkitClass("IChatBaseComponent$ChatSerializer", true, "network.chat");
+			class_IChatBaseComponent_ChatSerializer = fixBukkitClass(NMSUtils.usingPaper ? "Component$Serializer" : "IChatBaseComponent$ChatSerializer", true, "network.chat");
 			//class_EntitySnowman = fixBukkitClass("EntitySnowman", true, "world.entity.animal");
 			class_PathfinderGoalSelector_PathfinderGoalSelectorItem = fixBukkitClass(Utils.serverV < 14 ?
-							"PathfinderGoalSelector$PathfinderGoalSelectorItem" : "PathfinderGoalWrapped",
+							"PathfinderGoalSelector$PathfinderGoalSelectorItem" : NMSUtils.usingPaper ? "WrappedGoal" : "PathfinderGoalWrapped",
 					true, "world.entity.ai.goal");
-			class_IInventory = fixBukkitClass("IInventory", true, "world");
-			class_CraftInventory = fixBukkitClass("inventory.CraftInventory", false);
+			//class_IInventory = fixBukkitClass("IInventory", true, "world");
+			//class_CraftInventory = fixBukkitClass("inventory.CraftInventory", false);
 			class_MetadataStoreBase = fixBukkitClass("org.bukkit.metadata.MetadataStoreBase");
 
             /*class_Entity_lastXField = class_Entity.getDeclaredField(version < 17 ? "lastX" : "u"); // 1.17 : xo

@@ -28,7 +28,7 @@ public class VersionCommand implements CommandExecutor {
 		
 		if (args.length > 0 && args[0].equals("version")) {
 	        String MMEV = ChatColor.YELLOW +"MMExtension Version: "+ChatColor.WHITE+ plugin.getDescription().getVersion()+"\n";
-	        String SV = ChatColor.YELLOW +"Server Version: "+ChatColor.WHITE+Bukkit.getServer().getClass().getName()+ "\n";
+	        String SV = ChatColor.YELLOW +"Server Version: "+ChatColor.WHITE+Bukkit.getBukkitVersion().split("-")[0]+ "\n";
 	        String MMV = ChatColor.YELLOW +"MM Version: "+ChatColor.WHITE+ Utils.mythicmobs.getVersion()+ "\n";
 	        String MMB = ChatColor.YELLOW +"MM Build: "+ChatColor.WHITE+Utils.mythicmobs.getBuildNumber();
 	        

@@ -8,7 +8,6 @@ import io.lumine.mythic.api.adapters.AbstractLocation;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.*;
 import io.lumine.mythic.bukkit.MythicBukkit;
-import io.lumine.mythic.core.mobs.EntityManager;
 import io.lumine.mythic.core.mobs.MobExecutor;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.skills.SkillMechanic;
@@ -17,7 +16,6 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 public class CustomProjectile extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 	protected MythicBukkit mythicmobs;
-	protected EntityManager entitymanager;
 	protected SkillManager skillmanager;
 	protected MobExecutor mobmanager;
 
@@ -78,7 +76,6 @@ public class CustomProjectile extends SkillMechanic implements ITargetedEntitySk
 		this.threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
 		this.mythicmobs = Utils.mythicmobs;
-		this.entitymanager = this.mythicmobs.getEntityManager();
 		this.skillmanager = this.mythicmobs.getSkillManager();
 		this.mobmanager = this.mythicmobs.getMobManager();
 

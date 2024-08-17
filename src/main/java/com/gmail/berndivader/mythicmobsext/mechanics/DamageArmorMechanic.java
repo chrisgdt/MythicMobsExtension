@@ -54,7 +54,7 @@ public class DamageArmorMechanic extends SkillMechanic implements ITargetedEntit
 		if (target == null || !target.isLiving() || target.isDead()) {
 			return SkillResult.CONDITION_FAILED;
 		}
-		if (target.getBukkitEntity().getType().equals(EntityType.SNOWMAN)) {
+		if (target.getBukkitEntity().getType().equals(EntityType.SNOW_GOLEM)) {
 			NMSUtils.setSnowmanPumpkin((Snowman) target.getBukkitEntity(), false);
 		}
 		LivingEntity e = (LivingEntity) BukkitAdapter.adapt(target);

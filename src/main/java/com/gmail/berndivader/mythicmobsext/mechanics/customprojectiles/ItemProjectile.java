@@ -205,8 +205,7 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 
 			this.taskId = Main.taskManager.scheduleTask(this, 0, ItemProjectile.this.tickInterval);
 			if (ItemProjectile.this.hitPlayers || ItemProjectile.this.hitNonPlayers) {
-				this.inRange
-						.addAll(ItemProjectile.this.entitymanager.getLivingEntities(this.currentLocation.getWorld()));
+				this.inRange.addAll(this.currentLocation.getWorld().getLivingEntities());
 				this.inRange.removeIf(e -> {
 					if (e != null) {
 						if (e.getUniqueId().equals(this.am.getEntity().getUniqueId())

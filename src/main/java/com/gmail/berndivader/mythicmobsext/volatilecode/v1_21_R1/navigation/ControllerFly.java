@@ -1,12 +1,14 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3.navigation;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_21_R1.navigation;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.NodeEvaluator;
+import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.level.pathfinder.PathfindingContext;
 
 public class ControllerFly extends MoveControl {
 	public ControllerFly(Mob entityInsentient) {
@@ -31,9 +33,9 @@ public class ControllerFly extends MoveControl {
 			float f10 = f5 * f8 + f4 * f7;
 			PathNavigation navigationAbstract = this.mob.getNavigation();
 			if (navigationAbstract != null && (pathfinderAbstract = navigationAbstract.getNodeEvaluator()) != null
-					&& pathfinderAbstract.getBlockPathType(this.mob.level(), Mth.floor(this.mob.getX() + (double) f9),
+					&& pathfinderAbstract.getPathType(new PathfindingContext(this.mob.level(), this.mob), Mth.floor(this.mob.getX() + (double) f9),
 					Mth.floor(this.mob.getY()),
-					Mth.floor(this.mob.getZ() + (double) f10)) != BlockPathTypes.WALKABLE) {
+					Mth.floor(this.mob.getZ() + (double) f10)) != PathType.WALKABLE) {
 				this.strafeForwards = 1.0f;
 				this.strafeRight = 0.0f;
 				f3 = f2;

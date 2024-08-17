@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_20_R3.navigation;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_21_R1.navigation;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 
