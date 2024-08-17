@@ -7,18 +7,18 @@ import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.conditions.IEntityCondition;
 import io.lumine.mythic.core.skills.SkillString;
+import me.pikamug.quests.BukkitQuestsPlugin;
+import me.pikamug.quests.player.Quester;
+import me.pikamug.quests.quests.Quest;
+import me.pikamug.quests.quests.components.Stage;
 import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
-import me.blackvein.quests.Quest;
-import me.blackvein.quests.Quester;
-import me.blackvein.quests.Quests;
-import me.blackvein.quests.Stage;
 
 public class QuestRunningCondition extends AbstractCustomCondition implements IEntityCondition {
-	Quests quests = QuestsSupport.inst().quests();
+	BukkitQuestsPlugin quests = QuestsSupport.inst().quests();
 	RangedDouble rd;
 	String[] arr1;
 

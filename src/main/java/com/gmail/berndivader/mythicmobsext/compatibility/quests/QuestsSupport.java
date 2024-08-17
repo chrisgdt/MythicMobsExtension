@@ -1,11 +1,13 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.quests;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 
 import io.lumine.mythic.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
+import me.pikamug.quests.BukkitQuestsPlugin;
+import me.pikamug.quests.player.Quester;
+import me.pikamug.quests.quests.Quest;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,28 +15,24 @@ import org.bukkit.plugin.Plugin;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 
-import me.blackvein.quests.Quest;
-import me.blackvein.quests.Quester;
-import me.blackvein.quests.Quests;
-
 public class QuestsSupport implements Listener {
 	static String pluginName = "Quests";
 	private static QuestsSupport core;
 	private Plugin plugin;
-	private static Optional<Quests> quests;
+	private static Optional<BukkitQuestsPlugin> quests;
 
 	static {
-		quests = Optional.ofNullable((Quests) Bukkit.getServer().getPluginManager().getPlugin(pluginName));
+		quests = Optional.ofNullable((BukkitQuestsPlugin) Bukkit.getServer().getPluginManager().getPlugin(pluginName));
 	}
 
 	public QuestsSupport(Plugin plugin) {
-		if (Bukkit.getPluginManager().getPlugin(quests.get().getName()).getDescription().getVersion().contains("3.9")) {
+		if (Bukkit.getPluginManager().getPlugin(quests.get().getName()).getDescription().getVersion().contains("5.1")) {
 			core = this;
 			this.plugin = plugin;
 			Main.pluginmanager.registerEvents(this, plugin);
 			Main.logger.info("using " + pluginName);
 		} else {
-			Main.logger.warning("Your Quests plugin version is too old, update it if you want to use it!");
+			Main.logger.warning("Your Quests plugin version is too old, update to version 5.1.x it if you want to use it!");
 		}
 
 	}
@@ -51,7 +49,7 @@ public class QuestsSupport implements Listener {
 		return quests.isPresent();
 	}
 
-	public Quests quests() {
+	public BukkitQuestsPlugin quests() {
 		return QuestsSupport.quests.get();
 	}
 
@@ -94,9 +92,8 @@ public class QuestsSupport implements Listener {
 	}
 
 	static Quest getQuestFromCurrent(Quester quester, String questName) {
-		Iterator<Map.Entry<Quest, Integer>> entries = quester.getCurrentQuests().entrySet().iterator();
-		while (entries.hasNext()) {
-			Quest quest = entries.next().getKey();
+		for (Map.Entry<Quest, Integer> questIntegerEntry : quester.getCurrentQuests().entrySet()) {
+			Quest quest = questIntegerEntry.getKey();
 			if ((quest.getName().toLowerCase().equals(questName))) {
 				return quest;
 			}

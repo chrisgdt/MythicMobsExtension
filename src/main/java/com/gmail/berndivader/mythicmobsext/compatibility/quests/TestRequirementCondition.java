@@ -6,12 +6,12 @@ import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.skills.conditions.IEntityCondition;
 import io.lumine.mythic.core.skills.SkillString;
-import me.blackvein.quests.Quest;
-import me.blackvein.quests.Quester;
-import me.blackvein.quests.Quests;
+import me.pikamug.quests.BukkitQuestsPlugin;
+import me.pikamug.quests.player.Quester;
+import me.pikamug.quests.quests.Quest;
 
 public class TestRequirementCondition extends AbstractCustomCondition implements IEntityCondition {
-	Quests quests = QuestsSupport.inst().quests();
+	BukkitQuestsPlugin quests = QuestsSupport.inst().quests();
 	String s1;
 
 	public TestRequirementCondition(String line, MythicLineConfig mlc) {

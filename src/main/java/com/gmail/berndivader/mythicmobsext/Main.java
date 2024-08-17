@@ -147,7 +147,7 @@ public class Main extends JavaPlugin {
 				new ProtocolLibSupport(this);
 			}
 
-			if (Config.quests && pluginmanager.getPlugin("Quests")!=null&&pluginmanager.getPlugin("Quests").getClass().getPackage().getName().equals("me.blackvein.quests")) {
+			if (Config.quests && pluginmanager.getPlugin("Quests")!=null&&pluginmanager.getPlugin("Quests").getClass().getPackage().getName().equals("me.pikamug.quests")) {
 				new QuestsSupport(this);
 			}
 

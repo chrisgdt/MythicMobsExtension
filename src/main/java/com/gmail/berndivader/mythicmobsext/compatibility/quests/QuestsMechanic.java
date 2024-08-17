@@ -9,16 +9,15 @@ import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import io.lumine.mythic.core.skills.SkillExecutor;
 import io.lumine.mythic.core.skills.SkillMechanic;
 import io.lumine.mythic.core.skills.SkillString;
+import me.pikamug.quests.BukkitQuestsPlugin;
+import me.pikamug.quests.player.Quester;
+import me.pikamug.quests.quests.Quest;
 import org.bukkit.entity.Player;
-
-import me.blackvein.quests.Quest;
-import me.blackvein.quests.Quester;
-import me.blackvein.quests.Quests;
 
 import java.io.File;
 
 public class QuestsMechanic extends SkillMechanic implements ITargetedEntitySkill {
-	Quests quests = QuestsSupport.inst().quests();
+	BukkitQuestsPlugin quests = QuestsSupport.inst().quests();
 	String s1, s2;
 	int i1;
 
@@ -49,7 +48,7 @@ public class QuestsMechanic extends SkillMechanic implements ITargetedEntitySkil
 					break;
 				case "TAKEQUEST":
 					if(quest==null) {
-						quest=quests.getQuest(s1);
+						quest = quests.getQuest(s1);
 						if(quest!=null) {
 							q.takeQuest(quest, true);
 						}

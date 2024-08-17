@@ -3,7 +3,7 @@
 
     <groupId>com.gmail.berndivader</groupId>
     <artifactId>MythicMobsExtension</artifactId>
-    <version>1.755-SNAPSHOT</version>
+    <version>1.757-SNAPSHOT</version>
     <name>MythicMobsExtension</name>
 
     <repositories>
@@ -26,9 +26,9 @@
             <url>https://maven.enginehub.org/repo/</url>
         </repository>
         <repository>
-            <!-- Citizens repo -->
-            <id>everything</id>
-            <url>https://maven.citizensnpcs.co/repo/</url>
+            <id>citizens-repo</id>
+            <name>Citizens Repository</name>
+            <url>https://maven.citizensnpcs.co/repo</url>
         </repository>
         <repository>
             <!-- LibsDisguises repository -->
@@ -46,7 +46,7 @@
             <url>https://repo.md-5.net/content/repositories/releases/</url>
         </repository>
         <repository>
-            <!-- holographic display repo -->
+            <!-- holographic & Quests display repo -->
             <id>codemc-repo</id>
             <url>https://repo.codemc.io/repository/maven-public/</url>
         </repository>
@@ -68,10 +68,10 @@
         <!-- TODO: massivecraft:massivecore & massivecraft:factions https://www.massivecraft.com/tech-compile -->
         <!-- TODO: com.garbagemule:mobarena https://www.spigotmc.org/resources/mobarena.34110/ -->
         <!-- TODO: think:rpgitems https://github.com/NyaaCat/RPGItems-reloaded -->
-        <repository>
+        <!-- repository>
             <id>hackerzlair</id>
             <url>http://mc.hackerzlair.org:8888/repository/public</url>
-        </repository>
+        </repository -->
     </repositories>
     <!-- Global dependencies -->
     <dependencies>
@@ -93,37 +93,37 @@
         <dependency>
             <groupId>me.filoghost.holographicdisplays</groupId>
             <artifactId>holographicdisplays-api</artifactId>
-            <version>3.0.1-SNAPSHOT</version>
+            <version>3.0.5</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizensapi</artifactId>
-            <version>2.0.30-SNAPSHOT</version>
+            <version>2.0.35-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>5.1.0</version>
+            <version>5.3.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>LibsDisguises</groupId>
             <artifactId>LibsDisguises</artifactId>
-            <version>10.0.40</version>
+            <version>10.0.44</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>
             <artifactId>worldguard-bukkit</artifactId>
-            <version>7.0.7-SNAPSHOT</version>
+            <version>7.0.9</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
-            <version>7.3.0-SNAPSHOT</version>
+            <version>7.3.6</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -133,22 +133,27 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <!-- JitPack -->
-            <groupId>com.github.PikaMug</groupId>
-            <artifactId>Quests</artifactId>
-            <version>4.1.2</version>
+            <groupId>me.pikamug.quests</groupId>
+            <artifactId>quests-core</artifactId>
+            <version>5.1.2</version>
         </dependency>
         <dependency>
             <!-- JitPack -->
             <groupId>com.github.TownyAdvanced</groupId>
             <artifactId>Towny</artifactId>
-            <version>0.97.3.2</version>
+            <version>0.100.3.12</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.lumine</groupId>
             <artifactId>Mythic-Dist</artifactId>
-            <version>5.6.1-SNAPSHOT</version>
+            <version>5.7.2-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.lumine</groupId>
+            <artifactId>Mythic-API</artifactId>
+            <version>5.7.2-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -195,7 +200,7 @@
             <plugin>
                 <groupId>net.md-5</groupId>
                 <artifactId>specialsource-maven-plugin</artifactId>
-                <version>1.2.5</version>
+                <version>2.0.3</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -228,10 +233,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.13.0</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -241,14 +246,14 @@
         <!-- Project build properties -->
         <project.finalNameBase>${project.artifactId}-MC-${minecraft.version}-v${project.version}</project.finalNameBase>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jdk.version.release>8</jdk.version.release>
+        <jdk.version.release>17</jdk.version.release>
         <jdk.version.test>17</jdk.version.test>
-        <java.version>1.8</java.version>
-        <maven.compiler.source>1.8</maven.compiler.source>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- Library versions -->
-        <minecraft.version>1.20.4</minecraft.version>
+        <minecraft.version>1.21.1</minecraft.version>
         <minecraft.serverVersion>${minecraft.version}-R0.1-SNAPSHOT</minecraft.serverVersion>
 
         <!-- Default values if dev.properties file does not exist -->
