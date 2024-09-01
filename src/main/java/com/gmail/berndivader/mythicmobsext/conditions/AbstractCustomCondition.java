@@ -19,13 +19,13 @@ public class AbstractCustomCondition extends SkillCondition {
 		if (a.length() != 0) {
 			String[] arr = a.split(" ");
 			if (ConditionAction.isAction(arr[0])) {
-				this.ACTION = ConditionAction.valueOf(arr[0].toUpperCase());
+				this.ACTION = ConditionAction.get(arr[0]);;
 				if (arr.length > 1)
 					this.actionVar = PlaceholderString.of(arr[1]);
 			} else {
 				this.conditionVar = arr[0];
 				if (arr.length > 1 && ConditionAction.isAction(arr[1])) {
-					this.ACTION = ConditionAction.valueOf(arr[1].toUpperCase());
+					this.ACTION = ConditionAction.get(arr[1]);;
 					if (arr.length > 2)
 						this.actionVar = PlaceholderString.of(arr[2]);
 				}
